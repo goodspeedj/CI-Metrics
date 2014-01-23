@@ -93,7 +93,7 @@ d3.json('data.json', function(data) {
 
   var legend = d3.select("#legend").append("svg")
       .attr("width", legend_width + main_margin.left + main_margin.right)
-      .attr("height", legend_height + main_margin.top + main_margin.bottom)
+      .attr("height", main_height + main_margin.top + main_margin.bottom)
     .append("g")
       .attr("transform", "translate(" + legend_margin.left + "," + legend_margin.top + ")");
 
@@ -184,14 +184,6 @@ d3.json('data.json', function(data) {
       .attr("class", "legendLabel")
       .attr("x", function(d) { return main_width-195; })
       .attr("y", function(d,i) { return main_height-393 + (i*40); })
-      .text( function (d) { return d.key; })
-      .attr("font-family", "sans-serif")
-      .attr("font-size", "10px")
-      .attr("fill", "black");
-
-  legend.append("text")
-      .attr("x", function(d) { return legend_width; })
-      .attr("y", function(d,i) { return legend_height + (i*40); })
       .text( function (d) { return d.key; })
       .attr("font-family", "sans-serif")
       .attr("font-size", "10px")
