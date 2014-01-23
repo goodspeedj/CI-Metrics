@@ -1,8 +1,10 @@
 var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
     mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
+    legend_margin = {top: 20, right: 80, bottom: 100, left: 40},
     main_width = 1300 - main_margin.left - main_margin.right,
     main_height = 525 - main_margin.top - main_margin.bottom,
-    mini_height = 525 - mini_margin.top - mini_margin.bottom;
+    mini_height = 525 - mini_margin.top - mini_margin.bottom,
+    legend_width = 300 - main_margin.left - main_margin.right;
 
 
 d3.json('data.json', function(data) {
@@ -87,7 +89,14 @@ d3.json('data.json', function(data) {
       .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
 
   var mini = svg.append("g")
-    .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
+      .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
+
+  var legend = d3.select("#legend").append("svg")
+      .attr("width", legend_width + main_margin.left + main_margin.right)
+      .attr("height", legend_height + main_margin.top + main_margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + legend_margin.left + "," + legend_margin.top + ")");
+
 
 
   // Add the X axis
@@ -180,6 +189,13 @@ d3.json('data.json', function(data) {
       .attr("font-size", "10px")
       .attr("fill", "black");
 
+  legend.append("text")
+      .attr("x", function(d) { return legend_width; })
+      .attr("y", function(d,i) { return legend_height + (i*40); })
+      .text( function (d) { return d.key; })
+      .attr("font-family", "sans-serif")
+      .attr("font-size", "10px")
+      .attr("fill", "black");
 
   // Add the color rectangles to the legend
   main_stream.append("rect")
