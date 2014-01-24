@@ -17,7 +17,7 @@ d3.json('duration_by_stream.json', function(data) {
 
 
   // Setup X axis
-  main_x = d3.time.scale()
+  var main_x = d3.time.scale()
       .domain(d3.extent(data.result, function(d) { return d.date; }))
       .range([0, main_width-275]);
 
