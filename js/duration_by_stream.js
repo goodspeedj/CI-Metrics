@@ -4,6 +4,59 @@ var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
     main_height = 525 - main_margin.top - main_margin.bottom,
     mini_height = 525 - mini_margin.top - mini_margin.bottom;
 
+// Define line colors
+var color = d3.scale.category20();
+
+// Setup X time scale
+var main_x = d3.time.scale()
+    .range([0, main_width-275]);
+
+var mini_x = d3.time.scale()
+    .range([0, main_width-275]);
+
+var main_xAxis = d3.svg.axis()
+    .scale(main_x)
+    .ticks(d3.time.day, 1)
+    .orient("bottom");
+
+var mini_xAxis = d3.svg.axis()
+  .scale(mini_x)
+  .ticks(d3.time.day, 1)
+  .orient("bottom");
+
+// Setup Y axis
+var main_y = d3.scale.linear()
+    .range([main_height + 10, 0]);
+
+var mini_y = d3.scale.linear()
+    .range([mini_height, 0]);
+
+var main_yAxis = d3.svg.axis()
+    .scale(main_y)
+    .orient("left");
+
+// Create brush for mini graph
+var brush = d3.svg.brush()
+    .x(mini_x)
+    .on("brush", brushed);
+
+// Define main svg element in #graph
+var svg = d3.select("#graph").append("svg")
+    .attr("width", main_width + main_margin.left + main_margin.right)
+    .attr("height", main_height + main_margin.top + main_margin.bottom);
+
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", main_width-275)
+    .attr("height", main_height);
+
+var main = svg.append("g")
+    .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
+
+var mini = svg.append("g")
+    .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
+
 
 d3.json('duration_by_stream.json', function(data) {
 
@@ -11,49 +64,11 @@ d3.json('duration_by_stream.json', function(data) {
       d.date = new Date(d._id.year, d._id.month-1, d._id.day);
   });
 
-
-  // Define line colors
-  var color = d3.scale.category20();
-
-
-  // Setup X axis
-  var main_x = d3.time.scale()
-      .domain(d3.extent(data.result, function(d) { return d.date; }))
-      .range([0, main_width-275]);
-
-  var mini_x = d3.time.scale()
-      .domain(d3.extent(data.result, function(d) { return d.date; }))
-      .range([0, main_width-275]);
-
-  var main_xAxis = d3.svg.axis()
-      .scale(main_x)
-      .ticks(d3.time.day, 1)
-      .orient("bottom");
-
-  var mini_xAxis = d3.svg.axis()
-      .scale(mini_x)
-      .ticks(d3.time.day, 1)
-      .orient("bottom");
-
-
-  // Setup Y axis
-  var main_y = d3.scale.linear()
-      .domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2 ; }))
-      .range([main_height + 10, 0]);
-
-  var mini_y = d3.scale.linear()
-      .domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2; }))
-      .range([mini_height, 0]);
-
-  var main_yAxis = d3.svg.axis()
-      .scale(main_y)
-      .orient("left");
-
-
-  // Create brush for mini graph
-  var brush = d3.svg.brush()
-      .x(mini_x)
-      .on("brush", brushed);
+  // Create the axis domains
+  main_x.domain(d3.extent(data.result, function(d) { return d.date; }));
+  mini_x.domain(d3.extent(data.result, function(d) { return d.date; }))
+  main_y.domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2 ; }))
+  mini_y.domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2; }))
 
 
   // flatten out the data
@@ -70,25 +85,6 @@ d3.json('duration_by_stream.json', function(data) {
       .interpolate("cardinal")
       .x(function(d) { return mini_x(d.date); })
       .y(function(d) { return mini_y((d.buildDuration / 1000) / 60 ); });
-
-
-  // Define main svg element in #graph
-  var svg = d3.select("#graph").append("svg")
-      .attr("width", main_width + main_margin.left + main_margin.right)
-      .attr("height", main_height + main_margin.top + main_margin.bottom);
-
-  svg.append("defs").append("clipPath")
-      .attr("id", "clip")
-    .append("rect")
-      .attr("width", main_width-275)
-      .attr("height", main_height);
-
-  var main = svg.append("g")
-      .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
-
-  var mini = svg.append("g")
-      .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
-
 
 
   // Add the X axis
