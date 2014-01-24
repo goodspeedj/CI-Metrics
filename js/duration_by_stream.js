@@ -1,10 +1,8 @@
 var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
     mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
-    legend_margin = {top: 20, right: 80, bottom: 100, left: 40},
     main_width = 1300 - main_margin.left - main_margin.right,
     main_height = 525 - main_margin.top - main_margin.bottom,
-    mini_height = 525 - mini_margin.top - mini_margin.bottom,
-    legend_width = 300 - main_margin.left - main_margin.right;
+    mini_height = 525 - mini_margin.top - mini_margin.bottom;
 
 
 d3.json('duration_by_stream.json', function(data) {
@@ -90,12 +88,6 @@ d3.json('duration_by_stream.json', function(data) {
 
   var mini = svg.append("g")
       .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
-
-  var legend = d3.select("#legend").append("svg")
-      .attr("width", legend_width + main_margin.left + main_margin.right)
-      .attr("height", main_height + main_margin.top + main_margin.bottom)
-    .append("g")
-      .attr("transform", "translate(" + legend_margin.left + "," + legend_margin.top + ")");
 
 
 
