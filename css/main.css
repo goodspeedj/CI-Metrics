@@ -1,6 +1,15 @@
 body {
   font-size: 16px;
-  font-family: "Calibri";
+  font-family: "Calibri, Arial, san-serif";
+  width: 85%;
+}
+
+.toggle {
+  width: 150px;
+}
+
+.pull-right {
+  float: right !important;
 }
 
 .y_label {

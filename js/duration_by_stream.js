@@ -7,7 +7,7 @@ var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
     legend_width = 300 - main_margin.left - main_margin.right;
 
 
-d3.json('data.json', function(data) {
+d3.json('duration_by_stream.json', function(data) {
 
   data.result.forEach(function(d) {
       d.date = new Date(d._id.year, d._id.month-1, d._id.day);
