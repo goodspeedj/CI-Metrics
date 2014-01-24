@@ -35,11 +35,6 @@ var main_yAxis = d3.svg.axis()
     .scale(main_y)
     .orient("left");
 
-// Create brush for mini graph
-var brush = d3.svg.brush()
-    .x(mini_x)
-    .on("brush", brushed);
-
 // Define main svg element in #graph
 var svg = d3.select("#graph").append("svg")
     .attr("width", main_width + main_margin.left + main_margin.right)
@@ -70,6 +65,11 @@ d3.json('duration_by_stream.json', function(data) {
   main_y.domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2 ; }))
   mini_y.domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2; }))
 
+
+  // Create brush for mini graph
+  var brush = d3.svg.brush()
+       .x(mini_x)
+       .on("brush", brushed);
 
   // flatten out the data
   var nested = d3.nest().key(function(d) { return d._id.stream; })
@@ -347,5 +347,3 @@ function findMinY(data) {
 function mousemove() {
     //focus.select("circle").attr("transform", "translate(" + main_x(d.values + "," + main_y));
 }
-
-
