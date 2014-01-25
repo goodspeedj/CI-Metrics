@@ -12,12 +12,12 @@ var main_x0 = d3.time.scale()
     .range([0, main_width-275]);
 
 var main_xAxis = d3.svg.axis()
-    .scale(main_x)
+    .scale(main_x0)
     .ticks(d3.time.day, 1)
     .orient("bottom");
 
 // Setup the portfolio scale
-var main_x1 = d3.ordinal.scale();
+var main_x1 = d3.scale.ordinal();
 
 // Setup Y scale and axis
 var main_y = d3.scale.linear()
@@ -39,22 +39,24 @@ var main = svg.append("g")
 /*
  * Pull in the data
  */
-d3.json('fix_time_by_portfolio.json', function(data) {
+d3.json('fix_time_by_port.json', function(error, data) {
 
   console.log(data);
 
+  // This adds new elements to the data object
   data.result.forEach(function(d) {
-    //d.portfolios = d.port
+    d.portfolio = d._id.portfolio;
     d.date = new Date(d._id.year, d._id.month-1, d._id.day);
   });
 
   // define the axis domains
   main_x0.domain(d3.extent(data.result, function(d) { return d.date; }));
-  main_x1.domain(data.map(function(d) { return d.portfolio; } ));
-  main_y.domain(d3.extent(data.result, function(d) { return (d.buildFixTime / 1000) / 60 + 2 ; }));
+  main_x1.domain(d3.ascending(data.result, function(d) { return d.portfolio; } ));
+  main_y.domain(d3.extent(data.result, function(d) { return (d.buildFixTime / 1000) / 60 / 60 + 2 ; }));
 
   // flatten out the data
-  var nested = d3.nest().key(function(d) { return d._id.portfolio; })
+  var nested = d3.nest()
+      .key(function(d) { return d._id.portfolio; })
       .entries(data.result);
 
   // Define the bars???
@@ -76,7 +78,33 @@ d3.json('fix_time_by_portfolio.json', function(data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Build Fix Time (Minutes)")
+      .text("Build Fix Time (Hours)")
       .attr("class","y_label");
 
+  var bar = main.selectAll(".bars")
+      .data(nested)
+    .enter().append("g")
+      .attr("transform", function(d) { console.log(d.values); return "translate(0,50)" });
+
+  bar.append("rect")
+      .attr("width", main_x1.rangeBand())
+      .attr("height", "20");
+
+  /*
+  var bars = main.selectAll(".bars")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { console.log(d); return "translate(" + main_x0(20) + ",0)"; });
+
+  bars.selectAll("rect").append("rect")
+      //.data(function(d) { return d.values; })
+    //.enter().append("rect")
+      //.attr("transform", function(d) { console.log(d.date); return "translate(" + main_x0(d.date) + ",0)"; })
+      .attr("width", main_x1.rangeBand())
+      .attr("x", function(d) { return main_x1(d.date); })
+      .attr("y", function(d) { return main_y(d.buildFixTime); })
+      .attr("height", function(d) { return main_height - main_y(d.buildFixTime); })
+      .style("fill", function(d) { return color(d.key); });
+  */
 });

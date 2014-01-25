@@ -1,0 +1,41 @@
+{
+        "result" : [
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 3710497
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 79209205
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 35611663.4
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "portfolio" : "eService"
+                        },
+                        "buildFixTime" : 18273221.333333332
+                }
+        ],
+        "ok" : 1
+}

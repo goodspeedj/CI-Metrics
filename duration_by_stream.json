@@ -1,0 +1,536 @@
+{
+        "result" : [
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "stream" : "Stream_LMcom_2014_02_Development"
+                        },
+                        "buildDuration" : 508594
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "Stream_LMcom_2014_02_Development"
+                        },
+                        "buildDuration" : 584971
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "Stream_LMcom_2014_02_Development"
+                        },
+                        "buildDuration" : 568866
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "Stream_LMcom_2014_02_Development"
+                        },
+                        "buildDuration" : 559672
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_02_Services_Development"
+                        },
+                        "buildDuration" : 2577376.6666666665
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_02_Services_Development"
+                        },
+                        "buildDuration" : 3144736
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_02_Services_Development"
+                        },
+                        "buildDuration" : 2377679.02
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 17,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Client_Development"
+                        },
+                        "buildDuration" : 0
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Client_Development"
+                        },
+                        "buildDuration" : 154932
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Services_Development"
+                        },
+                        "buildDuration" : 2927094.777777778
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Services_Development"
+                        },
+                        "buildDuration" : 3061603.4285714286
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Services_Development"
+                        },
+                        "buildDuration" : 2378353.222222222
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Services_Development"
+                        },
+                        "buildDuration" : 2959055.5
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_03_Services_Development"
+                        },
+                        "buildDuration" : 1131820.3333333333
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_OPC_R5_Services_Development"
+                        },
+                        "buildDuration" : 3093211
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_OPC_R5_Services_Development"
+                        },
+                        "buildDuration" : 3294835
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_OPC_R5_Services_Development"
+                        },
+                        "buildDuration" : 3223821
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_OPC_R6_Services_Development"
+                        },
+                        "buildDuration" : 2065881
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_OPC_R6_Services_Development"
+                        },
+                        "buildDuration" : 2434558
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "Stream_PM_2014_OPC_R6_Services_Development"
+                        },
+                        "buildDuration" : 2316581
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 17,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_02_Client_Stream"
+                        },
+                        "buildDuration" : 589683
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_02_Client_Stream"
+                        },
+                        "buildDuration" : 985447.1126760563
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_02_Client_Stream"
+                        },
+                        "buildDuration" : 996661.612244898
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_02_Client_Stream"
+                        },
+                        "buildDuration" : 1431356.6626506024
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_02_Client_Stream"
+                        },
+                        "buildDuration" : 2813403.964285714
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_02_Client_Stream"
+                        },
+                        "buildDuration" : 974185.5
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 17,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_03_Client_Stream"
+                        },
+                        "buildDuration" : 692880
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_03_Client_Stream"
+                        },
+                        "buildDuration" : 1384302.75
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_03_Client_Stream"
+                        },
+                        "buildDuration" : 1231818.0652173914
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_03_Client_Stream"
+                        },
+                        "buildDuration" : 1524132.6044776118
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_03_Client_Stream"
+                        },
+                        "buildDuration" : 1204278.5526315789
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_03_Client_Stream"
+                        },
+                        "buildDuration" : 795800
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Mobile_Auto_Bind_Client_Stream"
+                        },
+                        "buildDuration" : 1264388.8461538462
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Mobile_Auto_Bind_Client_Stream"
+                        },
+                        "buildDuration" : 1543230.4666666666
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Mobile_Auto_Bind_Client_Stream"
+                        },
+                        "buildDuration" : 713770.5862068966
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Mobile_Auto_Bind_Client_Stream"
+                        },
+                        "buildDuration" : 3071750.5833333335
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_NGPA_R3_Client_Stream"
+                        },
+                        "buildDuration" : 738951.3125
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_NGPA_R3_Client_Stream"
+                        },
+                        "buildDuration" : 990731.625
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_NGPA_R3_Client_Stream"
+                        },
+                        "buildDuration" : 850990.125
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_NGPA_R3_Client_Stream"
+                        },
+                        "buildDuration" : 2799905.4545454546
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Responsive_Billing_Client_Stream"
+                        },
+                        "buildDuration" : 512788.6666666667
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Responsive_Billing_Client_Stream"
+                        },
+                        "buildDuration" : 774285.659574468
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Responsive_Billing_Client_Stream"
+                        },
+                        "buildDuration" : 445086.2
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eComm_2014_Responsive_Billing_Client_Stream"
+                        },
+                        "buildDuration" : 989039.5714285715
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_02_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 1912655
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_02_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 1944553.2857142857
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_02_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 1860274.2
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_02_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 1592696
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 17,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_03_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 2234662
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_03_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 1170723.5
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_03_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 2238212.75
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_03_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 2238871.6666666665
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_03_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 1971480.25
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_03_Monthly_Release_Stream"
+                        },
+                        "buildDuration" : 3662460
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eService_Services_2014_Acc_Level_Billing_Stream"
+                        },
+                        "buildDuration" : 2545594.6
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eService_Services_OPC_R5_Stream"
+                        },
+                        "buildDuration" : 2240130.75
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "stream" : "eService_Services_OPC_R5_Stream"
+                        },
+                        "buildDuration" : 1738129
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "stream" : "eService_Services_OPC_R6_Stream"
+                        },
+                        "buildDuration" : 2335367
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "stream" : "eService_Services_OPC_R6_Stream"
+                        },
+                        "buildDuration" : 2944686
+                }
+        ],
+        "ok" : 1
+}
