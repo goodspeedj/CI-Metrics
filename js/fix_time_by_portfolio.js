@@ -51,16 +51,14 @@ d3.json('fix_time_by_port.json', function(error, data) {
 
   // define the axis domains
   main_x0.domain(d3.extent(data.result, function(d) { return d.date; }));
-  main_x1.domain(d3.ascending(data.result, function(d) { return d.portfolio; } ));
+  //main_x1.domain(d3.extent(data.result, function(d) { console.log(d.portfolio); return d.portfolio; } ));
+  main_x1.domain(["eSales","eService","LMcom","Shared","Analytics"]);
   main_y.domain(d3.extent(data.result, function(d) { return (d.buildFixTime / 1000) / 60 / 60 + 2 ; }));
 
   // flatten out the data
   var nested = d3.nest()
       .key(function(d) { return d._id.portfolio; })
       .entries(data.result);
-
-  // Define the bars???
-
 
   // Add the X axis
   main.append("g")
@@ -84,27 +82,18 @@ d3.json('fix_time_by_port.json', function(error, data) {
   var bar = main.selectAll(".bars")
       .data(nested)
     .enter().append("g")
-      .attr("transform", function(d) { console.log(d.values); return "translate(0,50)" });
+      .attr("class", "g");
+      //.attr("transform", function(d) { console.log(d); return "translate(" + main_x0(d.values) + ",0)"; });
 
-  bar.append("rect")
-      .attr("width", main_x1.rangeBand())
-      .attr("height", "20");
-
-  /*
-  var bars = main.selectAll(".bars")
-      .data(data)
-    .enter().append("g")
-      .attr("class", "g")
-      .attr("transform", function(d) { console.log(d); return "translate(" + main_x0(20) + ",0)"; });
-
-  bars.selectAll("rect").append("rect")
-      //.data(function(d) { return d.values; })
-    //.enter().append("rect")
-      //.attr("transform", function(d) { console.log(d.date); return "translate(" + main_x0(d.date) + ",0)"; })
-      .attr("width", main_x1.rangeBand())
+  bar.selectAll("rect").append("rect")
+      .data(function(d) { return d.values; })
+    .enter().append("rect")
+      .attr("transform", function(d) { console.log(d.date); return "translate(" + main_x0(d.date) + ",0)"; })
+      //.attr("width", main_x1.rangeBand())
+      .attr("width", function(d) { console.log(main_x1.range()); return 50; })
       .attr("x", function(d) { return main_x1(d.date); })
       .attr("y", function(d) { return main_y(d.buildFixTime); })
       .attr("height", function(d) { return main_height - main_y(d.buildFixTime); })
       .style("fill", function(d) { return color(d.key); });
-  */
+  
 });
