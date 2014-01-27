@@ -3,24 +3,6 @@
                 {
                         "_id" : {
                                 "month" : 1,
-                                "day" : 24,
-                                "year" : 2014,
-                                "portfolio" : "Analytics"
-                        },
-                        "buildFixTime" : 12429859
-                },
-                {
-                        "_id" : {
-                                "month" : 1,
-                                "day" : 27,
-                                "year" : 2014,
-                                "portfolio" : "Shared"
-                        },
-                        "buildFixTime" : 192630302
-                },
-                {
-                        "_id" : {
-                                "month" : 1,
                                 "day" : 22,
                                 "year" : 2014,
                                 "portfolio" : "eSales"
@@ -41,9 +23,27 @@
                                 "month" : 1,
                                 "day" : 24,
                                 "year" : 2014,
+                                "portfolio" : "Analytics"
+                        },
+                        "buildFixTime" : 12429859
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
                                 "portfolio" : "eSales"
                         },
                         "buildFixTime" : 25685555.333333332
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "portfolio" : "eService"
+                        },
+                        "buildFixTime" : 27697021.363636363
                 },
                 {
                         "_id" : {
@@ -59,19 +59,20 @@
                                 "month" : 1,
                                 "day" : 27,
                                 "year" : 2014,
-                                "portfolio" : "eSales"
+                                "portfolio" : "Shared"
                         },
-                        "buildFixTime" : 222669666
+                        "buildFixTime" : 192630302
                 },
                 {
                         "_id" : {
                                 "month" : 1,
-                                "day" : 24,
+                                "day" : 27,
                                 "year" : 2014,
-                                "portfolio" : "eService"
+                                "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 27697021.363636363
+                        "buildFixTime" : 158408074.66666666
                 }
         ],
         "ok" : 1
 }
+
