@@ -3,6 +3,24 @@
                 {
                         "_id" : {
                                 "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "portfolio" : "Analytics"
+                        },
+                        "buildFixTime" : 12429859
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 27,
+                                "year" : 2014,
+                                "portfolio" : "Shared"
+                        },
+                        "buildFixTime" : 192630302
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
                                 "day" : 22,
                                 "year" : 2014,
                                 "portfolio" : "eSales"
@@ -25,7 +43,25 @@
                                 "year" : 2014,
                                 "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 35611663.4
+                        "buildFixTime" : 25685555.333333332
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 25,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 15102277
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 27,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 222669666
                 },
                 {
                         "_id" : {
@@ -34,7 +70,7 @@
                                 "year" : 2014,
                                 "portfolio" : "eService"
                         },
-                        "buildFixTime" : 18273221.333333332
+                        "buildFixTime" : 27697021.363636363
                 }
         ],
         "ok" : 1
