@@ -171,7 +171,7 @@ d3.json('duration_by_stream.json', function(data) {
   main_stream.append("text")
       .attr("class", "legendLabel")
       .attr("x", function(d) { return main_width-195; })
-      .attr("y", function(d,i) { return main_height-393 + (i*40); })
+      .attr("y", function(d,i) { return main_height-393 + (i*30); })
       .text( function (d) { return d.key; })
       .attr("font-family", "sans-serif")
       .attr("font-size", "10px")
@@ -182,7 +182,7 @@ d3.json('duration_by_stream.json', function(data) {
       .attr("height",10)
       .attr("width", 25)
       .attr("x",main_width-235)
-      .attr("y", function(d,i) { return main_height-400 + (i*40); })
+      .attr("y", function(d,i) { return main_height-400 + (i*30); })
       .attr("stroke", function(d) { return color(d.key);})
       .attr("fill",function(d) {
           if(d.vis=="1") {
