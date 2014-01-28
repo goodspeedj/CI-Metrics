@@ -164,14 +164,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
           // update the Y axis
           maxY=findMaxY(nested);
           minY=findMinY(nested);
-          main_y.domain([minY-0.2,maxY+0.2]);
+          main_y.domain([minY,maxY]);
 
           main.select(".y.axis").transition().call(main_yAxis);
 
+          // Update the ideal dashed line
           main.selectAll(".ideal").transition()
               .attr("y1", main_y(7200000))
               .attr("y2", main_y(7200000));
 
+          // Show or hide the bars
           main.selectAll("." + d.key + "-group").transition()
               .attr("fill", function(d) {
                   if (d.vis=="1") {
@@ -182,7 +184,11 @@ d3.json('fix_time_by_port.json', function(error, data) {
                   }
               });
 
- 
+          bar.selectAll("rect").transition()
+              .attr("y", function(d) { return main_y(d.buildFixTime); })
+              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+
+          // Update the legend 
           legend.select("rect").transition()
               .attr("fill", function(d) {
                   if (d.vis=="1") {
