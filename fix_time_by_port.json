@@ -3,6 +3,15 @@
                 {
                         "_id" : {
                                 "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 3710497
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
                                 "day" : 23,
                                 "year" : 2014,
                                 "portfolio" : "eSales"
@@ -77,9 +86,18 @@
                                 "month" : 1,
                                 "day" : 28,
                                 "year" : 2014,
+                                "portfolio" : "LMcom"
+                        },
+                        "buildFixTime" : 578188
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 28,
+                                "year" : 2014,
                                 "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 24059724.666666668
+                        "buildFixTime" : 16952145.2
                 },
                 {
                         "_id" : {
@@ -88,7 +106,7 @@
                                 "year" : 2014,
                                 "portfolio" : "eService"
                         },
-                        "buildFixTime" : 22129685.57142857
+                        "buildFixTime" : 55809093.5
                 }
         ],
         "ok" : 1
