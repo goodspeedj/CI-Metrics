@@ -114,6 +114,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("y", function(d) { return main_y(d.buildFixTime); })
       .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
 
+  var line = main.append("line")
+      .attr("class", "ideal")
+      .attr("x1", 0)
+      .attr("y1", main_y(7200000))
+      .attr("x2", main_width-main_margin.right - 195)
+      .attr("y2", main_y(7200000))
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "10,10")
+      .attr("stroke", "gray");
+
   var legend = main.selectAll(".legendLabel")
       .data(nested)
     .enter().append("g")
@@ -157,6 +167,10 @@ d3.json('fix_time_by_port.json', function(error, data) {
           main_y.domain([minY-0.2,maxY+0.2]);
 
           main.select(".y.axis").transition().call(main_yAxis);
+
+          main.selectAll(".ideal").transition()
+              .attr("y1", main_y(7200000))
+              .attr("y2", main_y(7200000));
 
           main.selectAll("." + d.key + "-group").transition()
               .attr("fill", function(d) {
