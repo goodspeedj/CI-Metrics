@@ -30,6 +30,7 @@ var dateFormat = d3.time.format("%Y-%m-%d");
 var main_xAxis = d3.svg.axis()
     .scale(main_x0)
     .tickFormat(dateFormat)
+    .ticks(d3.time.day, 1)
     .orient("bottom");
 
 // Define the Y axis
