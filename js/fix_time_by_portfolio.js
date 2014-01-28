@@ -1,8 +1,14 @@
+var ideal_time = 7200000;
+var legend_offset = 195;
+
 var main_margin = {top: 20, right: 80, bottom: 100, left: 100},
     mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
     main_width = 1300 - main_margin.left - main_margin.right,
     main_height = 525 - main_margin.top - main_margin.bottom,
-    mini_height = 525 - mini_margin.top - mini_margin.bottom;
+    mini_height = 525 - mini_margin.top - mini_margin.bottom,
+    legend_text_offset = {height: 393, width: 195},
+    legend_rect_offset = {height: 400, width: 235},
+    legend_interval = 40;
 
 // Define line colors
 var color = d3.scale.category10();
@@ -15,14 +21,10 @@ var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width-275], 0.2);
 var main_x1 = d3.scale.ordinal();
 
 // y is the fix time scal on the Y axis
-//var main_y  = d3.scale.linear().range([main_height, 0] );
 var main_y  = d3.scale.linear().range([main_height, 0] );
 
-
+// Date format for the X axis
 var dateFormat = d3.time.format("%Y-%m-%d");
-var formatTime = d3.time.format("%X");
-var formatMillis = function(d) { return formatTime(new Date(2012, 0, 1, 0, 0, 0, d)); };
-var y_format = d3.format("1");
 
 // Define the X axis
 var main_xAxis = d3.svg.axis()
@@ -55,16 +57,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
   data.result.forEach(function(d) {
     d.portfolio = d._id.portfolio;
     d.date = new Date(d._id.year, d._id.month-1, d._id.day);
-    //d.vis = 1;
   });
+
 
   // define the axis domains
   main_x0.domain(data.result.map( function(d) { return d.date; } )
-                          .sort(d3.ascending));
+        .sort(d3.ascending));
 
   main_x1.domain(data.result.map( function(d) { return d.portfolio; } )
-                          .sort(d3.ascending))
-       .rangeRoundBands([0, main_x0.rangeBand() ], 0);
+        .sort(d3.ascending))
+        .rangeRoundBands([0, main_x0.rangeBand() ], 0);
 
   main_y.domain([0, d3.max(data.result, function(d) { return d.buildFixTime; })]);
 
@@ -98,6 +100,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .text("Build Fix Time (Minutes)")
       .attr("class","y_label");
 
+  // Create the bars
   var bar = main.selectAll(".bars")
       .data(nested)
     .enter().append("g")
@@ -114,16 +117,18 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("y", function(d) { return main_y(d.buildFixTime); })
       .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
 
+  // Add the ideal fix time line
   var line = main.append("line")
       .attr("class", "ideal")
       .attr("x1", 0)
-      .attr("y1", main_y(7200000))
-      .attr("x2", main_width-main_margin.right - 195)
-      .attr("y2", main_y(7200000))
+      .attr("y1", main_y(ideal_time))    
+      .attr("x2", main_width-main_margin.right - legend_text_offset.width)
+      .attr("y2", main_y(ideal_time))
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "10,10")
       .attr("stroke", "gray");
 
+  // Add the legend
   var legend = main.selectAll(".legendLabel")
       .data(nested)
     .enter().append("g")
@@ -132,8 +137,8 @@ d3.json('fix_time_by_port.json', function(error, data) {
 
   legend.append("text")
       .attr("class", "legendLabel")
-      .attr("x", function(d) { return main_width-195; })
-      .attr("y", function(d,i) { return main_height-393 + (i*40); })
+      .attr("x", function(d) { return main_width - legend_text_offset.width; })
+      .attr("y", function(d,i) { return main_height - legend_text_offset.height + (i * legend_interval); })
       .text( function (d) { return d.key; })
       .attr("font-family", "sans-serif")
       .attr("font-size", "10px")
@@ -142,8 +147,8 @@ d3.json('fix_time_by_port.json', function(error, data) {
   legend.append("rect")
       .attr("height",10)
       .attr("width", 25)
-      .attr("x",main_width-235)
-      .attr("y", function(d,i) { return main_height-400 + (i*40); })
+      .attr("x",main_width - legend_rect_offset.width)
+      .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
       .attr("stroke", function(d) { return color(d.key);})
       .attr("fill", function(d) {
           if(d.vis=="1") {
@@ -170,8 +175,8 @@ d3.json('fix_time_by_port.json', function(error, data) {
 
           // Update the ideal dashed line
           main.selectAll(".ideal").transition()
-              .attr("y1", main_y(7200000))
-              .attr("y2", main_y(7200000));
+              .attr("y1", main_y(ideal_time))
+              .attr("y2", main_y(ideal_time));
 
           // Show or hide the bars
           main.selectAll("." + d.key + "-group").transition()
