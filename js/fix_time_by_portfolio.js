@@ -151,8 +151,14 @@ d3.json('fix_time_by_port.json', function(error, data) {
               d.vis="1";
           }
 
+          // update the Y axis
+          maxY=findMaxY(nested);
+          minY=findMinY(nested);
+          main_y.domain([minY-0.2,maxY+0.2]);
+
+          main.select(".y.axis").transition().call(main_yAxis);
+
           main.selectAll("." + d.key + "-group").transition()
-              //.attr("style", function(d) {
               .attr("fill", function(d) {
                   if (d.vis=="1") {
                       return color(d.key);
@@ -176,3 +182,49 @@ d3.json('fix_time_by_port.json', function(error, data) {
       
   
 });
+
+
+/**
+ * Get the max Y value (build duration)
+ */
+function findMaxY(data) {
+
+    var max = -9999999;
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].vis=="1") {
+            var buildData = data[i].values;   
+
+            for(var j = 0; j < buildData.length; j++) {
+                if (buildData[j].buildFixTime > max){
+                    max=buildData[j].buildFixTime;
+                }
+            }
+        }
+    }
+  return max;
+}
+
+
+/**
+ * Get the min Y value (build duration)   
+ */
+function findMinY(data) {
+
+    var min = 9999999;
+
+    for(var i=0; i < data.length; i++) {
+
+        if (data[i].vis == "1"){
+
+            var buildData = data[i].values;
+
+            for(var j = 0; j < buildData.length; j++) {
+                if (buildData[j].buildFixTime < min) {
+                    min = buildData[j].buildFixTime;
+                }
+            }
+        }
+    }
+  return min;
+}
