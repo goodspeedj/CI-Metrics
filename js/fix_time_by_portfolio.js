@@ -24,13 +24,12 @@ var main_x1 = d3.scale.ordinal();
 var main_y  = d3.scale.linear().range([main_height, 0] );
 
 // Date format for the X axis
-var dateFormat = d3.time.format("%Y-%m-%d");
+var dateFormat = d3.time.format("%a %d");
 
 // Define the X axis
 var main_xAxis = d3.svg.axis()
     .scale(main_x0)
     .tickFormat(dateFormat)
-    .ticks(d3.time.day, 1)
     .orient("bottom");
 
 // Define the Y axis
