@@ -47,6 +47,7 @@ var main = svg.append("g")
     .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
 
 
+
 /*
  * Pull in the data
  */
@@ -104,7 +105,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
   var bar = main.selectAll(".bars")
       .data(nested)
     .enter().append("g")
-      .attr("class", function(d) { return d.key + "-group"; })
+      .attr("class", function(d) { return d.key + "-group bar"; })
       .attr("fill", function(d) { return color(d.key); } );
 
   bar.selectAll("rect").append("rect")
@@ -204,8 +205,33 @@ d3.json('fix_time_by_port.json', function(error, data) {
                   }
               });
       });
+
+      d3.selectAll("input").on("change", toggle);      
+
+      // Turn off and on all bars
+      function toggle() {
+          if (this.value === "enable") {
+              nested.forEach(function(d) {
+                  d.vis = 1;
+              });
+              main.selectAll(".bar").transition()
+                .attr("fill", function(d) { return color(d.key); });
+
+              legend.selectAll("rect").transition()
+                .attr("fill", function(d) { return color(d.key); });
+          }
+          else {
+              nested.forEach(function(d) {
+                  d.vis = 0;
+              });
+              main.selectAll(".bar").transition()
+                .attr("fill", "white");
+
+              legend.selectAll("rect").transition()
+                .attr("fill", "white");
+          }
+      }
       
-  
 });
 
 
