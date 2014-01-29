@@ -271,18 +271,24 @@ d3.json('fix_time_by_port.json', function(error, data) {
       // Switch to a grouped bar orientation
       function transitionGrouped() {
           bar.selectAll("rect").transition()
+              .duration(300)
+              .delay(function(d, i) { return i * 10; })
               .attr("transform", function(d) { return "translate(" + main_x0(d.date) + ",0)"; })
               .attr("width", function(d) { return main_x1.rangeBand(); })
               .attr("x", function(d) { return main_x1(d.portfolio); })
+            .transition()
               .attr("y", function(d) { return main_y(d.buildFixTime); })
-              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });          
+              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });    
       }
 
       function transitionStacked() {
           bar.selectAll("rect").transition()
+              .duration(300)
+              .delay(function(d, i) { return i * 10; })
               .attr("transform", function(d) { return "translate(" + main_x1(d.date) + ",0)"; })
               .attr("width", function(d) { return main_x0.rangeBand(); })
               .attr("x", function(d) { return main_x0(d.date); })
+            .transition()
               .attr("y", function(d) { return main_y(d.y1); })
               .attr("height", function(d) { return main_y(d.y0) - main_y(d.y1); });
       }
