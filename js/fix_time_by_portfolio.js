@@ -169,7 +169,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
           // update the Y axis
           maxY=findMaxY(nested);
           minY=findMinY(nested);
-          main_y.domain([minY,maxY]);
+          main_y.domain([0,maxY]);
 
           main.select(".y.axis").transition().call(main_yAxis);
 

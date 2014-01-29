@@ -97,7 +97,7 @@
                                 "year" : 2014,
                                 "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 16952145.2
+                        "buildFixTime" : 15563893
                 },
                 {
                         "_id" : {
@@ -106,7 +106,52 @@
                                 "year" : 2014,
                                 "portfolio" : "eService"
                         },
-                        "buildFixTime" : 55809093.5
+                        "buildFixTime" : 54849882.35714286
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "portfolio" : "Analytics"
+                        },
+                        "buildFixTime" : 88226552
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "portfolio" : "LMcom"
+                        },
+                        "buildFixTime" : 1180700
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "portfolio" : "Shared"
+                        },
+                        "buildFixTime" : 9140141.333333334
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 128362744.25
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "portfolio" : "eService"
+                        },
+                        "buildFixTime" : 83901330
                 }
         ],
         "ok" : 1
