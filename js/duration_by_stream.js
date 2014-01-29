@@ -260,14 +260,17 @@ function toggle() {
         main.select(".y.axis").call(main_yAxis);
 
         main_stream.select("rect").transition()
+            .delay(function(d, i) { return i * 20; })
             .attr("fill", function(d) { return color(d.key); });
         
         main_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
             .attr("d", function(d) {
                 return main_line(d.values);
             });
 
         mini_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
             .attr("d", function(d) {
                 return mini_line(d.values);
             });
@@ -278,15 +281,17 @@ function toggle() {
           d.vis = 0;
         });
         main_stream.select("rect").transition()
+            .delay(function(d, i) { return i * 20; })
             .attr("fill","white");
 
         main_stream.select("path").transition()
-            .duration(1000)
+            .delay(function(d, i) { return i * 20; })
             .attr("d", function(d) {
                 return null;
             });
 
         mini_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
             .attr("d", function(d) {
                 return null;
             });

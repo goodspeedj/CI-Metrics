@@ -215,6 +215,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
                   d.vis = 1;
               });
               main.selectAll(".bar").transition()
+                .delay(function(d,i) { return i * 50; })
                 .attr("fill", function(d) { return color(d.key); });
 
               legend.selectAll("rect").transition()
@@ -225,6 +226,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
                   d.vis = 0;
               });
               main.selectAll(".bar").transition()
+                .delay(function(d,i) { return i * 50; })
                 .attr("fill", "white");
 
               legend.selectAll("rect").transition()
