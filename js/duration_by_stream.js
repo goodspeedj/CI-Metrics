@@ -240,52 +240,29 @@ d3.json('duration_by_stream.json', function(data) {
                   return "white";
               }
             });
+
+
+          d3.selectAll("input").on("change", toggle);      
+
+          // Turn off and on all lines
+          function toggle() {
+              if (this.value === "enable") {
+                  nested.forEach(function(d) {
+                      d.vis = 1;
+                  });
+                  main_stream.select("rect").transition()
+                    .attr("fill", function(d) { return color(d.key); });
+              }
+              else {
+                  nested.forEach(function(d) {
+                      d.vis = 0;
+                  });
+                  main_stream.select("rect").transition()
+                    .attr("fill","white");
+              }
+          }
       });
 
-/*
-  var focus = main.append("g")
-      .attr("class", "focus")
-      .style("display", "none");
-
-  focus.append("line")
-      .attr("class", "x")
-      .attr("y1", main_y(0) - 6)
-      .attr("y2", main_y(0) + 6)
-
-  focus.append("line")
-      .attr("class", "y0")
-      .attr("x1", main_width - 6) 
-      .attr("x2", main_width + 6);
-
-  focus.append("line")
-      .attr("class", "y1")
-      .attr("x1", main_width - 6)
-      .attr("x2", main_width + 6);
-
-  focus.append("circle")
-      .attr("class", "y0")
-      .attr("r", 4);
-
-  focus.append("text")
-      .attr("class", "y0")
-      .attr("dy", "-1em");
-
-  focus.append("circle")
-      .attr("class", "y1")
-      .attr("r", 4);
-
-  focus.append("text")
-      .attr("class", "y1")
-      .attr("dy", "-1em");
-
-  main.append("rect")
-      .attr("class", "overlay")
-      .attr("width", main_width-215)
-      .attr("height", main_height)
-      .on("mouseover", function() { focus.style("display", null); })
-      .on("mouseout", function() { focus.style("display", "none"); })
-      .on("mousemove", mousemove);   
-*/
 
 function brushed() {
     main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());

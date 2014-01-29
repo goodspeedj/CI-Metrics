@@ -5,7 +5,6 @@
     <title>Build Duration by Stream</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
   </head>
 
@@ -13,8 +12,14 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-12">
           <h3>Build Duration by Stream</h3>
+          <div id="toggle" class="pull-right">
+            <form>
+              <label><input type="radio" name="toggle" value="enable" checked> Enable All</label>
+              <label><input type="radio" name="toggle" value="disable"> Disable All</label>
+            </form>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -27,8 +32,7 @@
     <script src="js/d3.v3.min.js"></script>
     <script src="js/jquery-2.0.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap-switch.min.js"></script>
-    <script src="js/duration_by_stream.js"></script>
+    <script src="js/fix_time_by_portfolio.js"></script>
 
   </body>
 </html>
