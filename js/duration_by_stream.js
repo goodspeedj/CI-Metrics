@@ -241,27 +241,62 @@ d3.json('duration_by_stream.json', function(data) {
               }
             });
 
-
-          d3.selectAll("input").on("change", toggle);      
-
-          // Turn off and on all lines
-          function toggle() {
-              if (this.value === "enable") {
-                  nested.forEach(function(d) {
-                      d.vis = 1;
-                  });
-                  main_stream.select("rect").transition()
-                    .attr("fill", function(d) { return color(d.key); });
-              }
-              else {
-                  nested.forEach(function(d) {
-                      d.vis = 0;
-                  });
-                  main_stream.select("rect").transition()
-                    .attr("fill","white");
-              }
-          }
       });
+
+
+d3.selectAll("input").on("change", toggle);
+
+// toggle the lines on or off
+function toggle() {
+    if (this.value === "enable") {
+        nested.forEach(function(d) {
+          d.vis = 1;
+        });
+
+        maxY=findMaxY(nested);
+        minY=findMinY(nested);
+        main_y.domain([minY-0.2,maxY+0.2]);
+        mini_y.domain([minY-0.2,maxY+0.2]);
+        main.select(".y.axis").call(main_yAxis);
+
+        main_stream.select("rect").transition()
+            .delay(function(d, i) { return i * 20; })
+            .attr("fill", function(d) { return color(d.key); });
+        
+        main_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
+            .attr("d", function(d) {
+                return main_line(d.values);
+            });
+
+        mini_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
+            .attr("d", function(d) {
+                return mini_line(d.values);
+            });
+
+    }
+    else {
+        nested.forEach(function(d) {
+          d.vis = 0;
+        });
+        main_stream.select("rect").transition()
+            .delay(function(d, i) { return i * 20; })
+            .attr("fill","white");
+
+        main_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
+            .attr("d", function(d) {
+                return null;
+            });
+
+        mini_stream.select("path").transition()
+            .delay(function(d, i) { return i * 20; })
+            .attr("d", function(d) {
+                return null;
+            });
+    }
+}
 
 
 function brushed() {

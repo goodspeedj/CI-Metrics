@@ -11,8 +11,11 @@ var main_margin = {top: 20, right: 80, bottom: 100, left: 100},
     legend_interval = 40;
 
 // Define line colors
-var color = d3.scale.category10();
-
+//var color = d3.scale.category10();
+var color = d3.scale.ordinal()
+  .range(["#405774","#6787B0","#B1B17B","#CD6607","#F6A03D"]);
+  //.range(["#48729C","#729DC8","#485712","#B3A72D","#86701D"]);
+  //.range(["#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c"]);
 
 // x0 is the time scale on the X axis
 var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width-275], 0.2); 
@@ -61,6 +64,23 @@ d3.json('fix_time_by_port.json', function(error, data) {
   });
 
 
+  // This is needed for the y0 and y1 values required for the stacked chart
+  var nestByDate = d3.nest()
+        .key(function(d) { return d.date; })
+        .entries(data.result);
+
+
+  nestByDate.forEach(function(d) {
+      var y0 = 0;
+      var y1 = 0;
+      d.vis = 1;
+      d.values.forEach(function(d) {
+          d.y0 = y0 + y1;
+          y1 = d.buildFixTime;
+          d.y1 = y1;
+      });
+  });
+
   // define the axis domains
   main_x0.domain(data.result.map( function(d) { return d.date; } )
         .sort(d3.ascending));
@@ -81,6 +101,8 @@ d3.json('fix_time_by_port.json', function(error, data) {
   nested.forEach(function(d) {
       d.vis = 1;
   });
+
+  console.log(nested);
 
   // Add the X axis
   main.append("g")
@@ -206,15 +228,18 @@ d3.json('fix_time_by_port.json', function(error, data) {
               });
       });
 
-      d3.selectAll("input").on("change", toggle);      
+      d3.selectAll(".offOn").on("change", toggle);      
+      d3.selectAll(".orientation").on("change", orientation);      
 
       // Turn off and on all bars
       function toggle() {
+          
           if (this.value === "enable") {
               nested.forEach(function(d) {
                   d.vis = 1;
               });
               main.selectAll(".bar").transition()
+                .delay(function(d,i) { return i * 50; })
                 .attr("fill", function(d) { return color(d.key); });
 
               legend.selectAll("rect").transition()
@@ -225,11 +250,50 @@ d3.json('fix_time_by_port.json', function(error, data) {
                   d.vis = 0;
               });
               main.selectAll(".bar").transition()
+                .delay(function(d,i) { return i * 50; })
                 .attr("fill", "white");
 
               legend.selectAll("rect").transition()
                 .attr("fill", "white");
           }
+      }
+
+      
+      // Change the orientation of the graph
+      function orientation() {
+          if (this.value === "grouped") {
+              transitionGrouped();
+          }
+          else {
+              transitionStacked();
+          }
+
+      }
+
+
+      // Switch to a grouped bar orientation
+      function transitionGrouped() {
+          bar.selectAll("rect").transition()
+              .duration(300)
+              .delay(function(d, i) { return i * 10; })
+              .attr("transform", function(d) { return "translate(" + main_x0(d.date) + ",0)"; })
+              .attr("width", function(d) { return main_x1.rangeBand(); })
+              .attr("x", function(d) { return main_x1(d.portfolio); })
+            .transition()
+              .attr("y", function(d) { return main_y(d.buildFixTime); })
+              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });    
+      }
+
+      function transitionStacked() {
+          bar.selectAll("rect").transition()
+              .duration(300)
+              .delay(function(d, i) { return i * 10; })
+              .attr("transform", function(d) { return "translate(" + main_x1(d.date) + ",0)"; })
+              .attr("width", function(d) { return main_x0.rangeBand(); })
+              .attr("x", function(d) { return main_x0(d.date); })
+            .transition()
+              .attr("y", function(d) { return main_y(d.y1); })
+              .attr("height", function(d) { return main_y(d.y0) - main_y(d.y1); });
       }
       
 });

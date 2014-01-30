@@ -16,9 +16,13 @@
         <div class="col-md-12">
           <h3>Fix Time by Portfolio</h3>
           <div id="toggle" class="pull-right">
-            <form>
-              <label><input type="radio" name="toggle" value="enable" checked> Enable All</label>
-              <label><input type="radio" name="toggle" value="disable"> Disable All</label>
+            <form id="toggle">
+              <label><input class="offOn" type="radio" name="toggle" value="enable" checked> Enable All</label>
+              <label><input class="offOn" type="radio" name="toggle" value="disable"> Disable All</label>
+            </form>
+            <form id="orientation">
+              <label><input class="orientation" type="radio" name="orientation" value="grouped" checked> Grouped</label>
+              <label><input class="orientation" type="radio" name="orientation" value="stacked"> Stacked</label>
             </form>
           </div>
         </div>
@@ -34,6 +38,7 @@
     <script src="js/jquery-2.0.3.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-switch.min.js"></script>
+    <script src="js/colorbrewer.js"></script>
     <script src="js/fix_time_by_portfolio.js"></script>
 
   </body>
