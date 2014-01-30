@@ -47,10 +47,12 @@ svg.append("defs").append("clipPath")
     .attr("height", main_height);
 
 var main = svg.append("g")
-    .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
+    .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")")
+    .attr("id", "main");
 
 var mini = svg.append("g")
-    .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
+    .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")")
+    .attr("id", "mini");
 
 
 d3.json('duration_by_stream.json', function(data) {

@@ -13,7 +13,8 @@ var main_margin = {top: 20, right: 80, bottom: 100, left: 100},
 // Define line colors
 //var color = d3.scale.category10();
 var color = d3.scale.ordinal()
-  .range(["#405774","#6787B0","#B1B17B","#CD6607","#F6A03D"]);
+    .range(["#5D5CD6","#FF7236","#5FD664","#D64041","#C53AD6"]);
+  //.range(["#405774","#6787B0","#B1B17B","#CD6607","#F6A03D"]);
   //.range(["#48729C","#729DC8","#485712","#B3A72D","#86701D"]);
   //.range(["#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c"]);
 
@@ -38,7 +39,7 @@ var main_xAxis = d3.svg.axis()
 // Define the Y axis
 var main_yAxis = d3.svg.axis()
     .scale(main_y)
-    .tickFormat(function(d) { return d3.round((d / 1000 / 60), 0); } )
+    .tickFormat(function(d) { return d3.round((d / 1000 / 60 / 60), 0); } )
     .orient("left");
 
 // Define main svg element in #graph
@@ -64,6 +65,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
   });
 
 
+
   // This is needed for the y0 and y1 values required for the stacked chart
   var nestByDate = d3.nest()
         .key(function(d) { return d.date; })
@@ -78,8 +80,10 @@ d3.json('fix_time_by_port.json', function(error, data) {
           d.y0 = y0 + y1;
           y1 = d.buildFixTime;
           d.y1 = y1;
+          d.vis = 1;
       });
   });
+  
 
   // define the axis domains
   main_x0.domain(data.result.map( function(d) { return d.date; } )
@@ -120,7 +124,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Build Fix Time (Minutes)")
+      .text("Build Fix Time (Hours)")
       .attr("class","y_label");
 
   // Create the bars
@@ -150,6 +154,14 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "10,10")
       .attr("stroke", "gray");
+
+  main.append("text")
+      .attr("x", 10)
+      .attr("y", main_y(ideal_time) - 5)
+      .attr("fill", "gray")
+      .attr("font-size", "11px")
+      .attr("font-family", "sans-serif")
+      .text("Ideal fix time");
 
   // Add the legend
   var legend = main.selectAll(".legendLabel")
@@ -184,9 +196,15 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .on("click", function(d) { 
           if(d.vis=="1") {
               d.vis="0";
+              d.values.forEach(function(d) {
+                d.vis="0";
+              });
           }
           else{
               d.vis="1";
+              d.values.forEach(function(d) {
+                d.vis="1";
+              });
           }
 
           // update the Y axis
@@ -201,7 +219,8 @@ d3.json('fix_time_by_port.json', function(error, data) {
               .attr("y1", main_y(ideal_time))
               .attr("y2", main_y(ideal_time));
 
-          // Show or hide the bars
+
+          /* Show or hide the bars
           main.selectAll("." + d.key + "-group").transition()
               .attr("fill", function(d) {
                   if (d.vis=="1") {
@@ -211,10 +230,47 @@ d3.json('fix_time_by_port.json', function(error, data) {
                       return "white";
                   }
               });
+          
+          */
+          main.selectAll("." + d.key + "-group").transition()
+              .attr("fill-opacity", function(d) {
+                  if (d.vis=="1") {
+                      return "1.0";
+                  }
+                  else {
+                      return "0.0";
+                  }
+              });
+          
 
-          bar.selectAll("rect").transition()
-              .attr("y", function(d) { return main_y(d.buildFixTime); })
-              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+          if ($('input[name=orientation]:checked').val() == 'grouped') {
+              bar.selectAll("rect").transition()
+                  .attr("y", function(d) { return main_y(d.buildFixTime); })
+                  .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+          }
+          else {
+
+              // This is needed for the y0 and y1 values required for the stacked chart
+              nestByDate.forEach(function(d) {
+                  var y0 = 0;
+                  var y1 = 0;
+                  console.log(d.key);
+                  d.values.forEach(function(d) {
+                      if (d.vis == 1) {
+                          console.log("==============" + d.portfolio);
+                          d.y0 = y0 + y1;
+                          y1 = d.buildFixTime;
+                          console.log(y0);
+                          d.y1 = y1;
+                          console.log(y1);
+                      }
+                  });
+              });
+
+              bar.selectAll("rect").transition()
+                  .attr("y", function(d) { return main_y(d.y1); })
+                  .attr("height", function(d) { return main_y(d.y0) - main_y(d.y1); });
+          }
 
           // Update the legend 
           legend.select("rect").transition()
@@ -284,7 +340,9 @@ d3.json('fix_time_by_port.json', function(error, data) {
               .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });    
       }
 
+      // Switch to a stacked orientation
       function transitionStacked() {
+          updateStack();
           bar.selectAll("rect").transition()
               .duration(300)
               .delay(function(d, i) { return i * 10; })
@@ -294,6 +352,25 @@ d3.json('fix_time_by_port.json', function(error, data) {
             .transition()
               .attr("y", function(d) { return main_y(d.y1); })
               .attr("height", function(d) { return main_y(d.y0) - main_y(d.y1); });
+      }
+
+      // This function updates the y0 and y1 values after sections are enabled or disabled
+      function updateStack() {
+          nestByDate.forEach(function(d) {
+              var y0 = 0;
+              var y1 = 0;
+              console.log(d.key);
+              d.values.forEach(function(d) {
+                  if (d.vis == 1) {
+                      console.log("==============" + d.portfolio);
+                      d.y0 = y0 + y1;
+                      y1 = d.buildFixTime;
+                      console.log(y0);
+                      d.y1 = y1;
+                      console.log(y1);
+                  }
+              });
+          });    
       }
       
 });

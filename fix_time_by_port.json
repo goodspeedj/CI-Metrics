@@ -124,7 +124,7 @@
                                 "year" : 2014,
                                 "portfolio" : "Shared"
                         },
-                        "buildFixTime" : 9140141.333333334
+                        "buildFixTime" : 9851507.4
                 },
                 {
                         "_id" : {
@@ -133,7 +133,16 @@
                                 "year" : 2014,
                                 "portfolio" : "eService"
                         },
-                        "buildFixTime" : 83901330
+                        "buildFixTime" : 44009169
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 61355253.333333336
                 },
                 {
                         "_id" : {
@@ -147,13 +156,21 @@
                 {
                         "_id" : {
                                 "month" : 1,
-                                "day" : 29,
+                                "day" : 30,
                                 "year" : 2014,
                                 "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 105284801.4
+                        "buildFixTime" : 83698051.8
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 30,
+                                "year" : 2014,
+                                "portfolio" : "eService"
+                        },
+                        "buildFixTime" : 155228993.75
                 }
         ],
         "ok" : 1
 }
-
