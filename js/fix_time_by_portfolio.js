@@ -251,21 +251,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
           else {
 
               // This is needed for the y0 and y1 values required for the stacked chart
-              nestByDate.forEach(function(d) {
-                  var y0 = 0;
-                  var y1 = 0;
-                  console.log(d.key);
-                  d.values.forEach(function(d) {
-                      if (d.vis == 1) {
-                          console.log("==============" + d.portfolio);
-                          d.y0 = y0 + y1;
-                          y1 = d.buildFixTime;
-                          console.log(y0);
-                          d.y1 = y1;
-                          console.log(y1);
-                      }
-                  });
-              });
+              updateStack();
 
               bar.selectAll("rect").transition()
                   .attr("y", function(d) { return main_y(d.y1); })
