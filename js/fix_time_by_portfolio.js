@@ -11,8 +11,11 @@ var main_margin = {top: 20, right: 80, bottom: 100, left: 100},
     legend_interval = 40;
 
 // Define line colors
-var color = d3.scale.category10();
-
+//var color = d3.scale.category10();
+var color = d3.scale.ordinal()
+  .range(["#405774","#6787B0","#B1B17B","#CD6607","#F6A03D"]);
+  //.range(["#48729C","#729DC8","#485712","#B3A72D","#86701D"]);
+  //.range(["#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c"]);
 
 // x0 is the time scale on the X axis
 var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width-275], 0.2); 
