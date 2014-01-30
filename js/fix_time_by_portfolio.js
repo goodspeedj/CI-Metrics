@@ -20,12 +20,15 @@ var color = d3.scale.ordinal()
 
 // x0 is the time scale on the X axis
 var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width-275], 0.2); 
+var mini_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width-275], 0.2);
 
 // x1 is the portfolio scale on the X axis
 var main_x1 = d3.scale.ordinal();
+var mini_x1 = d3.scale.ordinal();
 
 // y is the fix time scal on the Y axis
 var main_y  = d3.scale.linear().range([main_height, 0] );
+var mini_y  = d3.scale.linear().range([mini_height, 0] );
 
 // Date format for the X axis
 var dateFormat = d3.time.format("%a %d");
@@ -33,6 +36,11 @@ var dateFormat = d3.time.format("%a %d");
 // Define the X axis
 var main_xAxis = d3.svg.axis()
     .scale(main_x0)
+    .tickFormat(dateFormat)
+    .orient("bottom");
+
+var mini_xAxis = d3.svg.axis()
+    .scale(mini_x0)
     .tickFormat(dateFormat)
     .orient("bottom");
 
@@ -49,6 +57,9 @@ var svg = d3.select("#graph").append("svg")
 
 var main = svg.append("g")
     .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
+
+var mini = svg.append("g")
+    .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
 
 
 
@@ -88,12 +99,18 @@ d3.json('fix_time_by_port.json', function(error, data) {
   // define the axis domains
   main_x0.domain(data.result.map( function(d) { return d.date; } )
         .sort(d3.ascending));
+  mini_x0.domain(data.result.map( function(d) { return d.date; } )
+        .sort(d3.ascending));
 
   main_x1.domain(data.result.map( function(d) { return d.portfolio; } )
         .sort(d3.ascending))
         .rangeRoundBands([0, main_x0.rangeBand() ], 0);
+  mini_x1.domain(data.result.map( function(d) { return d.portfolio; } )
+        .sort(d3.ascending))
+        .rangeRoundBands([0, main_x0.rangeBand() ], 0);
 
   main_y.domain([0, d3.max(data.result, function(d) { return d.buildFixTime; })]);
+  mini_y.domain([0, d3.max(data.result, function(d) { return d.buildFixTime; })]);
 
 
   // flatten out the data
@@ -105,8 +122,6 @@ d3.json('fix_time_by_port.json', function(error, data) {
   nested.forEach(function(d) {
       d.vis = 1;
   });
-
-  console.log(nested);
 
   // Add the X axis
   main.append("g")
@@ -127,6 +142,12 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .text("Build Fix Time (Hours)")
       .attr("class","y_label");
 
+  // Add the mini x axis
+  mini.append("g")
+      .attr("class", "x axis mini_axis")
+      .attr("transform", "translate(0," + mini_height + ")")
+      .call(mini_xAxis);
+
   // Create the bars
   var bar = main.selectAll(".bars")
       .data(nested)
@@ -143,6 +164,23 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("x", function(d) { return main_x1(d.portfolio); })
       .attr("y", function(d) { return main_y(d.buildFixTime); })
       .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+
+  // Create the bars
+  var mini_bar = main.selectAll(".bars")
+      .data(nested)
+    .enter().append("g")
+      .attr("class", function(d) { return d.key + "-group bar"; })
+      .attr("fill", function(d) { return color(d.key); } );
+
+  mini_bar.selectAll("rect").append("rect")
+      .data(function(d) { return d.values; })
+    .enter().append("rect")
+      .attr("class", function(d) { return d.portfolio; })
+      .attr("transform", function(d) { return "translate(" + mini_x0(d.date) + ",0)"; })
+      .attr("width", function(d) { return mini_x1.rangeBand(); })
+      .attr("x", function(d) { return mini_x1(d.portfolio); })
+      .attr("y", function(d) { return mini_y(d.buildFixTime); })
+      .attr("height", function(d) { return mini_height - mini_y(d.buildFixTime); });
 
   // Add the ideal fix time line
   var line = main.append("line")
@@ -211,28 +249,29 @@ d3.json('fix_time_by_port.json', function(error, data) {
           maxY=findMaxY(nested);
           minY=findMinY(nested);
           main_y.domain([0,maxY]);
+          mini_y.domain([0,maxY]);
 
           main.select(".y.axis").transition().call(main_yAxis);
+          mini.select(".y.axis").transition().call(mini_yAxis);
 
           // Update the ideal dashed line
           main.selectAll(".ideal").transition()
               .attr("y1", main_y(ideal_time))
               .attr("y2", main_y(ideal_time));
 
-
-          /* Show or hide the bars
+          
+          // Show or hide the bars
           main.selectAll("." + d.key + "-group").transition()
-              .attr("fill", function(d) {
+              .attr("fill-opacity", function(d) {
                   if (d.vis=="1") {
-                      return color(d.key);
+                      return "1.0";
                   }
                   else {
-                      return "white";
+                      return "0.0";
                   }
               });
-          
-          */
-          main.selectAll("." + d.key + "-group").transition()
+
+          mini.selectAll("." + d.key + "-group").transition()
               .attr("fill-opacity", function(d) {
                   if (d.vis=="1") {
                       return "1.0";
@@ -243,10 +282,15 @@ d3.json('fix_time_by_port.json', function(error, data) {
               });
           
 
+          // Change the transition calc based on the type of chart
           if ($('input[name=orientation]:checked').val() == 'grouped') {
               bar.selectAll("rect").transition()
                   .attr("y", function(d) { return main_y(d.buildFixTime); })
                   .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+
+              mini_bar.selectAll("rect").transition()
+                  .attr("y", function(d) { return mini_y(d.buildFixTime); })
+                  .attr("height", function(d) { return mini_height - mini_y(d.buildFixTime); });
           }
           else {
 
@@ -256,6 +300,10 @@ d3.json('fix_time_by_port.json', function(error, data) {
               bar.selectAll("rect").transition()
                   .attr("y", function(d) { return main_y(d.y1); })
                   .attr("height", function(d) { return main_y(d.y0) - main_y(d.y1); });
+
+              mini_bar.selectAll("rect").transition()
+                  .attr("y", function(d) { return mini_y(d.y1); })
+                  .attr("height", function(d) { return mini_y(d.y0) - mini_y(d.y1); });
           }
 
           // Update the legend 
@@ -284,6 +332,10 @@ d3.json('fix_time_by_port.json', function(error, data) {
                 .delay(function(d,i) { return i * 50; })
                 .attr("fill", function(d) { return color(d.key); });
 
+              mini.selectAll(".bar").transition()
+                .delay(function(d,i) { return i * 50; })
+                .attr("fill", function(d) { return color(d.key); });
+
               legend.selectAll("rect").transition()
                 .attr("fill", function(d) { return color(d.key); });
           }
@@ -292,6 +344,10 @@ d3.json('fix_time_by_port.json', function(error, data) {
                   d.vis = 0;
               });
               main.selectAll(".bar").transition()
+                .delay(function(d,i) { return i * 50; })
+                .attr("fill", "white");
+
+              mini.selectAll(".bar").transition()
                 .delay(function(d,i) { return i * 50; })
                 .attr("fill", "white");
 
@@ -324,6 +380,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
             .transition()
               .attr("y", function(d) { return main_y(d.buildFixTime); })
               .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });    
+
+          mini_bar.selectAll("rect").transition()
+              .duration(300)
+              .delay(function(d, i) { return i * 10; })
+              .attr("transform", function(d) { return "translate(" + mini_x0(d.date) + ",0)"; })
+              .attr("width", function(d) { return mini_x1.rangeBand(); })
+              .attr("x", function(d) { return mini_x1(d.portfolio); })
+            .transition()
+              .attr("y", function(d) { return mini_y(d.buildFixTime); })
+              .attr("height", function(d) { return mini_height - mini_y(d.buildFixTime); });  
       }
 
       // Switch to a stacked orientation
@@ -338,6 +404,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
             .transition()
               .attr("y", function(d) { return main_y(d.y1); })
               .attr("height", function(d) { return main_y(d.y0) - main_y(d.y1); });
+
+          mini_bar.selectAll("rect").transition()
+              .duration(300)
+              .delay(function(d, i) { return i * 10; })
+              .attr("transform", function(d) { return "translate(" + mini_x1(d.date) + ",0)"; })
+              .attr("width", function(d) { return mini_x0.rangeBand(); })
+              .attr("x", function(d) { return mini_x0(d.date); })
+            .transition()
+              .attr("y", function(d) { return mini_y(d.y1); })
+              .attr("height", function(d) { return mini_y(d.y0) - mini_y(d.y1); });
       }
 
       // This function updates the y0 and y1 values after sections are enabled or disabled
@@ -358,6 +434,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
               });
           });    
       }
+
+      /*
+      function brushed() {
+          main_x0.domain(brush.empty() ? mini_x0.domain() : brush.extent());
+          bar.select("rect").attr("d", function(d) {
+            return main_line(d.values)
+          });
+          main.select(".x.axis").call(main_xAxis);
+      }
+      */
       
 });
 
