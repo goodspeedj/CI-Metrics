@@ -113,6 +113,11 @@ d3.json('fix_time_by_port.json', function(error, data) {
   mini_y.domain([0, d3.max(data.result, function(d) { return d.buildFixTime; })]);
 
 
+  // Create brush for mini graph
+  var brush = d3.svg.brush()
+      .x(mini_x0)
+      .on("brush", brushed);
+
   // flatten out the data
   var nested = d3.nest()
       .key(function(d) { return d._id.portfolio; })
@@ -147,6 +152,13 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("class", "x axis mini_axis")
       .attr("transform", "translate(0," + mini_height + ")")
       .call(mini_xAxis);
+
+  mini.append("g")
+      .attr("class", "x brush")
+      .call(brush)
+    .selectAll("rect")
+      .attr("y", -10)
+      .attr("height", mini_height + 15);
 
   // Create the bars
   var bar = main.selectAll(".bars")
@@ -420,29 +432,27 @@ d3.json('fix_time_by_port.json', function(error, data) {
           nestByDate.forEach(function(d) {
               var y0 = 0;
               var y1 = 0;
-              console.log(d.key);
               d.values.forEach(function(d) {
                   if (d.vis == 1) {
-                      console.log("==============" + d.portfolio);
                       d.y0 = y0 + y1;
                       y1 = d.buildFixTime;
-                      console.log(y0);
                       d.y1 = y1;
-                      console.log(y1);
                   }
               });
           });    
       }
 
-      /*
+      
       function brushed() {
           main_x0.domain(brush.empty() ? mini_x0.domain() : brush.extent());
-          bar.select("rect").attr("d", function(d) {
-            return main_line(d.values)
-          });
+
+          bar.selectAll("rect")
+              .attr("width", function(d) { return main_x1.rangeBand(); })
+              .attr("x", function(d) { return main_x1(d.portfolio); })
+              .attr("y", function(d) { return main_y(d.buildFixTime); })
+              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
           main.select(".x.axis").call(main_xAxis);
       }
-      */
       
 });
 
