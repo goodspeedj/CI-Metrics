@@ -158,9 +158,18 @@
                                 "month" : 1,
                                 "day" : 30,
                                 "year" : 2014,
+                                "portfolio" : "Shared"
+                        },
+                        "buildFixTime" : 8677718
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 30,
+                                "year" : 2014,
                                 "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 83698051.8
+                        "buildFixTime" : 69892526.75
                 },
                 {
                         "_id" : {
@@ -169,7 +178,7 @@
                                 "year" : 2014,
                                 "portfolio" : "eService"
                         },
-                        "buildFixTime" : 155228993.75
+                        "buildFixTime" : 136007838.5
                 }
         ],
         "ok" : 1

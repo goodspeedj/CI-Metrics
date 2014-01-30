@@ -1,7 +1,7 @@
 var ideal_time = 7200000;
 var legend_offset = 195;
 
-var main_margin = {top: 20, right: 80, bottom: 100, left: 100},
+var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
     mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
     main_width = 1300 - main_margin.left - main_margin.right,
     main_height = 525 - main_margin.top - main_margin.bottom,
@@ -166,10 +166,10 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
 
   // Create the bars
-  var mini_bar = main.selectAll(".bars")
+  var mini_bar = mini.selectAll(".mini_bars")
       .data(nested)
     .enter().append("g")
-      .attr("class", function(d) { return d.key + "-group bar"; })
+      .attr("class", function(d) { return d.key + "-group mini_bar"; })
       .attr("fill", function(d) { return color(d.key); } );
 
   mini_bar.selectAll("rect").append("rect")
