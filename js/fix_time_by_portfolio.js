@@ -252,7 +252,6 @@ d3.json('fix_time_by_port.json', function(error, data) {
           mini_y.domain([0,maxY]);
 
           main.select(".y.axis").transition().call(main_yAxis);
-          mini.select(".y.axis").transition().call(mini_yAxis);
 
           // Update the ideal dashed line
           main.selectAll(".ideal").transition()
