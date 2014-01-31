@@ -167,7 +167,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("class", function(d) { return d.key + "-group bar"; })
       .attr("fill", function(d) { return color(d.key); } );
 
-  bar.selectAll("rect").append("rect")
+  bar.selectAll("rect")
       .data(function(d) { return d.values; })
     .enter().append("rect")
       .attr("class", function(d) { return d.portfolio; })
@@ -184,7 +184,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("class", function(d) { return d.key + "-group mini_bar"; })
       .attr("fill", function(d) { return color(d.key); } );
 
-  mini_bar.selectAll("rect").append("rect")
+  mini_bar.selectAll("rect")
       .data(function(d) { return d.values; })
     .enter().append("rect")
       .attr("class", function(d) { return d.portfolio; })
@@ -445,12 +445,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
       
       function brushed() {
           main_x0.domain(brush.empty() ? mini_x0.domain() : brush.extent());
-
+        
+          //main.select("rect")
+              //.attr("x", function(d) { return d.values; })
+              //.attr("width", function(d) { return d.values; });
           bar.selectAll("rect")
               .attr("width", function(d) { return main_x1.rangeBand(); })
-              .attr("x", function(d) { return main_x1(d.portfolio); })
-              .attr("y", function(d) { return main_y(d.buildFixTime); })
-              .attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+              .attr("x", function(d) { return main_x1(d.portfolio); });
+              //.attr("y", function(d) { console.log(d); return main_y(d.buildFixTime); })
+              //.attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
+          
           main.select(".x.axis").call(main_xAxis);
       }
       

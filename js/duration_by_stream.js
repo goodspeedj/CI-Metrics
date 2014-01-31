@@ -142,6 +142,7 @@ d3.json('duration_by_stream.json', function(data) {
   main_stream.append("path")
       .style("stroke", function(d) { return color(d.key); })
       .attr("clip-path", "url(#clip)")
+      .attr("class", function(d) { return d.key + " lines"; })
       .on("mouseover", function(d) {
  
           // Make the line bold
@@ -219,6 +220,7 @@ d3.json('duration_by_stream.json', function(data) {
   main_stream.append("rect")
       .attr("height",10)
       .attr("width", 25)
+      .attr("class", function(d) { return d.key; })
       .attr("x",main_width-235)
       .attr("y", function(d,i) { return main_height-400 + (i*30); })
       .attr("stroke", function(d) { return color(d.key);})
@@ -229,6 +231,27 @@ d3.json('duration_by_stream.json', function(data) {
           else {
               return "white";
           }
+      })
+      .on("mouseover", function(d) {
+          // Make the line bold
+          d3.select(this).transition().duration(200)
+              .style("stroke-width", "4px");
+
+          d3.select("path." + d.key).transition().duration(200)
+            .style("stroke-width", "4px");
+
+          var otherlines = $("path.lines").not("path." + d.key);
+          d3.selectAll(otherlines).transition().duration(200).style("opacity", .4);
+      })
+      .on("mouseout", function(d) {
+          d3.select(this).transition().duration(100)
+            .style("stroke-width", "2px");
+
+          d3.select("path." + d.key).transition().duration(100)
+            .style("stroke-width", "2px");
+
+          var otherlines = $("path.lines").not("path." + d.key);
+          d3.selectAll(otherlines).transition().duration(100).style("opacity", 1);
       })
       .on("click", function(d) {
           if(d.vis=="1") {
