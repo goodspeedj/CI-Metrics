@@ -26,7 +26,7 @@ var mini_xAxis = d3.svg.axis()
 
 // Setup Y axis
 var main_y = d3.scale.linear()
-    .range([main_height + 10, 0]);
+    .range([main_height, 0]);
 
 var mini_y = d3.scale.linear()
     .range([mini_height, 0]);
@@ -54,6 +54,10 @@ var mini = svg.append("g")
     .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")")
     .attr("id", "mini");
 
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 
 d3.json('duration_by_stream.json', function(data) {
 
@@ -64,8 +68,8 @@ d3.json('duration_by_stream.json', function(data) {
   // Create the axis domains
   main_x.domain(d3.extent(data.result, function(d) { return d.date; }));
   mini_x.domain(d3.extent(data.result, function(d) { return d.date; }))
-  main_y.domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2 ; }))
-  mini_y.domain(d3.extent(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2; }))
+  main_y.domain([0, d3.max(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2; })]);  
+  mini_y.domain([0, d3.max(data.result, function(d) { return (d.buildDuration / 1000) / 60 + 2; })]);  
 
 
   // Create brush for mini graph
@@ -138,6 +142,38 @@ d3.json('duration_by_stream.json', function(data) {
   main_stream.append("path")
       .style("stroke", function(d) { return color(d.key); })
       .attr("clip-path", "url(#clip)")
+      .on("mouseover", function(d) {
+ 
+          // Make the line bold
+          d3.select(this).transition().duration(200)
+            .style("stroke-width", "4px");
+          
+          // Fade out other lines
+          var otherlines = $('path').not(this);
+          d3.selectAll(otherlines).transition().duration(200).style("opacity", .4);
+
+          // Show tooltip
+          tooltip.transition().duration(200)
+              .style("opacity", .8);
+          tooltip
+              .html(d.key)
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY - 25) + "px");
+      })
+      .on("mouseout", function(d) {
+
+          // Make the line normal again
+          d3.select(this).transition().duration(100)
+            .style("stroke-width", "2px");
+
+          // Make other lines normal again
+          var otherlines = $('path').not(this);
+          d3.selectAll(otherlines).transition().duration(100)
+            .style("opacity", 1);          
+
+          // Hide the tool tip
+          tooltip.transition().duration(500).style("opacity", 0);
+      })
       .attr("d", function(d) { 
           // Draw the lines or not depending on d.vis
           if (d.vis=="1") {
@@ -301,13 +337,18 @@ function toggle() {
 }
 
 
-function brushed() {
-    main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
-    main_stream.select("path").attr("d", function(d) {
-      return main_line(d.values)
-    });
-    main.select(".x.axis").call(main_xAxis);
-}
+  function brushed() {
+      main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
+       main_stream.select("path").attr("d", function(d) {
+        return main_line(d.values)
+      });
+      main.select(".x.axis").call(main_xAxis);
+  }
+
+  function toolTip() {
+      var mouse = d3.svg.mouse(this);
+      d3.select("path").html("test");
+  }
 
 
 });
