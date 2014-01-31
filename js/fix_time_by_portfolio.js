@@ -61,7 +61,9 @@ var main = svg.append("g")
 var mini = svg.append("g")
     .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
 
-
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
 /*
  * Pull in the data
@@ -165,7 +167,25 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .data(nested)
     .enter().append("g")
       .attr("class", function(d) { return d.key + "-group bar"; })
-      .attr("fill", function(d) { return color(d.key); } );
+      .attr("fill", function(d) { return color(d.key); } )
+      .on("mouseover", function(d) {
+          var otherbars = $('rect').not('rect.' + d.key);
+          d3.selectAll(otherbars).transition().duration(200).style("opacity", .4);
+
+          tooltip.transition().duration(200)
+              .style("opacity", .8);
+          tooltip
+              .html(d.key)
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY - 25) + "px");
+      })
+      .on("mouseout", function(d) {
+          var otherbars = $('rect').not('rect.' + d.key);
+          d3.selectAll(otherbars).transition().duration(200).style("opacity", 1);
+
+          tooltip.transition().duration(500).style("opacity", 0);
+ 
+      });
 
   bar.selectAll("rect")
       .data(function(d) { return d.values; })
@@ -234,6 +254,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
       .attr("width", 25)
       .attr("x",main_width - legend_rect_offset.width)
       .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
+      .attr("class", function(d) { return d.key; })
       .attr("stroke", function(d) { return color(d.key);})
       .attr("fill", function(d) {
           if(d.vis=="1") {
