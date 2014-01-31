@@ -264,6 +264,21 @@ d3.json('fix_time_by_port.json', function(error, data) {
               return "white";
           }
       })
+      .on("mouseover", function(d) {
+          // Make the line bold
+          d3.select(this).transition().duration(200)
+              .style("stroke-width", "4px");
+
+          var otherbars = $('rect').not('rect.' + d.key);
+          d3.selectAll(otherbars).transition().duration(200).style("opacity", .4);
+      })
+      .on("mouseout", function(d) {
+          d3.select(this).transition().duration(100)
+            .style("stroke-width", "2px");
+
+          var otherbars = $('rect').not('rect.' + d.key);
+          d3.selectAll(otherbars).transition().duration(200).style("opacity", 1);
+      })
       .on("click", function(d) { 
           if(d.vis=="1") {
               d.vis="0";
