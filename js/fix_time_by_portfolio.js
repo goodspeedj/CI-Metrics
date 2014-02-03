@@ -14,9 +14,6 @@ var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
 //var color = d3.scale.category10();
 var color = d3.scale.ordinal()
     .range(["#5D5CD6","#FF7236","#5FD664","#D64041","#C53AD6"]);
-  //.range(["#405774","#6787B0","#B1B17B","#CD6607","#F6A03D"]);
-  //.range(["#48729C","#729DC8","#485712","#B3A72D","#86701D"]);
-  //.range(["#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c"]);
 
 // x0 is the time scale on the X axis
 var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width-275], 0.2); 
@@ -29,6 +26,9 @@ var mini_x1 = d3.scale.ordinal();
 // y is the fix time scal on the Y axis
 var main_y  = d3.scale.linear().range([main_height, 0] );
 var mini_y  = d3.scale.linear().range([mini_height, 0] );
+
+// xZoom is the scale for the brush/zoom 
+var main_xZoom = d3.scale.linear().range([0, main_width - 275]).domain([0, main_width - 275]);
 
 // Date format for the X axis
 var dateFormat = d3.time.format("%a %d");
@@ -55,6 +55,12 @@ var main_yAxis = d3.svg.axis()
 var svg = d3.select("#graph").append("svg")
     .attr("width", main_width + main_margin.left + main_margin.right)
     .attr("height", main_height + main_margin.top + main_margin.bottom);
+
+svg.append("defs").append("clipPath")
+    .attr("id", "clip")
+  .append("rect")
+    .attr("width", main_width-275)
+    .attr("height", main_height);
 
 var main = svg.append("g")
     .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
@@ -134,6 +140,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
   // Add the X axis
   main.append("g")
       .attr("class", "x axis")
+      .attr("clip-path", "url(#clip)")
       .attr("transform", "translate(0," + main_height + ")")
       .call(main_xAxis);
 
@@ -169,6 +176,7 @@ d3.json('fix_time_by_port.json', function(error, data) {
     .enter().append("g")
       .attr("class", function(d) { return d.key + "-group bar"; })
       .attr("fill", function(d) { return color(d.key); } )
+      .attr("clip-path", "url(#clip)")
       .on("mouseover", function(d) {
           var otherbars = $('rect').not('rect.' + d.key);
           d3.selectAll(otherbars).transition().duration(200).style("opacity", .4);
@@ -479,21 +487,33 @@ d3.json('fix_time_by_port.json', function(error, data) {
           });    
       }
 
-      
       function brushed() {
-          main_x0.domain(brush.empty() ? mini_x0.domain() : brush.extent());
-        
-          //main.select("rect")
-              //.attr("x", function(d) { return d.values; })
-              //.attr("width", function(d) { return d.values; });
-          bar.selectAll("rect")
-              .attr("width", function(d) { return main_x1.rangeBand(); })
-              .attr("x", function(d) { return main_x1(d.portfolio); });
-              //.attr("y", function(d) { console.log(d); return main_y(d.buildFixTime); })
-              //.attr("height", function(d) { return main_height - main_y(d.buildFixTime); });
-          
-          main.select(".x.axis").call(main_xAxis);
-      }
+        console.log("here");
+        var originalRange = main_xZoom.range();
+        main_xZoom.domain(brush.empty() ? 
+                     originalRange: 
+                     brush.extent() );
+
+        main_x0.rangeRoundBands( [
+            main_xZoom(originalRange[0]),
+            main_xZoom(originalRange[1])
+            ], 0.2);
+
+        main_x1.rangeRoundBands([0, main_x0.rangeBand()], 0);
+
+        bar.selectAll("rect")
+            .attr("transform", function (d) {
+                return "translate(" + main_x0(d.date) + ",0)";
+            })
+            .attr("width", function (d) {
+                return main_x1.rangeBand();
+            })
+            .attr("x", function (d) {
+                return main_x1(d.portfolio);
+            });
+
+        main.select("g.x.axis").call(main_xAxis);
+    } 
       
 });
 
