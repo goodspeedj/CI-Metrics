@@ -160,7 +160,7 @@
                                 "year" : 2014,
                                 "portfolio" : "Shared"
                         },
-                        "buildFixTime" : 8677718
+                        "buildFixTime" : 9669647
                 },
                 {
                         "_id" : {
@@ -169,7 +169,7 @@
                                 "year" : 2014,
                                 "portfolio" : "eSales"
                         },
-                        "buildFixTime" : 69892526.75
+                        "buildFixTime" : 67861647.1
                 },
                 {
                         "_id" : {
@@ -179,7 +179,62 @@
                                 "portfolio" : "eService"
                         },
                         "buildFixTime" : 136007838.5
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 31,
+                                "year" : 2014,
+                                "portfolio" : "Shared"
+                        },
+                        "buildFixTime" : 13330288
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 31,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 28190399.272727273
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 31,
+                                "year" : 2014,
+                                "portfolio" : "eService"
+                        },
+                        "buildFixTime" : 54946606.2
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 1,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 13052870
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 3,
+                                "year" : 2014,
+                                "portfolio" : "eSales"
+                        },
+                        "buildFixTime" : 283568451.5
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 3,
+                                "year" : 2014,
+                                "portfolio" : "eService"
+                        },
+                        "buildFixTime" : 338877668
                 }
         ],
         "ok" : 1
 }
+
