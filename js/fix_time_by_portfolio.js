@@ -488,7 +488,6 @@ d3.json('fix_time_by_port.json', function(error, data) {
       }
 
       function brushed() {
-        console.log("here");
         var originalRange = main_xZoom.range();
         main_xZoom.domain(brush.empty() ? 
                      originalRange: 
@@ -501,16 +500,31 @@ d3.json('fix_time_by_port.json', function(error, data) {
 
         main_x1.rangeRoundBands([0, main_x0.rangeBand()], 0);
 
-        bar.selectAll("rect")
-            .attr("transform", function (d) {
-                return "translate(" + main_x0(d.date) + ",0)";
-            })
-            .attr("width", function (d) {
-                return main_x1.rangeBand();
-            })
-            .attr("x", function (d) {
-                return main_x1(d.portfolio);
-            });
+
+        if ($('input[name=orientation]:checked').val() == 'grouped') {
+            bar.selectAll("rect")
+                .attr("transform", function (d) {
+                    return "translate(" + main_x0(d.date) + ",0)";
+                })
+                .attr("width", function (d) {
+                    return main_x1.rangeBand();
+                })
+                .attr("x", function (d) {
+                    return main_x1(d.portfolio);
+                });
+        }
+        else {
+            bar.selectAll("rect")
+                .attr("transform", function (d) {
+                    return "translate(" + main_x0(d.date) + ",0)";
+                })
+                .attr("width", function (d) {
+                    return main_x0.rangeBand();
+                })
+                .attr("x", function (d) {
+                    return main_x1(d.date);
+                });
+        }
 
         main.select("g.x.axis").call(main_xAxis);
     } 
