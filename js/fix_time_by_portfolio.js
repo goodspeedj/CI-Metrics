@@ -36,6 +36,7 @@ var dateFormat = d3.time.format("%a %d");
 // Define the X axis
 var main_xAxis = d3.svg.axis()
     .scale(main_x0)
+    .ticks(10)
     .tickFormat(dateFormat)
     .orient("bottom");
 

@@ -16,12 +16,12 @@ var mini_x = d3.time.scale()
 
 var main_xAxis = d3.svg.axis()
     .scale(main_x)
-    .ticks(d3.time.day, 1)
+    .ticks(10)
     .orient("bottom");
 
 var mini_xAxis = d3.svg.axis()
   .scale(mini_x)
-  .ticks(d3.time.day, 1)
+  .ticks(d3.time.day, 2)
   .orient("bottom");
 
 // Setup Y axis
