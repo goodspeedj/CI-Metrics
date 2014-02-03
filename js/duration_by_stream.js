@@ -175,9 +175,10 @@ d3.json('duration_by_stream.json', function(data) {
           // Hide the tool tip
           tooltip.transition().duration(500).style("opacity", 0);
       })
-      .attr("d", function(d) { 
+      .attr("d", function(d) {
           // Draw the lines or not depending on d.vis
           if (d.vis=="1") {
+              console.log(d.values); 
               return main_line(d.values); 
           }
           else {
