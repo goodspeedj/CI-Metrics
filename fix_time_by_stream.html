@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+  <head>
+    <title>Fix Time by Portfolio</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Fix Time by Stream</h3>
+          This chart shows the average build fix time per day by Stream.
+          <div id="toggle" class="pull-right">
+            <form id="toggle">
+              <label><input class="offOn" type="radio" name="toggle" value="enable" checked> Enable All</label>
+              <label><input class="offOn" type="radio" name="toggle" value="disable"> Disable All</label>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="graph"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/jquery-2.0.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.min.js"></script>
+    <script src="js/colorbrewer.js"></script>
+    <script src="js/multi-line-chart.js"></script>
+    <script src="js/fix_time_by_stream.js"></script>
+
+  </body>
+</html>
