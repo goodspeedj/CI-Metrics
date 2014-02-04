@@ -75,7 +75,7 @@ var tooltip = d3.select("body").append("div")
 /*
  * Pull in the data
  */
-d3.json('fix_time_by_port.json', function(error, data) {
+d3.json('data/fix_time_by_portfolio.json', function(error, data) {
 
 
   // This adds new elements to the data object
@@ -278,15 +278,15 @@ d3.json('fix_time_by_port.json', function(error, data) {
           d3.select(this).transition().duration(200)
               .style("stroke-width", "4px");
 
-          var otherbars = $('rect').not('rect.' + d.key);
-          d3.selectAll(otherbars).transition().duration(200).style("opacity", .4);
+          //var otherbars = $('rect').not('rect.' + d.key);
+          //d3.selectAll(otherbars).transition().duration(200).style("opacity", .4);
       })
       .on("mouseout", function(d) {
           d3.select(this).transition().duration(100)
             .style("stroke-width", "2px");
 
-          var otherbars = $('rect').not('rect.' + d.key);
-          d3.selectAll(otherbars).transition().duration(200).style("opacity", 1);
+          //var otherbars = $('rect').not('rect.' + d.key);
+          //d3.selectAll(otherbars).transition().duration(200).style("opacity", 1);
       })
       .on("click", function(d) { 
           if(d.vis=="1") {
@@ -364,12 +364,12 @@ d3.json('fix_time_by_port.json', function(error, data) {
 
           // Update the legend 
           legend.select("rect").transition()
-              .attr("fill", function(d) {
+              .attr("fill-opacity", function(d) {
                   if (d.vis=="1") {
-                      return color(d.key);
+                      return "1.0";
                   }
                   else {
-                      return "white";
+                      return "0.0";
                   }
               });
       });
@@ -386,14 +386,16 @@ d3.json('fix_time_by_port.json', function(error, data) {
               });
               main.selectAll(".bar").transition()
                 .delay(function(d,i) { return i * 50; })
-                .attr("fill", function(d) { return color(d.key); });
+                //.attr("fill", function(d) { return color(d.key); });
+                .attr("fill-opacity", "1.0");
 
-              mini.selectAll(".bar").transition()
+              mini.selectAll(".mini_bar").transition()
                 .delay(function(d,i) { return i * 50; })
-                .attr("fill", function(d) { return color(d.key); });
+                //.attr("fill", function(d) { return color(d.key); });
+                .attr("fill-opacity", "1.0");
 
               legend.selectAll("rect").transition()
-                .attr("fill", function(d) { return color(d.key); });
+                .attr("fill-opacity", "1.0");
           }
           else {
               nested.forEach(function(d) {
@@ -401,14 +403,14 @@ d3.json('fix_time_by_port.json', function(error, data) {
               });
               main.selectAll(".bar").transition()
                 .delay(function(d,i) { return i * 50; })
-                .attr("fill", "white");
+                .attr("fill-opacity", "0.0");
 
-              mini.selectAll(".bar").transition()
+              mini.selectAll(".mini_bar").transition()
                 .delay(function(d,i) { return i * 50; })
-                .attr("fill", "white");
+                .attr("fill-opacity", "0.0");
 
               legend.selectAll("rect").transition()
-                .attr("fill", "white");
+                .attr("fill-opacity", "0.0");
           }
       }
 

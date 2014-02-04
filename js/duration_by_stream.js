@@ -59,7 +59,7 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
 
-d3.json('duration_by_stream.json', function(data) {
+d3.json('data/duration_by_stream.json', function(data) {
 
   data.result.forEach(function(d) {
       d.date = new Date(d._id.year, d._id.month-1, d._id.day);
