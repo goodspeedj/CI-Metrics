@@ -6,7 +6,7 @@ var chart = multiLineChart()
   .yLabel("Build Fix Time (Hours)")
   .dimKey(function(d) { return d._id.stream; });
 
-d3.json('fix_time_by_stream.json', function(data) {
+d3.json('data/fix_time_by_stream.json', function(data) {
 	d3.select("#graph")
 		.datum(data)
 		.call(chart);

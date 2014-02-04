@@ -36,7 +36,7 @@ function multiLineChart() {
 
     // Setup Y axis
     var main_y = d3.scale.linear()
-        .range([main_height, 0]);
+        .range([main_height, 10]);
 
     var mini_y = d3.scale.linear()
         .range([mini_height, 0]);
@@ -85,9 +85,9 @@ function multiLineChart() {
             main_y.domain([0, d3.max(data.result, yValue)]);
             mini_y.domain([0, d3.max(data.result, yValue)]);
 
-            //var brush = d3.svg.brush()
-            //    .x(mini_x)
-            //    .on("brush", brushed);
+            var brush = d3.svg.brush()
+                .x(mini_x)
+                .on("brush", brushed);
 
             // Flatten out the data
             var nested = d3.nest().key(dimKey)
@@ -121,20 +121,14 @@ function multiLineChart() {
             // Create the main line elements
             var main_line = d3.svg.line()
                 .interpolate("cardinal")
-                //.x(main_x(xValue))
-                //.y(main_y(yValue));
-                .x(function(d) { return main_x(d.date); })
-                .y(function(d) {
-                    return main_y(yLiteral); 
-                });
+                .x(function(d) { return main_x(xValue(d)); })
+                .y(function(d) { return main_y(yValue(d)); });
 
             // Create the mini line elements
             var mini_line = d3.svg.line()
                 .interpolate("cardinal")
-                //.x(function(d) { return mini_x(xValue); })
-                .x(mini_x(xValue))
-                //.y(function(d) { return mini_y(yValue); });
-                .y(mini_y(yValue));
+                .x(function(d) { return mini_x(xValue(d)); })
+                .y(function(d) { return mini_y(yValue(d)); });
 
             var main_stream = main.selectAll(".main_stream")
                 .data(nested)
@@ -152,6 +146,19 @@ function multiLineChart() {
                     return "mini_stream";
                 });
 
+            mini_stream.append("path")
+                .style("stroke", function(d) { return color(d.key); })
+                .attr("class", function(d) { return d.key + " lines"; })
+                .attr("d", function(d) {
+                // Draw the lines or not depending on d.vis
+                    if (d.vis=="1") {
+                        return mini_line(d.values);
+                    }
+                    else {
+                        return null;
+                    }
+                });
+
             // Draw the lines
             main_stream.append("path")
                 .style("stroke", function(d) { return color(d.key); })
@@ -159,7 +166,6 @@ function multiLineChart() {
                 .attr("class", function(d) { return d.key + " lines"; })
                 .attr("d", function(d) {
                     if (d.vis == 1) {
-                        console.log(d.values);
                         return main_line(d.values);
                     }
                     else {
@@ -170,11 +176,14 @@ function multiLineChart() {
 
                     // Make the line bold
                     d3.select(this).transition().duration(200)
-                        .style("stroke-width", "4px");
+                        .style("stroke-width", "5px");
 
                     // Fade out the other lines
-                    var otherlines = $('path').not(this);
-                    d3.selectAll(otherlines).transition().duration(200).style("opacity", .4);
+                    var otherlines = $('path.lines').not("path." + d.key);
+                    d3.selectAll(otherlines).transition().duration(200)
+                        .style("opacity", .3)
+                        .style("stroke-width", 1.5)
+                        .style("stroke", "gray");
 
                     // Show tooltip
                     tooltip.transition().duration(200)
@@ -191,16 +200,206 @@ function multiLineChart() {
                         .style("stroke-width", "2px");
 
                     // Make the other lines normal again
-                    var otherlines = $('path').not(this);
+                    var otherlines = $('.lines').not("path." + d.key);
                     d3.selectAll(otherlines).transition().duration(100)
-                        .style("opacity", 1);   
+                        .style("opacity", 1)
+                        .style("stroke-width", 2)
+                        .style("stroke", function(d) { return color(d.key)});   
 
                     // Hide the tooltip
                     tooltip.transition().duration(500).style("opacity", 0);
                 });
+
+            mini.append("g")
+                .attr("class", "x brush")
+                .call(brush)
+              .selectAll("rect")
+                .attr("y", -10)
+                .attr("height", mini_height + 15);
+
+            // Add the text to the legend
+            main_stream.append("text")
+                .attr("class", "legendLabel")
+                .attr("x", function(d) { return main_width-195; })
+                .attr("y", function(d,i) { return main_height-393 + (i*30); })
+                .text( function (d) { return d.key; })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "10px")
+                .attr("fill", "black");
+    
+            // Add the colored rectangles to the legend
+            main_stream.append("rect")
+                .attr("height",10)
+                .attr("width", 25)
+                .attr("class", function(d) { return d.key; })
+                .attr("x",main_width-235)
+                .attr("y", function(d,i) { return main_height-400 + (i*30); })
+                .attr("stroke", function(d) { return color(d.key);})
+                .attr("fill",function(d) {
+                    if(d.vis=="1") {
+                        return color(d.key);
+                    }
+                    else {
+                        return "white";
+                    }
+                })
+                .on("mouseover", function(d) {
+                    // Make the line bold
+                    d3.select(this).transition().duration(200)
+                        .style("stroke-width", "5px");
+
+                    d3.select("path." + d.key).transition().duration(200)
+                        .style("stroke-width", "5px");
+
+                    var otherlines = $("path.lines").not("path." + d.key);
+                    d3.selectAll(otherlines).transition().duration(200)
+                        .style("opacity", .3)
+                        .style("stroke-width", 1.5)
+                        .style("stroke", "gray");;
+                })
+                .on("mouseout", function(d) {
+                    d3.select(this).transition().duration(100)
+                        .style("stroke-width", "2px");
+
+                    d3.select("path." + d.key).transition().duration(100)
+                        .style("stroke-width", "2px");
+
+                    var otherlines = $("path.lines").not("path." + d.key);
+                    d3.selectAll(otherlines).transition().duration(100)
+                        .style("opacity", 1)
+                        .style("stroke-width", 2)
+                        .style("stroke", function(d) { return color(d.key)});
+                })
+                .on("click", function(d) {
+                    if(d.vis=="1") {
+                        d.vis="0";
+                    }
+                    else {
+                        d.vis="1";
+                    }
+        
+                    // Update the Y axis
+                    maxY = getMaxY();
+
+                    main_y.domain([0,maxY]);
+                    mini_y.domain([0,maxY]);
+
+                    main.select(".y.axis").call(main_yAxis);
+
+                    // Update the lines
+                    main_stream.select("path").transition()
+                        .attr("d", function(d) { 
+                            if(d.vis=="1") { 
+                                return main_line(d.values);
+                            } 
+                            else { 
+                                return null;
+                            } 
+                        })
+
+                    mini_stream.select("path").transition()
+                        .attr("d", function(d) {
+                            if(d.vis=="1") {
+                                return mini_line(d.values);
+                            }
+                            else {
+                                return null;
+                            }
+                        })
+
+                    // Update the legend
+                    main_stream.select("rect").transition()
+                        .attr("fill",function(d) {
+                            if (d.vis=="1") {
+                                return color(d.key);
+                            }
+                            else {
+                                return "white";
+                            }
+                        });
+                });
+
+            d3.selectAll("input").on("change", toggle);
+
+            // toggle the lines on or off
+            function toggle() {
+                if (this.value === "enable") {
+                    nested.forEach(function(d) {
+                      d.vis = 1;
+                });
+
+                maxY = getMaxY();
+                main_y.domain([0,maxY]);
+                mini_y.domain([0,maxY]);
+                main.select(".y.axis").call(main_yAxis);
+
+                main_stream.select("rect").transition()
+                    .delay(function(d, i) { return i * 20; })
+                    .attr("fill", function(d) { return color(d.key); });
+        
+                main_stream.select("path").transition()
+                    .delay(function(d, i) { return i * 20; })
+                    .attr("d", function(d) {
+                        return main_line(d.values);
+                    });
+
+                mini_stream.select("path").transition()
+                    .delay(function(d, i) { return i * 20; })
+                    .attr("d", function(d) {
+                        return mini_line(d.values);
+                    });
+
+            }
+            else {
+                nested.forEach(function(d) {
+                  d.vis = 0;
+                });
+                main_stream.select("rect").transition()
+                    .delay(function(d, i) { return i * 20; })
+                    .attr("fill","white");
+
+                main_stream.select("path").transition()
+                    .delay(function(d, i) { return i * 20; })
+                    .attr("d", function(d) {
+                        return null;
+                    });
+
+                mini_stream.select("path").transition()
+                    .delay(function(d, i) { return i * 20; })
+                    .attr("d", function(d) {
+                        return null;
+                    });
+           }
+      }
+
+            // Brush/select function
+            function brushed() {
+                main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
+                main_stream.select("path").attr("d", function(d) {
+                    return main_line(d.values)
+                });
+                main.select(".x.axis").call(main_xAxis);
+            }  
+
+            // Get the max Y value
+            function getMaxY() {
+                var maxY = -1;
+                
+                nested.forEach(function(d) {
+                    if (d.vis == 1) {
+                        d.values.forEach(function(d) {
+                            if (yValue(d) > maxY){
+                                maxY = yValue(d);
+                            }
+                        });
+                    }
+                });
+                return maxY;
+            } 
         });
 
     }
+
 
 
     // Get/set main_margin
