@@ -17,6 +17,9 @@ function multiLineChart() {
     // The dimension key
     var dimKey;
 
+    // The Y tick format
+    var yTickFormat; 
+
     // Setup X time scale
     var main_x = d3.time.scale()
         .range([0, main_width-275]);
@@ -43,7 +46,7 @@ function multiLineChart() {
 
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
-        .tickFormat(function(d) { return d3.round((d / 1000 / 60 / 60), 0); } )
+        .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
 
     // Define main svg element in #graph
@@ -472,6 +475,12 @@ function multiLineChart() {
     chart.dimKey = function(value) {
         if (!arguments.length) return dimKey;
         dimKey = value;
+        return chart;
+    }
+  
+    chart.yTickFormat = function(value) {
+        if (!arguments.length) return yTickFormat;
+        yTickFormat = value;
         return chart;
     }
 
