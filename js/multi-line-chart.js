@@ -452,18 +452,6 @@ function multiLineChart() {
         return chart;
     }
 
-    chart.xLiteral = function(value) {
-        if (!arguments.length) return xLiteral;
-        xLiteral = value;
-        return chart;
-    }
-
-    chart.yLiteral = function(value) {
-        if (!arguments.length) return yLiteral;
-        yLiteral = value;
-        return chart;
-    }
-
     // Get/set the Y axis label
     chart.yLabel = function(value) {
         if (!arguments.length) return yLabel;
