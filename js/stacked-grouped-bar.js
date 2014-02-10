@@ -24,9 +24,6 @@ function stackedGroupedBarChart() {
     // The Y tick format
     var yTickFormat; 
 
-    // Default date format for the X axis
-    var dateFormat = d3.time.format("%a %d");
-
     // x0 is the time scale on the X axis
     var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width - axis_offset], 0.2); 
     var mini_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width - axis_offset], 0.2);
