@@ -21,6 +21,9 @@ function stackedGroupedBarChart() {
     // The dimension key
     var dimKey;
 
+    // The date format
+    var dateFormat;
+
     // The Y tick format
     var yTickFormat; 
 
