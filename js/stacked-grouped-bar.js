@@ -13,7 +13,7 @@ function stackedGroupedBarChart() {
         .range(["#5D5CD6","#FF7236","#5FD664","#D64041","#C53AD6"]);
 
     // These are the x and y dimensions supplied by the calling chart
-    var x0Value, x1Value yValue;
+    var x0Value, x1Value, yValue;
 
     // The label for the Y axis
     var yLabel = "Duration";
@@ -91,13 +91,13 @@ function stackedGroupedBarChart() {
 
             // This adds new elements to the data object
             data.result.forEach(function(d) {
-                d.portfolio = d._id.portfolio;
+                d.portfolio = dimKey;
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
 
             // This is needed to get the y0 and y1 values required for the stacked chart
             var nestByDate = d3.nest()
-                .key(function(d) { return xValue; })
+                .key(function(d) { return x0Value; })
                 .entries(data.result);
 
             // Calc the y0 and y1 values (start and end points of the stacked bars)
@@ -515,7 +515,7 @@ function stackedGroupedBarChart() {
                 });
                 return maxY;
             } 
-        }
+        });
     }
 
     // Get/set main_margin
