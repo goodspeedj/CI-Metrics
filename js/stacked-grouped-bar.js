@@ -22,7 +22,7 @@ function stackedGroupedBarChart() {
     var dimKey;
 
     // The date format
-    var dateFormat;
+    var dateFormat = d3.time.format("%a %d");
 
     // The Y tick format
     var yTickFormat; 
@@ -91,13 +91,13 @@ function stackedGroupedBarChart() {
 
             // This adds new elements to the data object
             data.result.forEach(function(d) {
-                d.portfolio = dimKey;
+                d.portfolio = dimKey(d);
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
 
             // This is needed to get the y0 and y1 values required for the stacked chart
             var nestByDate = d3.nest()
-                .key(function(d) { return x0Value; })
+                .key(function(d) { return x0Value(d); })
                 .entries(data.result);
 
             // Calc the y0 and y1 values (start and end points of the stacked bars)
@@ -111,31 +111,31 @@ function stackedGroupedBarChart() {
                     d.y0 = y0 + y1;
 
                     // y1 is the y axis end of the bar
-                    y1 = yValue;
+                    d.y1 = yValue(d);
 
                     // d.vis controls whether bars are visible or not
                     d.vis = 1;
                 });
             });
 
-
+            
             // x0 is the first x axis group domain (ie: date)
-            main_x0.domain(data.result.map( function(d) { return x0Value; } )
+            main_x0.domain(data.result.map( function(d) { return x0Value(d); } )
                   .sort(d3.ascending));
-            mini_x0.domain(data.result.map( function(d) { return x0Value; } )
+            mini_x0.domain(data.result.map( function(d) { return x0Value(d); } )
                   .sort(d3.ascending));
 
             // x1 is the second x axis group domain (ie: portfolio, stream)
-            main_x1.domain(data.result.map( function(d) { return x1Value; } )
+            main_x1.domain(data.result.map( function(d) { return x1Value(d); } )
                   .sort(d3.ascending))
                   .rangeRoundBands([0, main_x0.rangeBand() ], 0);
-            mini_x1.domain(data.result.map( function(d) { return x1Value; } )
+            mini_x1.domain(data.result.map( function(d) { return x1Value(d); } )
                   .sort(d3.ascending))
                   .rangeRoundBands([0, main_x0.rangeBand() ], 0);
 
             // y axis domain (ie: time)
-            main_y.domain([0, d3.max(data.result, function(d) { return yValue; })]);
-            mini_y.domain([0, d3.max(data.result, function(d) { return yValue; })]);
+            main_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
+            mini_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
 
             // Create brush for mini graph
             var brush = d3.svg.brush()
@@ -236,7 +236,7 @@ function stackedGroupedBarChart() {
                 .attr("width", function(d) { return mini_x1.rangeBand(); })
                 .attr("x", function(d) { return mini_x1(x1Value(d)); })
                 .attr("y", function(d) { return mini_y(yValue(d)); })
-                .attr("height", function(d) { return mini_height - mini_y(x1Value(d)); });
+                .attr("height", function(d) { return mini_height - mini_y(yValue(d)); });
 
             // Add the ideal fix time line
             var line = main.append("line")
@@ -592,13 +592,6 @@ function stackedGroupedBarChart() {
     chart.yTickFormat = function(value) {
         if (!arguments.length) return yTickFormat;
         yTickFormat = value;
-        return chart;
-    }
-
-    // Get/set the X axis date format
-    chart.dateFormat = function(value) {
-        if (!arguments.length) return dateFormat;
-        dateFormat = value;
         return chart;
     }
 

@@ -331,7 +331,7 @@
 				"year" : 2014,
 				"stream" : "Stream_PM_2014_03_Services_Development"
 			},
-			"buildDuration" : 2075594.75
+			"buildDuration" : 2030711.4
 		},
 		{
 			"_id" : {
@@ -466,7 +466,7 @@
 				"year" : 2014,
 				"stream" : "Stream_PM_2014_Mobile_Auto_Bind_Services_Development"
 			},
-			"buildDuration" : 2355726
+			"buildDuration" : 2161372.5
 		},
 		{
 			"_id" : {
@@ -1024,7 +1024,7 @@
 				"year" : 2014,
 				"stream" : "eComm_2014_03_Client_Stream"
 			},
-			"buildDuration" : 881940.3333333334
+			"buildDuration" : 882234.052631579
 		},
 		{
 			"_id" : {
@@ -1447,7 +1447,7 @@
 				"year" : 2014,
 				"stream" : "eComm_2014_Responsive_Billing_Client_Stream"
 			},
-			"buildDuration" : 323404.75
+			"buildDuration" : 311350
 		},
 		{
 			"_id" : {

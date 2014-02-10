@@ -4,8 +4,7 @@ var chart = stackedGroupedBarChart()
     .y(function(d) { return d.buildFixTime; })
     .yLabel("Build Fix Time (Hours)")
     .dimKey(function(d) { return d._id.portfolio; })
-    .yTickFormat(function(d) { return d3.round((d / 1000 / 60 / 60), 0); })
-    .dateFormat(d3.time.format("%a %d"));
+    .yTickFormat(function(d) { return d3.round((d / 1000 / 60 / 60), 0); });
 
 d3.json('data/fix_time_by_portfolio.json', function(data) {
     d3.select("#graph")
