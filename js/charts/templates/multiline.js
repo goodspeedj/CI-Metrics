@@ -1,24 +1,10 @@
 function multiLineChart() {
-    var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
-        mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
-        main_width = 1300 - main_margin.left - main_margin.right,
-        main_height = 525 - main_margin.top - main_margin.bottom,
-        mini_height = 525 - mini_margin.top - mini_margin.bottom;
 
     // Define line colors
     var color = d3.scale.category20();
 
     // These are the x and y dimensions supplied by the calling chart
     var xValue, yValue;
-
-    // The label for the Y axis
-    var yLabel = "Duration";
-
-    // The dimension key
-    var dimKey;
-
-    // The Y tick format
-    var yTickFormat; 
 
     // Setup X time scale
     var main_x = d3.time.scale()
@@ -48,29 +34,6 @@ function multiLineChart() {
         .scale(main_y)
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
-
-    // Define main svg element in #graph
-    var svg = d3.select("#graph").append("svg")
-        .attr("width", main_width + main_margin.left + main_margin.right)
-        .attr("height", main_height + main_margin.top + main_margin.bottom);
-
-    svg.append("defs").append("clipPath")
-        .attr("id", "clip")
-      .append("rect")
-        .attr("width", main_width-275)
-        .attr("height", main_height);
-
-    var main = svg.append("g")
-        .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")")
-        .attr("id", "main");
-
-    var mini = svg.append("g")
-        .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")")
-        .attr("id", "mini");
-
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
 
 
 
