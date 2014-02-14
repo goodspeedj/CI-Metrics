@@ -1,6 +1,6 @@
 function stackedAreaChart() {
 
-	// The label for the Y axis
+    // The label for the Y axis
     var yLabel = "Duration";
 
     // These are the x and y dimensions supplied by the calling chart
@@ -36,63 +36,131 @@ function stackedAreaChart() {
         .orient("left");
 
     var categories = ["Stable","Unstable","Failed"];
-	var z = d3.scale.ordinal().domain(categories).range(["#A2C21D","#FCE338","#EF3434"]);
+    var z = d3.scale.ordinal().domain(categories).range(["#A2C21D","#FCE338","#EF3434"]);
 
-	// Create the area stack
-	var stack = d3.layout.stack()
+    // Create the area stack
+    var stack = d3.layout.stack()
               .offset("zero")
               .values(function(d) { return d.values; })
-              .x(function(d) { return d.date; })
-              .y(function(d) { return d.Count; });
-
-    // Nest by name aka status
-	var nest = d3.nest()
-              .key(function(d) { return d.Name; });
+              .x(function(d) { return xValue(d); })
+              .y(function(d) { return yValue(d); });
 
     // Define the area
-	var area = d3.svg.area()
+    var area = d3.svg.area()
               .interpolate("basis")
-              .x(function(d) { return x(d.date); })
+              .x(function(d) { return x(xValue(d)); })
               .y0(function(d) { return y(d.y0); })
               .y1(function(d) { return y(d.y0 + d.y); });
 
 
-	function chart(selection) {
+    function chart(selection) {
         selection.each(function(data) {
 
-        	// Loop through the data and add elements
-			data.forEach(function(d) {
-			  var date = new Date(d.date);
-			  //var date = moment(d.date).format('MM/DD/YY');
-			  d.date = format.parse(date);
-			  d.Count = +d.Count;
-			});
+            // Loop through the data and add elements
+            data.result.forEach(function(d) {
+                d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+            });
 
-			// Create the layers
-			var layers = stack(nest.entries(data));
+            // Nest by name aka status
+            var nested = d3.nest()
+              .key(dimKey);
+              //.entries(data.result);
 
-			layers = stack(nest.entries(data));
-			main_x.domain(d3.extent(data, function(d) { return d.date; }));
-			main_y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
+            console.log(nested.entries(data.result));
 
-			// Add the line paths
-			svg.selectAll(".layer")
-			  .data(layers)
-			.enter().append("path")
-			  .attr("class", "layer")
-			  .attr("d", function(d) { return area(d.values); })
-			  .style("fill", function(d, i) { return z(i); });
+            // Create the layers
+            //var layers = stack(nested.entries(data.result));
+            var layers = stack(nested.entries(data));
 
-			// Add the X and Y axis
-			svg.append("g")
-			  .attr("class", "x axis")
-			  .attr("transform", "translate(0," + height + ")")
-			  .call(main_xAxis);
+            main_x.domain(d3.extent(data, function(d) { return xValue(d); }));
+            main_y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
 
-			svg.append("g")
-			  .attr("class", "y axis")
-			  .call(main_yAxis);
-        }
+            // Add the line paths
+            svg.selectAll(".layer")
+              .data(layers)
+            .enter().append("path")
+              .attr("class", "layer")
+              .attr("d", function(d) { return area(d.values); })
+              .style("fill", function(d, i) { return z(i); });
+
+            // Add the X and Y axis
+            svg.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(main_xAxis);
+
+            svg.append("g")
+              .attr("class", "y axis")
+              .call(main_yAxis);
+        });
+    }
+
+
+    // Get/set main_margin
+    chart.main_margin = function(value) {
+        if (!arguments.length) return main_margin;
+        main_margin = value;
+        return chart;
+    }
+
+    // Get/set mini_margin
+    chart.mini_margin = function(value) {
+        if (!arguments.length) return mini_margin;
+        mini_margin = value;
+        return chart;
+    }
+
+    // Get/set main_width
+    chart.main_width = function(value) {
+        if (!arguments.length) return main_width;
+        main_width = value;
+        return chart;
+    }
+
+    // Get/set main_height
+    chart.main_height = function(value) {
+        if (!arguments.length) return main_height;
+        main_height = value;
+        return chart;
+    }
+
+    // Get/set mini_height
+    chart.mini_height = function(value) {
+        if (!arguments.length) return mini_height;
+        mini_height = value;
+        return chart;
+    }
+
+    chart.x = function(value) {
+        if (!arguments.length) return xValue;
+        xValue = value;
+        return chart;
+    }
+
+    chart.y = function(value) {
+        if (!arguments.length) return yValue;
+        yValue = value;
+        return chart;
+    }
+
+    // Get/set the Y axis label
+    chart.yLabel = function(value) {
+        if (!arguments.length) return yLabel;
+        yLabel = value;
+        return chart;
+    }
+
+    // Get/set the dimension key
+    chart.dimKey = function(value) {
+        if (!arguments.length) return dimKey;
+        dimKey = value;
+        return chart;
+    }
+  
+    chart.yTickFormat = function(value) {
+        if (!arguments.length) return yTickFormat;
+        yTickFormat = value;
+        return chart;
     }
 
     return chart;
