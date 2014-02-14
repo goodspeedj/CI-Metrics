@@ -8,10 +8,10 @@ function multiLineChart() {
 
     // Setup X time scale
     var main_x = d3.time.scale()
-        .range([0, main_width-275]);
+        .range([0, main_width-axis_offset]);
 
     var mini_x = d3.time.scale()
-        .range([0, main_width-275]);
+        .range([0, main_width-axis_offset]);
 
     var main_xAxis = d3.svg.axis()
         .scale(main_x)
