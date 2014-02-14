@@ -1,0 +1,544 @@
+{
+        "result" : [
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 17,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 4
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 17,
+                                "year" : 2014
+                        },
+                        "count" : 3
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 27
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 20,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 93
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 86
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 21,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 186
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 81
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 22,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 294
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 29
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 1
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 23,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 273
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 186
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 24,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 83
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 25,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 25,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 3
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 26,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 1
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 27,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 4
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 27,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 35
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 27,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 173
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 28,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 110
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 28,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 31
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 126
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 29,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 49
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 30,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 142
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 30,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 103
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 30,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 31,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 156
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 31,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 63
+                },
+                {
+                        "_id" : {
+                                "month" : 1,
+                                "day" : 31,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 1
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 1,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 1,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 3,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 114
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 3,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 54
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 4,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 152
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 4,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 4,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 98
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 5,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 42
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 5,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 118
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 6,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 38
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 6,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 97
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 6,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 1
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 7,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 117
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 7,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 1
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 7,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 143
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 8,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 12
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 8,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 9,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 1
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 9,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 6
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 10,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 14
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 10,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 97
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 11,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 48
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 11,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 166
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 12,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 155
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 12,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 65
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 13,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 166
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 13,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 40
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 13,
+                                "year" : 2014,
+                                "buildResult" : "ABORTED"
+                        },
+                        "count" : 2
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 14,
+                                "year" : 2014,
+                                "buildResult" : "FAILURE"
+                        },
+                        "count" : 46
+                },
+                {
+                        "_id" : {
+                                "month" : 2,
+                                "day" : 14,
+                                "year" : 2014,
+                                "buildResult" : "SUCCESS"
+                        },
+                        "count" : 107
+                }
+        ],
+        "ok" : 1
+}
