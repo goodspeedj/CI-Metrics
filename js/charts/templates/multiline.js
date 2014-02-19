@@ -344,7 +344,13 @@ function multiLineChart() {
             function brushed() {
                 main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
                 main_stream.select("path").attr("d", function(d) {
-                    return main_line(d.values)
+                    if (d.vis == 1) {
+                        return main_line(d.values);
+                    }
+                    else {
+                        return null;
+                    }
+                    
                 });
                 main.select(".x.axis").call(main_xAxis);
             }  
