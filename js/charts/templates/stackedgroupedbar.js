@@ -273,8 +273,7 @@ function stackedGroupedBarChart() {
                     }
 
                     // update the Y axis
-                    maxY=findMaxY(nested);
-                    minY=findMinY(nested);
+                    maxY=getMaxY(nested);
                     main_y.domain([0,maxY]);
                     mini_y.domain([0,maxY]);
 
