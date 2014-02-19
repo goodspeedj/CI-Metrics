@@ -1,9 +1,4 @@
 function multiLineChart() {
-    var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
-        mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
-        main_width = 1300 - main_margin.left - main_margin.right,
-        main_height = 525 - main_margin.top - main_margin.bottom,
-        mini_height = 525 - mini_margin.top - mini_margin.bottom;
 
     // Define line colors
     var color = d3.scale.category20();
@@ -11,30 +6,23 @@ function multiLineChart() {
     // These are the x and y dimensions supplied by the calling chart
     var xValue, yValue;
 
-    // The label for the Y axis
-    var yLabel = "Duration";
-
-    // The dimension key
-    var dimKey;
-
-    // The Y tick format
-    var yTickFormat; 
-
     // Setup X time scale
     var main_x = d3.time.scale()
-        .range([0, main_width-275]);
+        .range([0, main_width-axis_offset]);
 
     var mini_x = d3.time.scale()
-        .range([0, main_width-275]);
+        .range([0, main_width-axis_offset]);
 
     var main_xAxis = d3.svg.axis()
         .scale(main_x)
         .ticks(10)
+        .tickFormat(dateFormat)
         .orient("bottom");
 
     var mini_xAxis = d3.svg.axis()
       .scale(mini_x)
-      .ticks(d3.time.day, 2)
+      .ticks(10)
+      .tickFormat(dateFormat)
       .orient("bottom");
 
     // Setup Y axis
@@ -48,29 +36,6 @@ function multiLineChart() {
         .scale(main_y)
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
-
-    // Define main svg element in #graph
-    var svg = d3.select("#graph").append("svg")
-        .attr("width", main_width + main_margin.left + main_margin.right)
-        .attr("height", main_height + main_margin.top + main_margin.bottom);
-
-    svg.append("defs").append("clipPath")
-        .attr("id", "clip")
-      .append("rect")
-        .attr("width", main_width-275)
-        .attr("height", main_height);
-
-    var main = svg.append("g")
-        .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")")
-        .attr("id", "main");
-
-    var mini = svg.append("g")
-        .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")")
-        .attr("id", "mini");
-
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
 
 
 
@@ -373,13 +338,19 @@ function multiLineChart() {
                         return null;
                     });
            }
-      }
+        }
 
             // Brush/select function
             function brushed() {
                 main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
                 main_stream.select("path").attr("d", function(d) {
-                    return main_line(d.values)
+                    if (d.vis == 1) {
+                        return main_line(d.values);
+                    }
+                    else {
+                        return null;
+                    }
+                    
                 });
                 main.select(".x.axis").call(main_xAxis);
             }  

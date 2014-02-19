@@ -2,30 +2,12 @@ function stackedGroupedBarChart() {
 
     var ideal_time = 7200000;
 
-    var axis_offset        = 275,
-        legend_offset      = 195,
-        legend_text_offset = {height: 393, width: 195},
-        legend_rect_offset = {height: 400, width: 235},
-        legend_interval    = 40;
-
     // Default bar colors
     var color = d3.scale.ordinal()
         .range(["#5D5CD6","#FF7236","#5FD664","#D64041","#C53AD6"]);
 
     // These are the x and y dimensions supplied by the calling chart
     var x0Value, x1Value, yValue;
-
-    // The label for the Y axis
-    var yLabel = "Duration";
-
-    // The dimension key
-    var dimKey;
-
-    // The date format
-    var dateFormat = d3.time.format("%a %d");
-
-    // The Y tick format
-    var yTickFormat; 
 
     // x0 is the time scale on the X axis
     var main_x0 = d3.scale.ordinal().rangeRoundBands([0, main_width - axis_offset], 0.2); 
@@ -42,47 +24,11 @@ function stackedGroupedBarChart() {
     // xZoom is the scale for the brush/zoom 
     var main_xZoom = d3.scale.linear().range([0, main_width - axis_offset]).domain([0, main_width - axis_offset]);
 
-    // Define the X axis
-    var main_xAxis = d3.svg.axis()
-        .scale(main_x0)
-        .ticks(10)
-        .tickFormat(dateFormat)
-        .orient("bottom");
-
-    // Define the X mini axis
-    var mini_xAxis = d3.svg.axis()
-        .scale(mini_x0)
-        .tickFormat(dateFormat)
-        .orient("bottom");
-
     // Define the Y axis
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
-
-    // Define main svg element in #graph
-    var svg = d3.select("#graph").append("svg")
-        .attr("width", main_width + main_margin.left + main_margin.right)
-        .attr("height", main_height + main_margin.top + main_margin.bottom);
-
-    // Add the clip path
-    svg.append("defs").append("clipPath")
-        .attr("id", "clip")
-      .append("rect")
-        .attr("width", main_width - axis_offset)
-        .attr("height", main_height);
-
-    var main = svg.append("g")
-        .attr("transform", "translate(" + main_margin.left + "," + main_margin.top + ")");
-
-    var mini = svg.append("g")
-        .attr("transform", "translate(" + mini_margin.left + "," + mini_margin.top + ")");
-
-    // Create the tooltip div
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
 
 
 
@@ -136,6 +82,20 @@ function stackedGroupedBarChart() {
             // y axis domain (ie: time)
             main_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
             mini_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
+
+            // Define the X axis
+            var main_xAxis = d3.svg.axis()
+                .scale(main_x0)
+                .tickFormat(dateFormat)
+                .tickValues(main_x0.domain().filter(function(d, i) { return !(i % 3); }))
+                .orient("bottom");
+
+            // Define the X mini axis
+            var mini_xAxis = d3.svg.axis()
+                .scale(mini_x0)
+                .tickFormat(dateFormat)
+                .tickValues(main_x0.domain().filter(function(d, i) { return !(i % 3); }))
+                .orient("bottom");
 
             // Create brush for mini graph
             var brush = d3.svg.brush()
@@ -313,8 +273,7 @@ function stackedGroupedBarChart() {
                     }
 
                     // update the Y axis
-                    maxY=findMaxY(nested);
-                    minY=findMinY(nested);
+                    maxY=getMaxY(nested);
                     main_y.domain([0,maxY]);
                     mini_y.domain([0,maxY]);
 
@@ -422,6 +381,7 @@ function stackedGroupedBarChart() {
             // Switch to a stacked orientation
             function transitionStacked() {
                 updateStack();
+
                 bar.selectAll("rect").transition()
                     .duration(300)
                     .delay(function(d, i) { return i * 10; })
@@ -451,11 +411,11 @@ function stackedGroupedBarChart() {
                     d.values.forEach(function(d) {
                         if (d.vis == 1) {
                             d.y0 = y0 + y1;
-                            y1 = yValue;
+                            y1 = yValue(d);
                             d.y1 = y1;
                         }
                     });
-                });    
+                });   
             }
 
             function brushed() {

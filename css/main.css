@@ -27,6 +27,10 @@ div.tooltip {
   font-size: 13px;
 }
 
+.axis, .main_axis {
+  font-size: 14px;
+}
+
 .mini_axis {
   font-size: 11px;
 }
