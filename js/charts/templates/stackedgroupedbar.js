@@ -24,19 +24,6 @@ function stackedGroupedBarChart() {
     // xZoom is the scale for the brush/zoom 
     var main_xZoom = d3.scale.linear().range([0, main_width - axis_offset]).domain([0, main_width - axis_offset]);
 
-    // Define the X axis
-    var main_xAxis = d3.svg.axis()
-        .scale(main_x0)
-        .ticks(10)
-        .tickFormat(dateFormat)
-        .orient("bottom");
-
-    // Define the X mini axis
-    var mini_xAxis = d3.svg.axis()
-        .scale(mini_x0)
-        .tickFormat(dateFormat)
-        .orient("bottom");
-
     // Define the Y axis
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
@@ -95,6 +82,20 @@ function stackedGroupedBarChart() {
             // y axis domain (ie: time)
             main_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
             mini_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
+
+            // Define the X axis
+            var main_xAxis = d3.svg.axis()
+                .scale(main_x0)
+                .tickFormat(dateFormat)
+                .tickValues(main_x0.domain().filter(function(d, i) { return !(i % 3); }))
+                .orient("bottom");
+
+            // Define the X mini axis
+            var mini_xAxis = d3.svg.axis()
+                .scale(mini_x0)
+                .tickFormat(dateFormat)
+                .tickValues(main_x0.domain().filter(function(d, i) { return !(i % 3); }))
+                .orient("bottom");
 
             // Create brush for mini graph
             var brush = d3.svg.brush()
@@ -381,6 +382,7 @@ function stackedGroupedBarChart() {
             // Switch to a stacked orientation
             function transitionStacked() {
                 updateStack();
+
                 bar.selectAll("rect").transition()
                     .duration(300)
                     .delay(function(d, i) { return i * 10; })
@@ -410,11 +412,11 @@ function stackedGroupedBarChart() {
                     d.values.forEach(function(d) {
                         if (d.vis == 1) {
                             d.y0 = y0 + y1;
-                            y1 = yValue;
+                            y1 = yValue(d);
                             d.y1 = y1;
                         }
                     });
-                });    
+                });   
             }
 
             function brushed() {

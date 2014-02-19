@@ -19,7 +19,7 @@ var yLabel = "Duration";
 var dimKey;
 
 // The date format
-var dateFormat = d3.time.format("%a %d");
+var dateFormat = d3.time.format("%b %d");
 
 // The Y tick format
 var yTickFormat; 

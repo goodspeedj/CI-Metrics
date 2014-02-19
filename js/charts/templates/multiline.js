@@ -16,11 +16,13 @@ function multiLineChart() {
     var main_xAxis = d3.svg.axis()
         .scale(main_x)
         .ticks(10)
+        .tickFormat(dateFormat)
         .orient("bottom");
 
     var mini_xAxis = d3.svg.axis()
       .scale(mini_x)
-      .ticks(d3.time.day, 2)
+      .ticks(10)
+      .tickFormat(dateFormat)
       .orient("bottom");
 
     // Setup Y axis
@@ -336,7 +338,7 @@ function multiLineChart() {
                         return null;
                     });
            }
-      }
+        }
 
             // Brush/select function
             function brushed() {
