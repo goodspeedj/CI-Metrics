@@ -1,15 +1,15 @@
 // Chart dimensions
 var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
-    mini_margin = {top: 460, right: 80, bottom: 20, left: 40},
+    mini_margin = {top: 585, right: 80, bottom: 20, left: 40},
     main_width  = 1300 - main_margin.left - main_margin.right,
-    main_height = 525 - main_margin.top - main_margin.bottom,
-    mini_height = 525 - mini_margin.top - mini_margin.bottom;
+    main_height = 650 - main_margin.top - main_margin.bottom,
+    mini_height = 650 - mini_margin.top - mini_margin.bottom;
 
 // Define some offsets
 var axis_offset        = 275,
     legend_offset      = 195,
-    legend_text_offset = {height: 393, width: 195},
-    legend_rect_offset = {height: 400, width: 235},
+    legend_text_offset = {height: 518, width: 195},
+    legend_rect_offset = {height: 525, width: 235},
     legend_interval    = 40;
 
 // The label for the Y axis
