@@ -1,5 +1,9 @@
 function stackedAreaChart() {
 
+    // parsed date
+    //var parsedDate = dateFormat.parse;
+    var parseDate = d3.time.format("%Y-%m-%d");
+
     // The label for the Y axis
     var yLabel = "Duration";
 
@@ -35,7 +39,7 @@ function stackedAreaChart() {
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
 
-    var categories = ["Stable","Unstable","Failed"];
+    var categories = ["SUCCESS","UNSTABLE","FAILURE","ABORTED"];
     var z = d3.scale.ordinal().domain(categories).range(["#A2C21D","#FCE338","#EF3434"]);
 
     // Create the area stack
@@ -48,9 +52,10 @@ function stackedAreaChart() {
     // Define the area
     var area = d3.svg.area()
               .interpolate("basis")
-              .x(function(d) { return x(xValue(d)); })
-              .y0(function(d) { return y(d.y0); })
-              .y1(function(d) { return y(d.y0 + d.y); });
+              //.x(function(d) { return main_x(xValue(d)); })
+              .x(function(d) { console.log(main_x(parseDate(d.date).parse)); return main_x(parseDate(d.date).parse); })
+              .y0(function(d) { return main_y(d.y0); })
+              .y1(function(d) { return main_y(d.y0 + d.y); });
 
 
     function chart(selection) {
@@ -59,20 +64,21 @@ function stackedAreaChart() {
             // Loop through the data and add elements
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+                //d.date = parseDate.parse(d._id.year + "-" + d._id.month-1 + "-" + d._id.day);
+                //d.date1 = parseDate.parse("2011-01-01");
+                //d.buildResult = d._id.buildResult;
             });
 
             // Nest by name aka status
             var nested = d3.nest()
               .key(dimKey);
-              //.entries(data.result);
-
-            console.log(nested.entries(data.result));
 
             // Create the layers
-            //var layers = stack(nested.entries(data.result));
-            var layers = stack(nested.entries(data));
+            var layers = stack(nested.entries(data.result));
+            console.log(layers);
 
             main_x.domain(d3.extent(data, function(d) { return xValue(d); }));
+
             main_y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
 
             // Add the line paths
@@ -86,7 +92,7 @@ function stackedAreaChart() {
             // Add the X and Y axis
             svg.append("g")
               .attr("class", "x axis")
-              .attr("transform", "translate(0," + height + ")")
+              .attr("transform", "translate(0," + main_height + ")")
               .call(main_xAxis);
 
             svg.append("g")

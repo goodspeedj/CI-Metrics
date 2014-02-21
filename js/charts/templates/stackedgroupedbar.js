@@ -206,16 +206,17 @@ function stackedGroupedBarChart() {
                 .attr("x2", main_width-main_margin.right - legend_text_offset.width)
                 .attr("y2", main_y(ideal_time))
                 .attr("stroke-width", 1)
-                .attr("stroke-dasharray", "10,10")
-                .attr("stroke", "gray");
+                .attr("stroke-dasharray", "5,5")
+                .attr("stroke", "#413839");
 
             main.append("text")
-                .attr("x", 10)
-                .attr("y", main_y(ideal_time) - 5)
-                .attr("fill", "gray")
+                .attr("class", "ideal")
+                .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
+                .attr("y", main_y(ideal_time))
+                .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("Ideal fix time");
+                .text("Ideal");
 
             // Add the legend
             var legend = main.selectAll(".legendLabel")
@@ -281,6 +282,7 @@ function stackedGroupedBarChart() {
 
                     // Update the ideal dashed line
                     main.selectAll(".ideal").transition()
+                        .attr("y", main_y(ideal_time))
                         .attr("y1", main_y(ideal_time))
                         .attr("y2", main_y(ideal_time));
 
