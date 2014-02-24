@@ -1,7 +1,6 @@
 function stackedAreaChart() {
 
     // parsed date
-    //var parsedDate = dateFormat.parse;
     var parseDate = d3.time.format("%Y-%m-%d");
 
     // The label for the Y axis
@@ -12,10 +11,10 @@ function stackedAreaChart() {
 
     // Setup X time scale
     var main_x = d3.time.scale()
-        .range([0, main_width-axis_offset]);
+        .range([0, main_width - axis_offset]);
 
     var mini_x = d3.time.scale()
-        .range([0, main_width-axis_offset]);
+        .range([0, main_width - axis_offset]);
 
     var main_xAxis = d3.svg.axis()
         .scale(main_x)
@@ -29,7 +28,7 @@ function stackedAreaChart() {
 
     // Setup Y axis
     var main_y = d3.scale.linear()
-        .range([main_height, 10]);
+        .range([main_height, 0]);
 
     var mini_y = d3.scale.linear()
         .range([mini_height, 0]);
@@ -39,8 +38,8 @@ function stackedAreaChart() {
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
 
-    var categories = ["SUCCESS","UNSTABLE","FAILURE","ABORTED"];
-    var z = d3.scale.ordinal().domain(categories).range(["#A2C21D","#FCE338","#EF3434"]);
+    var categories = ["ABORTED","SUCCESS","UNSTABLE","FAILURE"];
+    var z = d3.scale.ordinal().domain(categories).range(["#C0C0C0","#A2C21D","#FCE338","#EF3434"]);
 
     // Create the area stack
     var stack = d3.layout.stack()
@@ -53,7 +52,7 @@ function stackedAreaChart() {
     var area = d3.svg.area()
               .interpolate("basis")
               //.x(function(d) { return main_x(xValue(d)); })
-              .x(function(d) { console.log(main_x(parseDate(d.date).parse)); return main_x(parseDate(d.date).parse); })
+              .x(function(d) { return main_x(d.date); })
               .y0(function(d) { return main_y(d.y0); })
               .y1(function(d) { return main_y(d.y0 + d.y); });
 
@@ -64,25 +63,56 @@ function stackedAreaChart() {
             // Loop through the data and add elements
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
-                //d.date = parseDate.parse(d._id.year + "-" + d._id.month-1 + "-" + d._id.day);
-                //d.date1 = parseDate.parse("2011-01-01");
-                //d.buildResult = d._id.buildResult;
+            });
+
+            var nestByDate = d3.nest()
+                .key(function(d) { return d.date; })
+                .entries(data.result);
+
+            nestByDate.forEach(function(d) {
+                var dateObj = new Date(d.key);
+                var statusHolding = new Array();
+                var i = 0;
+                d.values.forEach(function(d) {
+                    statusHolding[i] = d._id.buildResult;
+                    i++;
+                });
+
+                if (statusHolding.length < 4) {
+                    var difference = diff(categories, statusHolding);
+                    
+                    for (var k = 0; k < difference.length; k++) {
+                        data.result.push({
+                            "_id": {
+                                "buildResult": difference[k]
+                            },
+                            "count": 0,
+                            "date": dateObj
+                        });
+                    }
+                }
             });
 
             // Nest by name aka status
             var nested = d3.nest()
-              .key(dimKey);
+              .key(dimKey)
+              .sortKeys(function(a,b) { return categories.indexOf(a) - categories.indexOf(b)})
+              .sortValues(function(a,b) { return ((a.date < b.date)
+                    ? -1
+                    : 1);
+                    return 0;} )
+              .entries(data.result);
+
 
             // Create the layers
-            var layers = stack(nested.entries(data.result));
-            console.log(layers);
+            var layers = stack(nested);
 
-            main_x.domain(d3.extent(data, function(d) { return xValue(d); }));
+            main_x.domain(d3.extent(data.result, function(d) { return d.date; }));
 
-            main_y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
+            main_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
 
             // Add the line paths
-            svg.selectAll(".layer")
+            main.selectAll(".layer")
               .data(layers)
             .enter().append("path")
               .attr("class", "layer")
@@ -90,14 +120,29 @@ function stackedAreaChart() {
               .style("fill", function(d, i) { return z(i); });
 
             // Add the X and Y axis
-            svg.append("g")
+            main.append("g")
               .attr("class", "x axis")
               .attr("transform", "translate(0," + main_height + ")")
               .call(main_xAxis);
 
-            svg.append("g")
-              .attr("class", "y axis")
-              .call(main_yAxis);
+            main.append("g")
+                .attr("class", "y axis")
+                .attr("transform", "translate(0,0)")
+                .call(main_yAxis)
+              .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text(yLabel)
+                .attr("class","y_label");
+        });
+    }
+
+
+    function diff(A, B) {
+        return A.filter(function(a) {
+            return B.indexOf(a) == -1;
         });
     }
 
