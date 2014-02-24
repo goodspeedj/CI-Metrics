@@ -136,6 +136,39 @@ function stackedAreaChart() {
                 .style("text-anchor", "end")
                 .text(yLabel)
                 .attr("class","y_label");
+
+            // Add the legend
+            var legend = main.selectAll(".legendLabel")
+                .data(nested)
+              .enter().append("g")
+                .attr("class", "legendLabel")
+                .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; });
+
+            legend.append("text")
+                .attr("class", "legendLabel")
+                .attr("x", function(d) { return main_width - legend_text_offset.width; })
+                .attr("y", function(d,i) { return main_height - legend_text_offset.height + (i * legend_interval); })
+                .text( function (d) { return d.key; })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "10px")
+                .attr("fill", "black");
+
+            legend.append("rect")
+                .attr("height",10)
+                .attr("width", 25)
+                .attr("x",main_width - legend_rect_offset.width)
+                .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
+                .attr("class", function(d) { return d.key; })
+                .attr("stroke", function(d) { return z(d.key);})
+                .attr("fill", function(d) {
+                    if(d.vis=="1") {
+                        return z(d.key);
+                    }
+                    else {
+                        //return "white";
+                        return z(d.key);
+                    }
+                });
         });
     }
 
