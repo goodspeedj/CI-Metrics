@@ -3,7 +3,7 @@ var chart = stackedAreaChart()
 	.y(function(d) { return d.count; })
   	.yLabel("Total Number")
   	.dimKey(function(d) { return d._id.buildResult; })
-  	.yTickFormat(function(d) { return d3.round(d); });;
+  	.yTickFormat(function(d) { return d3.round(d); });
 
 d3.json('data/passfail.json', function(data) {
 	d3.select("#graph")
