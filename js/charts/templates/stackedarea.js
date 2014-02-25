@@ -38,8 +38,15 @@ function stackedAreaChart() {
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
 
+    // Create the brush for the mini chart
+    var brush = d3.svg.brush()
+        .x(mini_x)
+        .on("brush", brushed);
+
     var categories = ["ABORTED","SUCCESS","UNSTABLE","FAILURE"];
-    var z = d3.scale.ordinal().domain(categories).range(["#C0C0C0","#A2C21D","#FCE338","#EF3434"]);
+    //var categories = ["FAILURE","UNSTABLE","SUCCESS","ABORTED"];
+    var z = d3.scale.ordinal().domain(categories).range(["#C0C0C0","#6FB200","#FCE338","#EF3434"]);
+    //var z = d3.scale.ordinal().domain(categories).range(["#EF3434","#FCE338","#6FB200", "#C0C0C0"]);
 
     // Create the area stack
     var stack = d3.layout.stack()
@@ -49,81 +56,64 @@ function stackedAreaChart() {
               .y(function(d) { return yValue(d); });
 
     // Define the area
-    var area = d3.svg.area()
+    var main_area = d3.svg.area()
               .interpolate("basis")
-              //.x(function(d) { return main_x(xValue(d)); })
-              .x(function(d) { return main_x(d.date); })
+              .x(function(d) { return main_x(xValue(d)); })
               .y0(function(d) { return main_y(d.y0); })
               .y1(function(d) { return main_y(d.y0 + d.y); });
+
+    var mini_area = d3.svg.area()
+              .interpolate("basis")
+              .x(function(d) { return mini_x(xValue(d)); })
+              .y0(function(d) { return mini_y(d.y0); })
+              .y1(function(d) { return mini_y(d.y0 + d.y); });
 
 
     function chart(selection) {
         selection.each(function(data) {
 
-            // Loop through the data and add elements
-            data.result.forEach(function(d) {
-                d.date = new Date(d._id.year, d._id.month-1, d._id.day);
-            });
-
-            var nestByDate = d3.nest()
-                .key(function(d) { return d.date; })
-                .entries(data.result);
-
-            nestByDate.forEach(function(d) {
-                var dateObj = new Date(d.key);
-                var statusHolding = new Array();
-                var i = 0;
-                d.values.forEach(function(d) {
-                    statusHolding[i] = d._id.buildResult;
-                    i++;
-                });
-
-                if (statusHolding.length < 4) {
-                    var difference = diff(categories, statusHolding);
-                    
-                    for (var k = 0; k < difference.length; k++) {
-                        data.result.push({
-                            "_id": {
-                                "buildResult": difference[k]
-                            },
-                            "count": 0,
-                            "date": dateObj
-                        });
-                    }
-                }
-            });
-
-            // Nest by name aka status
-            var nested = d3.nest()
-              .key(dimKey)
-              .sortKeys(function(a,b) { return categories.indexOf(a) - categories.indexOf(b)})
-              .sortValues(function(a,b) { return ((a.date < b.date)
-                    ? -1
-                    : 1);
-                    return 0;} )
-              .entries(data.result);
-
+            
+            var massagedData = massageData(data);
+            console.log(massagedData);
 
             // Create the layers
-            var layers = stack(nested);
+            var layers = stack(massagedData);
 
-            main_x.domain(d3.extent(data.result, function(d) { return d.date; }));
-
+            // Set the x and y domains
+            main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
             main_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
+
+            mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
+            mini_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
+
+            
 
             // Add the line paths
             main.selectAll(".layer")
-              .data(layers)
-            .enter().append("path")
-              .attr("class", "layer")
-              .attr("d", function(d) { return area(d.values); })
-              .style("fill", function(d, i) { return z(i); });
+                .data(layers)
+              .enter().append("path")
+                .attr("clip-path", "url(#clip)")
+                .attr("class", "layer")
+                .attr("d", function(d) { return main_area(d.values); })
+                .style("fill", function(d, i) { return z(i); });
+
+            mini.selectAll(".mini-layer")
+                .data(layers)
+              .enter().append("path")
+                .attr("class", "mini-layer")
+                .attr("d", function(d) { return mini_area(d.values); })
+                .style("fill", function(d, i) { return z(i); });
 
             // Add the X and Y axis
             main.append("g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + main_height + ")")
-              .call(main_xAxis);
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + main_height + ")")
+                .call(main_xAxis);
+
+            mini.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + mini_height + ")")
+                .call(mini_xAxis);
 
             main.append("g")
                 .attr("class", "y axis")
@@ -137,9 +127,16 @@ function stackedAreaChart() {
                 .text(yLabel)
                 .attr("class","y_label");
 
+            mini.append("g")
+                .attr("class", "x brush")
+                .call(brush)
+              .selectAll("rect")
+                .attr("y", -10)
+                .attr("height", mini_height + 15);
+
             // Add the legend
             var legend = main.selectAll(".legendLabel")
-                .data(nested)
+                .data(massagedData)
               .enter().append("g")
                 .attr("class", "legendLabel")
                 .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; });
@@ -148,7 +145,7 @@ function stackedAreaChart() {
                 .attr("class", "legendLabel")
                 .attr("x", function(d) { return main_width - legend_text_offset.width; })
                 .attr("y", function(d,i) { return main_height - legend_text_offset.height + (i * legend_interval); })
-                .text( function (d) { return d.key; })
+                .text( function (d, i) { return d.key; })
                 .attr("font-family", "sans-serif")
                 .attr("font-size", "10px")
                 .attr("fill", "black");
@@ -160,16 +157,111 @@ function stackedAreaChart() {
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
-                .attr("fill", function(d) {
-                    if(d.vis=="1") {
-                        return z(d.key);
-                    }
-                    else {
-                        //return "white";
-                        return z(d.key);
-                    }
-                });
+                .attr("fill", function(d) { return z(d.key); });
+            
+
+            //d3.selectAll(".filter").on("change", redraw);
+
+
+            
+            
+
         });
+    }
+
+
+    // redraw the chart based on new data
+            function redraw(dataFile) {
+
+                console.log("argh");
+
+                console.log(dataFile);
+
+                d3.json(dataFile, function(data) {
+
+                
+
+                var newData = massageData(data);    // appending to the data instead of replacing
+                console.log(newData);
+                var newLayers = stack(newData);
+                console.log(newLayers);
+
+                main.selectAll(".layer")
+                  .data(newLayers)
+                    .attr("d", function(d) { return main_area(d.values); });
+
+                //console.log(newData);
+
+                /*
+                layers.enter().append("path")
+                    .attr("clip-path", "url(#clip)")
+                    .attr("class", "layer")
+                    .attr("d", function(d) { return main_area(d.values); })
+                    .style("fill", function(d, i) { return z(i); });
+                */
+                
+
+                main.transition()
+                    .attr("d", function(d) { console.log(d.values); return main_area(d.values); });
+
+                //layers.exit().remove();
+
+                });
+
+            }
+
+
+    function massageData(data) {
+        console.log("I've been called!");
+        // Loop through the data and add elements
+        data.result.forEach(function(d) {
+            d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+        });
+
+        // Group the data by date
+        var nestByDate = d3.nest()
+            .key(function(d) { return d.date; })
+            .entries(data.result);
+
+        // This adds missing records.  I.e. records where the count is 0
+        nestByDate.forEach(function(d) {
+            var dateObj = new Date(d.key);
+            var statusHolding = new Array();
+            var i = 0;
+
+            d.values.forEach(function(d) {
+                statusHolding[i] = d._id.buildResult;
+                i++;
+            });
+
+            if (statusHolding.length < 4) {
+                var difference = diff(categories, statusHolding);
+                
+                for (var k = 0; k < difference.length; k++) {
+                    data.result.push({
+                        "_id": {
+                            "buildResult": difference[k]
+                        },
+                        "count": 0,
+                        "date": dateObj
+                    });
+                }
+            }
+        });
+        
+        // Nest/group by dimKey
+        var nested = d3.nest()
+            .key(dimKey)
+            .sortKeys(function(a,b) { return categories.indexOf(a) - categories.indexOf(b)})
+            .sortValues(function(a,b) { return ((a.date < b.date)
+                ? -1
+                : 1);
+                return 0;
+            })
+            .entries(data.result);
+
+        return nested;
+
     }
 
 
@@ -178,6 +270,13 @@ function stackedAreaChart() {
             return B.indexOf(a) == -1;
         });
     }
+
+    // Brush/select function
+    function brushed() {
+        main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
+        main.selectAll(".layer").attr("d", function(d) { return main_area(d.values); })
+        main.select(".x.axis").call(main_xAxis);
+    }  
 
 
     // Get/set main_margin
