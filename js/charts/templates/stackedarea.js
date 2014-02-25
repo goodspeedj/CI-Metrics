@@ -72,60 +72,12 @@ function stackedAreaChart() {
     function chart(selection) {
         selection.each(function(data) {
 
-            // Loop through the data and add elements
-            data.result.forEach(function(d) {
-                d.date = new Date(d._id.year, d._id.month-1, d._id.day);
-            });
-
-            // Group the data by date
-            var nestByDate = d3.nest()
-                .key(function(d) { return d.date; })
-                .entries(data.result);
-
-            // This adds missing records.  I.e. records where the count is 0
-            nestByDate.forEach(function(d) {
-                var dateObj = new Date(d.key);
-                var statusHolding = new Array();
-                var i = 0;
-
-                d.values.forEach(function(d) {
-                    statusHolding[i] = d._id.buildResult;
-                    i++;
-                });
-
-                if (statusHolding.length < 4) {
-                    var difference = diff(categories, statusHolding);
-                    
-                    for (var k = 0; k < difference.length; k++) {
-                        data.result.push({
-                            "_id": {
-                                "buildResult": difference[k]
-                            },
-                            "count": 0,
-                            "date": dateObj
-                        });
-                    }
-                }
-            });
             
-
-
-
-
-            // Nest/group by dimKey
-            var nested = d3.nest()
-                .key(dimKey)
-                .sortKeys(function(a,b) { return categories.indexOf(a) - categories.indexOf(b)})
-                .sortValues(function(a,b) { return ((a.date < b.date)
-                    ? -1
-                    : 1);
-                    return 0;
-                })
-                .entries(data.result);
-
+            var massagedData = massageData(data);
+            console.log(massagedData);
 
             // Create the layers
-            var layers = stack(nested);
+            var layers = stack(massagedData);
 
             // Set the x and y domains
             main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
@@ -184,7 +136,7 @@ function stackedAreaChart() {
 
             // Add the legend
             var legend = main.selectAll(".legendLabel")
-                .data(nested)
+                .data(massagedData)
               .enter().append("g")
                 .attr("class", "legendLabel")
                 .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; });
@@ -193,11 +145,7 @@ function stackedAreaChart() {
                 .attr("class", "legendLabel")
                 .attr("x", function(d) { return main_width - legend_text_offset.width; })
                 .attr("y", function(d,i) { return main_height - legend_text_offset.height + (i * legend_interval); })
-                .text( function (d, i) { 
-                    console.log(d.key + i); 
-
-                    return d.key; 
-                })
+                .text( function (d, i) { return d.key; })
                 .attr("font-family", "sans-serif")
                 .attr("font-size", "10px")
                 .attr("fill", "black");
@@ -212,10 +160,108 @@ function stackedAreaChart() {
                 .attr("fill", function(d) { return z(d.key); });
             
 
+            //d3.selectAll(".filter").on("change", redraw);
 
+
+            
             
 
         });
+    }
+
+
+    // redraw the chart based on new data
+            function redraw(dataFile) {
+
+                console.log("argh");
+
+                console.log(dataFile);
+
+                d3.json(dataFile, function(data) {
+
+                
+
+                var newData = massageData(data);    // appending to the data instead of replacing
+                console.log(newData);
+                var newLayers = stack(newData);
+                console.log(newLayers);
+
+                main.selectAll(".layer")
+                  .data(newLayers)
+                    .attr("d", function(d) { return main_area(d.values); });
+
+                //console.log(newData);
+
+                /*
+                layers.enter().append("path")
+                    .attr("clip-path", "url(#clip)")
+                    .attr("class", "layer")
+                    .attr("d", function(d) { return main_area(d.values); })
+                    .style("fill", function(d, i) { return z(i); });
+                */
+                
+
+                main.transition()
+                    .attr("d", function(d) { console.log(d.values); return main_area(d.values); });
+
+                //layers.exit().remove();
+
+                });
+
+            }
+
+
+    function massageData(data) {
+        console.log("I've been called!");
+        // Loop through the data and add elements
+        data.result.forEach(function(d) {
+            d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+        });
+
+        // Group the data by date
+        var nestByDate = d3.nest()
+            .key(function(d) { return d.date; })
+            .entries(data.result);
+
+        // This adds missing records.  I.e. records where the count is 0
+        nestByDate.forEach(function(d) {
+            var dateObj = new Date(d.key);
+            var statusHolding = new Array();
+            var i = 0;
+
+            d.values.forEach(function(d) {
+                statusHolding[i] = d._id.buildResult;
+                i++;
+            });
+
+            if (statusHolding.length < 4) {
+                var difference = diff(categories, statusHolding);
+                
+                for (var k = 0; k < difference.length; k++) {
+                    data.result.push({
+                        "_id": {
+                            "buildResult": difference[k]
+                        },
+                        "count": 0,
+                        "date": dateObj
+                    });
+                }
+            }
+        });
+        
+        // Nest/group by dimKey
+        var nested = d3.nest()
+            .key(dimKey)
+            .sortKeys(function(a,b) { return categories.indexOf(a) - categories.indexOf(b)})
+            .sortValues(function(a,b) { return ((a.date < b.date)
+                ? -1
+                : 1);
+                return 0;
+            })
+            .entries(data.result);
+
+        return nested;
+
     }
 
 
