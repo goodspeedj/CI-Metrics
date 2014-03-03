@@ -57,13 +57,13 @@ function stackedAreaChart() {
 
     // Define the area
     var main_area = d3.svg.area()
-              .interpolate("basis")
+              .interpolate("cardinal")
               .x(function(d) { return main_x(xValue(d)); })
               .y0(function(d) { return main_y(d.y0); })
               .y1(function(d) { return main_y(d.y0 + d.y); });
 
     var mini_area = d3.svg.area()
-              .interpolate("basis")
+              .interpolate("cardinal")
               .x(function(d) { return mini_x(xValue(d)); })
               .y0(function(d) { return mini_y(d.y0); })
               .y1(function(d) { return mini_y(d.y0 + d.y); });
