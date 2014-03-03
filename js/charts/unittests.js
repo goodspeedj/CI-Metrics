@@ -3,7 +3,9 @@ var chart = stackedAreaChart()
     .y(function(d) { return d.total; })
     .yLabel("Total Number")
     .dimKey(function(d) { return d._id.portfolio; })
-    .yTickFormat(function(d) { return d3.round(d); });
+    .yTickFormat(function(d) { return d3.round(d); })
+    .categories(["PASS","FAILE","SKIPPED"])
+    .stackColors(["#98ABC5","#6B486B","#FF8C00"]);
 
 d3.json('data/unit_by_portfolio.json', function(data) {
     d3.select("#graph")

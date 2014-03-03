@@ -5,7 +5,9 @@ var chart = stackedAreaChart()
     .y(function(d) { return d.count; })
     .yLabel("Total Number")
     .dimKey(function(d) { return d._id.buildResult; })
-    .yTickFormat(function(d) { return d3.round(d); });
+    .yTickFormat(function(d) { return d3.round(d); })
+    .categories(["ABORTED","SUCCESS","UNSTABLE","FAILURE"])
+    .stackColors(["#C0C0C0","#6FB200","#FCE338","#EF3434"]);
 
 drawChart(dataFile);
 
