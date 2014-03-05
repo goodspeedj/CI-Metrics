@@ -45,6 +45,7 @@ function stackedAreaChart() {
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
         .tickFormat(function(d) { return yTickFormat(d) })
+        .ticks(5)
         .orient("left");
 
     // Create the brush for the mini chart
@@ -83,6 +84,8 @@ function stackedAreaChart() {
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
+
+            console.log(yScale);
 
 
             // Get the data into the right format - categories are passed in from calling chart
@@ -196,7 +199,7 @@ function stackedAreaChart() {
 
         });
     }
-    
+
 
     // Brush/select function
     function brushed() {
