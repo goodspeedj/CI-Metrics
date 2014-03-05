@@ -15,6 +15,9 @@ function stackedAreaChart() {
     // The colors of the stack area supplied by the calling chart
     var stackColors;
 
+    // The Y Scale axis
+    var yScale;
+
     // Setup X time scale
     var main_x = d3.time.scale()
         .range([0, main_width - axis_offset]);
@@ -42,6 +45,7 @@ function stackedAreaChart() {
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
         .tickFormat(function(d) { return yTickFormat(d) })
+        .ticks(5)
         .orient("left");
 
     // Create the brush for the mini chart
@@ -78,50 +82,39 @@ function stackedAreaChart() {
 
             // Loop through the data and add elements
             data.result.forEach(function(d) {
-                var passed = d.total - d.failed - d.skipped;
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
 
-            var nested = d3.nest()
-                .key(function(d) { return xValue(d); })
-                .entries(data.result);
 
-            //console.log(nested);
-
-            var keys = ["total", "failed","skipped"];
-            var subKeys = ["Shared", "eService"];
-
-            // Get the data into the right format
-            var dataSeries = keys.map( function(type) {
+            // Get the data into the right format - categories are passed in from calling chart
+            var dataSeries = categories.map(function(type) {
                 var dataObj = {};
-                //dataObj.key = type;
+                dataObj.key = type;
 
-                dataObj.values = data.result.map( function(d) {
-                    dataObj.key = type + "-" + dimKey(d);
-                    
-                    if (d[type] === "total") {
-                        return { date: d.date, total: d[type] - d.skipped - d.failed };
-                    }
-                    else {
-                        return { date: d.date, total: d[type] };
-                    }
-                    
+                dataObj.values = data.result.map(function(d) {
+                    return { date: d.date, total: d[type] };  
                 });
 
                 return dataObj;
             });
 
-            
-
             console.log(dataSeries);
-            //console.log(JSON.stringify(dataSeries, undefined, 3));
+
 
             // Create the layers
             var layers = stack(dataSeries);
 
+            console.log(layers);
+
             // Set the x and y domains
             main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
-            main_y.domain([0, d3.max(data.result, function(d) { console.log(d.total); return d.total; })]);
+            main_y.domain([0, d3.max(data.result, function(d) { 
+                var total = 0;
+                categories.forEach(function(type) {
+                    total = total + d[type];
+                })
+                return total + 10; 
+            })]);
 
             mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
             mini_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
@@ -354,6 +347,13 @@ function stackedAreaChart() {
     chart.stackColors = function(value) {
         if (!arguments.length) return stackColors;
         stackColors = value;
+        return chart;
+    }
+
+    // Y axis scale
+    chart.yScale = function(value) {
+        if (!arguments.length) return yScale;
+        yScale = value;
         return chart;
     }
 
