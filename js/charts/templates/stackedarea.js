@@ -9,6 +9,9 @@ function stackedAreaChart() {
     // These are the x and y dimensions supplied by the calling chart
     var xValue, yValue;
 
+    // layer categories supplied by calling chart
+    var categories;
+
     // Setup X time scale
     var main_x = d3.time.scale()
         .range([0, main_width - axis_offset]);
@@ -43,10 +46,7 @@ function stackedAreaChart() {
         .x(mini_x)
         .on("brush", brushed);
 
-    var categories = ["ABORTED","SUCCESS","UNSTABLE","FAILURE"];
-    //var categories = ["FAILURE","UNSTABLE","SUCCESS","ABORTED"];
-    var z = d3.scale.ordinal().domain(categories).range(["#C0C0C0","#6FB200","#FCE338","#EF3434"]);
-    //var z = d3.scale.ordinal().domain(categories).range(["#EF3434","#FCE338","#6FB200", "#C0C0C0"]);
+    var z = d3.scale.ordinal();
 
     // Create the area stack
     var stack = d3.layout.stack()
@@ -85,6 +85,8 @@ function stackedAreaChart() {
 
             mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
             mini_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
+
+            z.domain(categories).range(colors);
 
             
 
@@ -157,62 +159,14 @@ function stackedAreaChart() {
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
-                .attr("fill", function(d) { return z(d.key); });
+                .attr("fill", function(d) { return z(d.key); });        
             
-
-            //d3.selectAll(".filter").on("change", redraw);
-
-
-            
-            
-
         });
     }
 
 
-    // redraw the chart based on new data
-            function redraw(dataFile) {
-
-                console.log("argh");
-
-                console.log(dataFile);
-
-                d3.json(dataFile, function(data) {
-
-                
-
-                var newData = massageData(data);    // appending to the data instead of replacing
-                console.log(newData);
-                var newLayers = stack(newData);
-                console.log(newLayers);
-
-                main.selectAll(".layer")
-                  .data(newLayers)
-                    .attr("d", function(d) { return main_area(d.values); });
-
-                //console.log(newData);
-
-                /*
-                layers.enter().append("path")
-                    .attr("clip-path", "url(#clip)")
-                    .attr("class", "layer")
-                    .attr("d", function(d) { return main_area(d.values); })
-                    .style("fill", function(d, i) { return z(i); });
-                */
-                
-
-                main.transition()
-                    .attr("d", function(d) { console.log(d.values); return main_area(d.values); });
-
-                //layers.exit().remove();
-
-                });
-
-            }
-
-
     function massageData(data) {
-        console.log("I've been called!");
+        
         // Loop through the data and add elements
         data.result.forEach(function(d) {
             d.date = new Date(d._id.year, d._id.month-1, d._id.day);
@@ -343,6 +297,18 @@ function stackedAreaChart() {
     chart.yTickFormat = function(value) {
         if (!arguments.length) return yTickFormat;
         yTickFormat = value;
+        return chart;
+    }
+
+    chart.categories = function(value) {
+        if (!arguments.length) return categories;
+        categories = value;
+        return chart;
+    }
+
+    chart.colors = function(value) {
+        if (!arguments.length) return colors;
+        colors = value;
         return chart;
     }
 
