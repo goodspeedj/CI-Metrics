@@ -257,6 +257,26 @@ function stackedAreaChart() {
                     }
                     
                 })
+                .on("mouseover", function(d) {
+                    // Make the line bold
+                    d3.select(this).transition().duration(200)
+                        .style("stroke-width", "5px");
+
+                    // Fade out the other layers
+                    var otherlayers = $('path.layer').not("path." + d.key);
+                    d3.selectAll(otherlayers).transition().duration(200)
+                        .style("opacity", .5);
+                })
+                .on("mouseout", function(d) {
+                    d3.select(this).transition().duration(100)
+                        .style("stroke-width", "2px");
+
+                    // Make the other lines normal again
+                    var otherlayers = $('.layer').not("path." + d.key);
+                    d3.selectAll(otherlayers).transition().duration(100)
+                        .style("opacity", 1)
+                        .style("fill", function(d) { return z(d.key)});
+                })
                 .on("click", function(d) {
 
                     if(d.vis === "1") {
