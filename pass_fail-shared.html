@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+  <head>
+    <title>Build Pass/Fail</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Number of CI Builds by Status and Date</h3>
+          This chart shows the total number of builds for the Shared portfolio (NextGen Services and Internet Common jobs) by status and date.
+          <!--
+          <div id="filter" class="pull-right">
+            <form id="filter">
+              <label><input class="filter" type="radio" name="filter" value="all" checked> eCommerce All</label><br />
+              <label><input class="filter" type="radio" name="filter" value="Anlytics"> Analytics</label><br />
+              <label><input class="filter" type="radio" name="filter" value="eSales"> eSales</label><br />
+              <label><input class="filter" type="radio" name="filter" value="eService"> eService</label><br />
+              <label><input class="filter" type="radio" name="filter" value="LMcom"> LM.com</label><br />
+              <label><input class="filter" type="radio" name="filter" value="Shared"> Shared</label><br />
+            </form>
+          </div>
+          -->
+          <p>&nbsp;</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="graph"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/jquery-2.0.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.min.js"></script>
+    <script src="js/charts/common.js"></script>
+    <script src="js/charts/templates/stackedarea.js"></script>
+    <script src="js/charts/passfail-shared.js"></script>
+
+  </body>
+</html>
