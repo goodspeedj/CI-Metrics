@@ -3,9 +3,9 @@ var chartName = "unitTest";
 var chart = stackedAreaChart()
     .x(function(d) { return d.date; })
     .y(function(d) { return d.total; })
-    .yLabel("Total Number (Thousands)")
+    .yLabel("Total Number")
     .dimKey(function(d) { return d._id.portfolio; })
-    .yTickFormat(function(d) { return d3.round(d / 1000); })
+    .yTickFormat(function(d) { return d; })
     .categories(["Failed", "Skipped", "Total"])
     .stackColors(["#ff8c00","#d0743c", "#98abc5"])
     .yScale(d3.scale.sqrt());
