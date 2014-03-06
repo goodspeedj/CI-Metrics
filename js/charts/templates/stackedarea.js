@@ -119,7 +119,7 @@ function stackedAreaChart() {
                 categories.forEach(function(type) {
                     total = total + d[type];
                 })
-                return total + 10; 
+                return total; 
             })]);
 
             mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
@@ -128,15 +128,17 @@ function stackedAreaChart() {
                 categories.forEach(function(type) {
                     total = total + d[type];
                 })
-                return total + 10; 
+                return total; 
             })]);
 
             z.domain(categories).range(stackColors);
 
             // Add the line paths
-            main.selectAll(".layer")
+            var main_layer = main.selectAll(".layer")
                 .data(layers)
-              .enter().append("path")
+              .enter().append("g");
+
+            main_layer.append("path")
                 .attr("clip-path", "url(#clip)")
                 .attr("class", "layer")
                 .attr("d", function(d) { 
@@ -150,9 +152,12 @@ function stackedAreaChart() {
                 .style("fill", function(d, i) { return z(i); });
                     
 
-            mini.selectAll(".mini-layer")
+            var mini_layer = mini.selectAll(".mini-layer")
                 .data(layers)
-              .enter().append("path")
+              .enter().append("g");
+
+
+            mini_layer.append("path")
                 .attr("class", "mini-layer")
                 .attr("d", function(d) { 
                     if(d.vis === "1") {
@@ -236,12 +241,19 @@ function stackedAreaChart() {
                     }
 
                     maxY = getMaxY();
-                    main.select(".y.axis").call(main_yAxis);
+                    main_y.domain([0,maxY]);
+                    mini_y.domain([0,maxY]);
 
-                    main.select("path").transition()
+                    main.select(".y.axis")
+                        .transition()
+                          .duration(800)
+                        .call(main_yAxis);
+
+                    main_layer.select(".layer")
+                        .transition()
+                          .duration(500)
                         .attr("d", function(d) { 
-                            console.log(d);
-                            if(d.vis === 1) {
+                            if(d.vis === "1") {
                                 return main_area(d.values);
                             }
                             else {
@@ -249,7 +261,21 @@ function stackedAreaChart() {
                             }
                         });
 
-                    legend.select("rect").transition()
+                    mini_layer.select(".mini-layer")
+                        .transition()
+                          .duration(500)
+                        .attr("d", function(d) { 
+                            if(d.vis === "1") {
+                                return mini_area(d.values);
+                            }
+                            else {
+                                return null;
+                            }
+                        });
+
+                    legend.select("rect")
+                        .transition()
+                          .duration(500)
                         .attr("fill",function(d) {
                             if (d.vis=="1") {
                                 return z(d.key);
@@ -266,7 +292,7 @@ function stackedAreaChart() {
                 var maxY = -1;
                 
                 dataSeries.forEach(function(d) {
-                    if (d.vis === 1) {
+                    if (d.vis === "1") {
                         d.values.forEach(function(d) {
                             if (yValue(d) > maxY){
                                 maxY = yValue(d);
@@ -285,7 +311,15 @@ function stackedAreaChart() {
     // Brush/select function
     function brushed() {
         main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
-        main.selectAll(".layer").attr("d", function(d) { return main_area(d.values); })
+        main.selectAll(".layer").attr("d", function(d) { 
+            if (d.vis === "1") {
+                return main_area(d.values);
+            }
+            else {
+                return null;
+            }           
+        });
+
         main.select(".x.axis").call(main_xAxis);
     }  
 
