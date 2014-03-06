@@ -203,7 +203,7 @@ function multiLineChart() {
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i*30); })
                 .attr("stroke", function(d) { return color(d.key);})
                 .attr("fill",function(d) {
-                    if(d.vis=="1") {
+                    if(d.vis === "1") {
                         return color(d.key);
                     }
                     else {
@@ -359,7 +359,7 @@ function multiLineChart() {
                 var maxY = -1;
                 
                 nested.forEach(function(d) {
-                    if (d.vis == 1) {
+                    if (d.vis === 1) {
                         d.values.forEach(function(d) {
                             if (yValue(d) > maxY){
                                 maxY = yValue(d);

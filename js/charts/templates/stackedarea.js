@@ -100,6 +100,7 @@ function stackedAreaChart() {
             var dataSeries = categories.map(function(type) {
                 var dataObj = {};
                 dataObj.key = type;
+                dataObj.vis = "1";
 
                 dataObj.values = data.result.map(function(d) {
                     return { date: d.date, total: d[type] };  
@@ -138,14 +139,29 @@ function stackedAreaChart() {
               .enter().append("path")
                 .attr("clip-path", "url(#clip)")
                 .attr("class", "layer")
-                .attr("d", function(d) { return main_area(d.values); })
+                .attr("d", function(d) { 
+                    if(d.vis === "1") {
+                        return main_area(d.values);
+                    }
+                    else {
+                        return null;
+                    }
+                })
                 .style("fill", function(d, i) { return z(i); });
+                    
 
             mini.selectAll(".mini-layer")
                 .data(layers)
               .enter().append("path")
                 .attr("class", "mini-layer")
-                .attr("d", function(d) { return mini_area(d.values); })
+                .attr("d", function(d) { 
+                    if(d.vis === "1") {
+                        return mini_area(d.values);
+                    }
+                    else {
+                        return null;
+                    }
+                })
                 .style("fill", function(d, i) { return z(i); });
 
             // Add the X and Y axis
@@ -201,7 +217,66 @@ function stackedAreaChart() {
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
-                .attr("fill", function(d) { return z(d.key); });        
+                .attr("fill", function(d) { 
+                    if(d.vis === "1") {
+                        return z(d.key); 
+                    }
+                    else {
+                        return "white";
+                    }
+                    
+                })
+                .on("click", function(d) {
+
+                    if(d.vis === "1") {
+                        d.vis = "0";
+                    }
+                    else {
+                        d.vis = "1";
+                    }
+
+                    maxY = getMaxY();
+                    main.select(".y.axis").call(main_yAxis);
+
+                    main.select("path").transition()
+                        .attr("d", function(d) { 
+                            console.log(d);
+                            if(d.vis === 1) {
+                                return main_area(d.values);
+                            }
+                            else {
+                                return null;
+                            }
+                        });
+
+                    legend.select("rect").transition()
+                        .attr("fill",function(d) {
+                            if (d.vis=="1") {
+                                return z(d.key);
+                            }
+                            else {
+                                return "white";
+                            }
+                        });
+                }); 
+
+
+            // Get the max Y value
+            function getMaxY() {
+                var maxY = -1;
+                
+                dataSeries.forEach(function(d) {
+                    if (d.vis === 1) {
+                        d.values.forEach(function(d) {
+                            if (yValue(d) > maxY){
+                                maxY = yValue(d);
+                            }
+                        });
+                    }
+                });
+
+                return maxY;
+            }        
 
         });
     }
