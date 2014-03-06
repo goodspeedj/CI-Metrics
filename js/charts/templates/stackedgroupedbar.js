@@ -50,7 +50,7 @@ function stackedGroupedBarChart() {
             nestByDate.forEach(function(d) {
                 var y0 = 0;
                 var y1 = 0;
-                d.vis = 1;
+                d.vis = "1";
                 d.values.forEach(function(d) {
 
                     // y0 is the y axis start of the bar
@@ -60,7 +60,7 @@ function stackedGroupedBarChart() {
                     d.y1 = yValue(d);
 
                     // d.vis controls whether bars are visible or not
-                    d.vis = 1;
+                    d.vis = "1";
                 });
             });
 
@@ -109,7 +109,7 @@ function stackedGroupedBarChart() {
 
             // Add the vis element to the nested data structure
             nested.forEach(function(d) {
-                d.vis = 1;
+                d.vis = "1";
             });
 
             // Add the X axis
@@ -277,17 +277,24 @@ function stackedGroupedBarChart() {
                     main_y.domain([0,maxY]);
                     mini_y.domain([0,maxY]);
 
-                    main.select(".y.axis").transition().call(main_yAxis);
+                    main.select(".y.axis")
+                        .transition()
+                          .duration(800)
+                        .call(main_yAxis);
 
                     // Update the ideal dashed line
-                    main.selectAll(".ideal").transition()
+                    main.selectAll(".ideal")
+                        .transition()
+                          .duration(500)
                         .attr("y", main_y(ideal_time))
                         .attr("y1", main_y(ideal_time))
                         .attr("y2", main_y(ideal_time));
 
                     
                     // Show or hide the bars
-                    main.selectAll("." + d.key + "-group").transition()
+                    main.selectAll("." + d.key + "-group")
+                        .transition()
+                          .duration(500)
                         .attr("fill-opacity", function(d) {
                             if (d.vis === "1") {
                                 return "1.0";
@@ -297,7 +304,9 @@ function stackedGroupedBarChart() {
                             }
                         });
 
-                    mini.selectAll("." + d.key + "-group").transition()
+                    mini.selectAll("." + d.key + "-group")
+                        .transition()
+                          .duration(500)
                         .attr("fill-opacity", function(d) {
                             if (d.vis === "1") {
                                 return "1.0";

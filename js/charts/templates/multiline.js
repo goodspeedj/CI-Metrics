@@ -251,10 +251,15 @@ function multiLineChart() {
                     main_y.domain([0,maxY]);
                     mini_y.domain([0,maxY]);
 
-                    main.select(".y.axis").call(main_yAxis);
+                    main.select(".y.axis")
+                        .transition()
+                            .duration(800)
+                        .call(main_yAxis);
 
                     // Update the lines
-                    main_stream.select("path").transition()
+                    main_stream.select("path")
+                        .transition()
+                          .duration(500)
                         .attr("d", function(d) { 
                             if(d.vis === "1") { 
                                 return main_line(d.values);
@@ -264,7 +269,9 @@ function multiLineChart() {
                             } 
                         })
 
-                    mini_stream.select("path").transition()
+                    mini_stream.select("path")
+                        .transition()
+                          .duration(500)
                         .attr("d", function(d) {
                             if(d.vis === "1") {
                                 return mini_line(d.values);
@@ -275,7 +282,9 @@ function multiLineChart() {
                         })
 
                     // Update the legend
-                    main_stream.select("rect").transition()
+                    main_stream.select("rect")
+                        .transition()
+                          .duration(500)
                         .attr("fill",function(d) {
                             if (d.vis === "1") {
                                 return color(d.key);
