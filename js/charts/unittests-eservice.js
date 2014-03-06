@@ -6,7 +6,7 @@ var chart = stackedAreaChart()
     .yLabel("Total Number")
     .dimKey(function(d) { return d._id.portfolio; })
     .yTickFormat(function(d) { return d; })
-    .categories(["Failed", "Skipped", "Total"])
+    .categories(["Failed", "Skipped", "Passed"])
     .stackColors(["#ff8c00","#d0743c", "#98abc5"])
     .yScale(d3.scale.sqrt());
 

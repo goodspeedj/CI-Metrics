@@ -38,17 +38,17 @@ function stackedAreaChart() {
     // Setup Y axis
     if (chartName === "unitTest") {
         var main_y = d3.scale.sqrt()
-            .range([main_height, 0]);
+            .range([main_height, 10]);
 
         var mini_y = d3.scale.sqrt()
-            .range([mini_height, 0]);
+            .range([mini_height, 10]);
     }
     else {
         var main_y = d3.scale.linear()
-            .range([main_height, 0]);
+            .range([main_height, 10]);
 
         var mini_y = d3.scale.linear()
-            .range([mini_height, 0]);   
+            .range([mini_height, 10]);   
     }
 
     var main_yAxis = d3.svg.axis()
