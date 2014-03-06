@@ -140,7 +140,7 @@ function stackedAreaChart() {
 
             main_layer.append("path")
                 .attr("clip-path", "url(#clip)")
-                .attr("class", "layer")
+                .attr("class", function(d) { return d.key + " layer"; })
                 .attr("d", function(d) { 
                     if(d.vis === "1") {
                         return main_area(d.values);
@@ -149,7 +149,33 @@ function stackedAreaChart() {
                         return null;
                     }
                 })
-                .style("fill", function(d, i) { return z(i); });
+                .style("fill", function(d, i) { return z(i); })
+                .on("mouseover", function(d) {
+
+                    // Fade out the other layers
+                    var otherlayers = $('path.layer').not("path." + d.key);
+                    d3.selectAll(otherlayers).transition().duration(200)
+                        .style("opacity", .5);
+
+                    // Show tooltip
+                    tooltip.transition().duration(200)
+                        .style("opacity", .8);
+                    tooltip
+                        .html(d.key)
+                          .style("left", (d3.event.pageX + 10) + "px")
+                          .style("top", (d3.event.pageY - 25) + "px");
+                })
+                .on("mouseout", function(d) {
+
+                    // Make the other lines normal again
+                    var otherlayers = $('.layer').not("path." + d.key);
+                    d3.selectAll(otherlayers).transition().duration(100)
+                        .style("opacity", 1)
+                        .style("fill", function(d) { return z(d.key)});   
+
+                    // Hide the tooltip
+                    tooltip.transition().duration(500).style("opacity", 0);
+                });
                     
 
             var mini_layer = mini.selectAll(".mini-layer")
