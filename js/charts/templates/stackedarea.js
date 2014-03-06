@@ -9,6 +9,15 @@ function stackedAreaChart() {
     // These are the x and y dimensions supplied by the calling chart
     var xValue, yValue;
 
+    // The stack area categories supplied by the calling chart
+    var categories;
+
+    // The colors of the stack area supplied by the calling chart
+    var stackColors;
+
+    // The Y Scale axis
+    var yScale;
+
     // Setup X time scale
     var main_x = d3.time.scale()
         .range([0, main_width - axis_offset]);
@@ -23,19 +32,29 @@ function stackedAreaChart() {
 
     var mini_xAxis = d3.svg.axis()
       .scale(mini_x)
-      .ticks(d3.time.day, 2)
+      .ticks(10)
       .orient("bottom");
 
     // Setup Y axis
-    var main_y = d3.scale.linear()
-        .range([main_height, 0]);
+    if (chartName === "unitTest") {
+        var main_y = d3.scale.sqrt()
+            .range([main_height, 0]);
 
-    var mini_y = d3.scale.linear()
-        .range([mini_height, 0]);
+        var mini_y = d3.scale.sqrt()
+            .range([mini_height, 0]);
+    }
+    else {
+        var main_y = d3.scale.linear()
+            .range([main_height, 0]);
+
+        var mini_y = d3.scale.linear()
+            .range([mini_height, 0]);   
+    }
 
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
         .tickFormat(function(d) { return yTickFormat(d) })
+        .ticks(5)
         .orient("left");
 
     // Create the brush for the mini chart
@@ -43,10 +62,9 @@ function stackedAreaChart() {
         .x(mini_x)
         .on("brush", brushed);
 
-    var categories = ["ABORTED","SUCCESS","UNSTABLE","FAILURE"];
-    //var categories = ["FAILURE","UNSTABLE","SUCCESS","ABORTED"];
-    var z = d3.scale.ordinal().domain(categories).range(["#C0C0C0","#6FB200","#FCE338","#EF3434"]);
-    //var z = d3.scale.ordinal().domain(categories).range(["#EF3434","#FCE338","#6FB200", "#C0C0C0"]);
+
+    // Z scale is the different categories (i.e.: build success, fail, unstable)
+    var z = d3.scale.ordinal();
 
     // Create the area stack
     var stack = d3.layout.stack()
@@ -57,13 +75,13 @@ function stackedAreaChart() {
 
     // Define the area
     var main_area = d3.svg.area()
-              .interpolate("basis")
+              .interpolate("cardinal")
               .x(function(d) { return main_x(xValue(d)); })
               .y0(function(d) { return main_y(d.y0); })
               .y1(function(d) { return main_y(d.y0 + d.y); });
 
     var mini_area = d3.svg.area()
-              .interpolate("basis")
+              .interpolate("cardinal")
               .x(function(d) { return mini_x(xValue(d)); })
               .y0(function(d) { return mini_y(d.y0); })
               .y1(function(d) { return mini_y(d.y0 + d.y); });
@@ -72,21 +90,47 @@ function stackedAreaChart() {
     function chart(selection) {
         selection.each(function(data) {
 
-            
-            var massagedData = massageData(data);
-            console.log(massagedData);
+            // Loop through the data and add elements
+            data.result.forEach(function(d) {
+                d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+            });
+
+
+            // Get the data into the right format - categories are passed in from calling chart
+            var dataSeries = categories.map(function(type) {
+                var dataObj = {};
+                dataObj.key = type;
+
+                dataObj.values = data.result.map(function(d) {
+                    return { date: d.date, total: d[type] };  
+                });
+
+                return dataObj;
+            });
 
             // Create the layers
-            var layers = stack(massagedData);
+            var layers = stack(dataSeries);
 
             // Set the x and y domains
             main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
-            main_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
+            main_y.domain([0, d3.max(data.result, function(d) { 
+                var total = 0;
+                categories.forEach(function(type) {
+                    total = total + d[type];
+                })
+                return total + 10; 
+            })]);
 
             mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
-            mini_y.domain([0, d3.max(data.result, function(d) { return d.y0 + d.y; })]);
+            mini_y.domain([0, d3.max(data.result, function(d) { 
+                var total = 0;
+                categories.forEach(function(type) {
+                    total = total + d[type];
+                })
+                return total + 10; 
+            })]);
 
-            
+            z.domain(categories).range(stackColors);
 
             // Add the line paths
             main.selectAll(".layer")
@@ -136,7 +180,7 @@ function stackedAreaChart() {
 
             // Add the legend
             var legend = main.selectAll(".legendLabel")
-                .data(massagedData)
+                .data(dataSeries)
               .enter().append("g")
                 .attr("class", "legendLabel")
                 .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; });
@@ -157,119 +201,11 @@ function stackedAreaChart() {
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
-                .attr("fill", function(d) { return z(d.key); });
-            
-
-            //d3.selectAll(".filter").on("change", redraw);
-
-
-            
-            
+                .attr("fill", function(d) { return z(d.key); });        
 
         });
     }
 
-
-    // redraw the chart based on new data
-            function redraw(dataFile) {
-
-                console.log("argh");
-
-                console.log(dataFile);
-
-                d3.json(dataFile, function(data) {
-
-                
-
-                var newData = massageData(data);    // appending to the data instead of replacing
-                console.log(newData);
-                var newLayers = stack(newData);
-                console.log(newLayers);
-
-                main.selectAll(".layer")
-                  .data(newLayers)
-                    .attr("d", function(d) { return main_area(d.values); });
-
-                //console.log(newData);
-
-                /*
-                layers.enter().append("path")
-                    .attr("clip-path", "url(#clip)")
-                    .attr("class", "layer")
-                    .attr("d", function(d) { return main_area(d.values); })
-                    .style("fill", function(d, i) { return z(i); });
-                */
-                
-
-                main.transition()
-                    .attr("d", function(d) { console.log(d.values); return main_area(d.values); });
-
-                //layers.exit().remove();
-
-                });
-
-            }
-
-
-    function massageData(data) {
-        console.log("I've been called!");
-        // Loop through the data and add elements
-        data.result.forEach(function(d) {
-            d.date = new Date(d._id.year, d._id.month-1, d._id.day);
-        });
-
-        // Group the data by date
-        var nestByDate = d3.nest()
-            .key(function(d) { return d.date; })
-            .entries(data.result);
-
-        // This adds missing records.  I.e. records where the count is 0
-        nestByDate.forEach(function(d) {
-            var dateObj = new Date(d.key);
-            var statusHolding = new Array();
-            var i = 0;
-
-            d.values.forEach(function(d) {
-                statusHolding[i] = d._id.buildResult;
-                i++;
-            });
-
-            if (statusHolding.length < 4) {
-                var difference = diff(categories, statusHolding);
-                
-                for (var k = 0; k < difference.length; k++) {
-                    data.result.push({
-                        "_id": {
-                            "buildResult": difference[k]
-                        },
-                        "count": 0,
-                        "date": dateObj
-                    });
-                }
-            }
-        });
-        
-        // Nest/group by dimKey
-        var nested = d3.nest()
-            .key(dimKey)
-            .sortKeys(function(a,b) { return categories.indexOf(a) - categories.indexOf(b)})
-            .sortValues(function(a,b) { return ((a.date < b.date)
-                ? -1
-                : 1);
-                return 0;
-            })
-            .entries(data.result);
-
-        return nested;
-
-    }
-
-
-    function diff(A, B) {
-        return A.filter(function(a) {
-            return B.indexOf(a) == -1;
-        });
-    }
 
     // Brush/select function
     function brushed() {
@@ -340,9 +276,32 @@ function stackedAreaChart() {
         return chart;
     }
   
+    // Y axis tick format
     chart.yTickFormat = function(value) {
         if (!arguments.length) return yTickFormat;
         yTickFormat = value;
+        return chart;
+    }
+
+
+    // Stack area categories
+    chart.categories = function(value) {
+        if (!arguments.length) return categories;
+        categories = value;
+        return chart;
+    }
+
+    // Stack area colors
+    chart.stackColors = function(value) {
+        if (!arguments.length) return stackColors;
+        stackColors = value;
+        return chart;
+    }
+
+    // Y axis scale
+    chart.yScale = function(value) {
+        if (!arguments.length) return yScale;
+        yScale = value;
         return chart;
     }
 
