@@ -190,8 +190,8 @@ function stackedAreaChart() {
                 .attr("x", function(d) { return main_width - legend_text_offset.width; })
                 .attr("y", function(d,i) { return main_height - legend_text_offset.height + (i * legend_interval); })
                 .text( function (d, i) { return d.key; })
-                .attr("font-family", "sans-serif")
-                .attr("font-size", "10px")
+                //.attr("font-family", "sans-serif")
+                .attr("font-size", "11px")
                 .attr("fill", "black");
 
             legend.append("rect")

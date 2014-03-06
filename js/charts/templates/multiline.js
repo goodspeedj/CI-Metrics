@@ -191,8 +191,7 @@ function multiLineChart() {
                 .attr("x", function(d) { return main_width-195; })
                 .attr("y", function(d,i) { return main_height - legend_text_offset.height + (i*30); })
                 .text( function (d) { return d.key; })
-                .attr("font-family", "sans-serif")
-                .attr("font-size", "10px")
+                .attr("font-size", "11px")
                 .attr("fill", "black");
     
             // Add the colored rectangles to the legend
