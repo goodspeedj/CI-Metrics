@@ -119,7 +119,7 @@ function multiLineChart() {
                 .attr("class", function(d) { return d.key + " lines"; })
                 .attr("d", function(d) {
                 // Draw the lines or not depending on d.vis
-                    if (d.vis=="1") {
+                    if (d.vis === "1") {
                         return mini_line(d.values);
                     }
                     else {
@@ -133,7 +133,7 @@ function multiLineChart() {
                 .attr("clip-path", "url(#clip)")
                 .attr("class", function(d) { return d.key + " lines"; })
                 .attr("d", function(d) {
-                    if (d.vis == 1) {
+                    if (d.vis === "1") {
                         return main_line(d.values);
                     }
                     else {
@@ -204,7 +204,7 @@ function multiLineChart() {
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i*30); })
                 .attr("stroke", function(d) { return color(d.key);})
                 .attr("fill",function(d) {
-                    if(d.vis=="1") {
+                    if(d.vis === "1") {
                         return color(d.key);
                     }
                     else {
@@ -239,11 +239,11 @@ function multiLineChart() {
                         .style("stroke", function(d) { return color(d.key)});
                 })
                 .on("click", function(d) {
-                    if(d.vis=="1") {
-                        d.vis="0";
+                    if(d.vis === "1") {
+                        d.vis = "0";
                     }
                     else {
-                        d.vis="1";
+                        d.vis = "1";
                     }
         
                     // Update the Y axis
@@ -257,7 +257,7 @@ function multiLineChart() {
                     // Update the lines
                     main_stream.select("path").transition()
                         .attr("d", function(d) { 
-                            if(d.vis=="1") { 
+                            if(d.vis === "1") { 
                                 return main_line(d.values);
                             } 
                             else { 
@@ -267,7 +267,7 @@ function multiLineChart() {
 
                     mini_stream.select("path").transition()
                         .attr("d", function(d) {
-                            if(d.vis=="1") {
+                            if(d.vis === "1") {
                                 return mini_line(d.values);
                             }
                             else {
@@ -278,7 +278,7 @@ function multiLineChart() {
                     // Update the legend
                     main_stream.select("rect").transition()
                         .attr("fill",function(d) {
-                            if (d.vis=="1") {
+                            if (d.vis === "1") {
                                 return color(d.key);
                             }
                             else {
@@ -344,7 +344,7 @@ function multiLineChart() {
             function brushed() {
                 main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
                 main_stream.select("path").attr("d", function(d) {
-                    if (d.vis == 1) {
+                    if (d.vis === "1") {
                         return main_line(d.values);
                     }
                     else {
@@ -360,7 +360,7 @@ function multiLineChart() {
                 var maxY = -1;
                 
                 nested.forEach(function(d) {
-                    if (d.vis == 1) {
+                    if (d.vis === "1") {
                         d.values.forEach(function(d) {
                             if (yValue(d) > maxY){
                                 maxY = yValue(d);

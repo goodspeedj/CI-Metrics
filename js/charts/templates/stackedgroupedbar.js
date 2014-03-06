@@ -242,7 +242,7 @@ function stackedGroupedBarChart() {
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return color(d.key);})
                 .attr("fill", function(d) {
-                    if(d.vis=="1") {
+                    if(d.vis === "1") {
                         return color(d.key);
                     }
                     else {
@@ -260,16 +260,16 @@ function stackedGroupedBarChart() {
                         .style("stroke-width", "2px");
                 })
                 .on("click", function(d) { 
-                    if(d.vis=="1") {
-                        d.vis="0";
+                    if(d.vis === "1") {
+                        d.vis = "0";
                         d.values.forEach(function(d) {
-                            d.vis="0";
+                            d.vis = "0";
                         });
                     }
                     else{
-                        d.vis="1";
+                        d.vis = "1";
                         d.values.forEach(function(d) {
-                            d.vis="1";
+                            d.vis = "1";
                         });
                     }
 
@@ -290,7 +290,7 @@ function stackedGroupedBarChart() {
                     // Show or hide the bars
                     main.selectAll("." + d.key + "-group").transition()
                         .attr("fill-opacity", function(d) {
-                            if (d.vis=="1") {
+                            if (d.vis === "1") {
                                 return "1.0";
                             }
                             else {
@@ -300,7 +300,7 @@ function stackedGroupedBarChart() {
 
                     mini.selectAll("." + d.key + "-group").transition()
                         .attr("fill-opacity", function(d) {
-                            if (d.vis=="1") {
+                            if (d.vis === "1") {
                                 return "1.0";
                             }
                             else {
@@ -310,7 +310,7 @@ function stackedGroupedBarChart() {
                     
 
                     // Change the transition calc based on the type of chart
-                    if ($('input[name=orientation]:checked').val() == 'grouped') {
+                    if ($('input[name=orientation]:checked').val() === 'grouped') {
                         bar.selectAll("rect").transition()
                             .attr("y", function(d) { return main_y(yValue(d)); })
                             .attr("height", function(d) { return main_height - main_y(yValue(d)); });
@@ -336,7 +336,7 @@ function stackedGroupedBarChart() {
                     // Update the legend 
                     legend.select("rect").transition()
                         .attr("fill-opacity", function(d) {
-                            if (d.vis=="1") {
+                            if (d.vis === "1") {
                                 return "1.0";
                             }
                             else {
@@ -411,7 +411,7 @@ function stackedGroupedBarChart() {
                     var y0 = 0;
                     var y1 = 0;
                     d.values.forEach(function(d) {
-                        if (d.vis == 1) {
+                        if (d.vis === "1") {
                             d.y0 = y0 + y1;
                             y1 = yValue(d);
                             d.y1 = y1;
@@ -434,7 +434,7 @@ function stackedGroupedBarChart() {
                 main_x1.rangeRoundBands([0, main_x0.rangeBand()], 0);
 
 
-                if ($('input[name=orientation]:checked').val() == 'grouped') {
+                if ($('input[name=orientation]:checked').val() === 'grouped') {
                     bar.selectAll("rect")
                         .attr("transform", function (d) {
                             return "translate(" + main_x0(x0Value(d)) + ",0)";
@@ -467,7 +467,7 @@ function stackedGroupedBarChart() {
                 var maxY = -1;
                 
                 nested.forEach(function(d) {
-                    if (d.vis == 1) {
+                    if (d.vis === "1") {
                         d.values.forEach(function(d) {
                             if (yValue(d) > maxY){
                                 maxY = yValue(d);
