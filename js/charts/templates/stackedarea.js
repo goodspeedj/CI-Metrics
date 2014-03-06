@@ -249,6 +249,7 @@ function stackedAreaChart() {
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
                 .attr("fill", function(d) { 
+                    console.log(d.vis);
                     if(d.vis === "1") {
                         return z(d.key); 
                     }
@@ -259,23 +260,25 @@ function stackedAreaChart() {
                 })
                 .on("mouseover", function(d) {
                     // Make the line bold
-                    d3.select(this).transition().duration(200)
+                    d3.select(this)
                         .style("stroke-width", "5px");
 
                     // Fade out the other layers
                     var otherlayers = $('path.layer').not("path." + d.key);
-                    d3.selectAll(otherlayers).transition().duration(200)
+                    d3.selectAll(otherlayers)
                         .style("opacity", .5);
                 })
                 .on("mouseout", function(d) {
-                    d3.select(this).transition().duration(100)
+                    d3.select(this)
                         .style("stroke-width", "2px");
 
                     // Make the other lines normal again
                     var otherlayers = $('.layer').not("path." + d.key);
-                    d3.selectAll(otherlayers).transition().duration(100)
+                    
+                    d3.selectAll(otherlayers)
                         .style("opacity", 1)
                         .style("fill", function(d) { return z(d.key)});
+
                 })
                 .on("click", function(d) {
 

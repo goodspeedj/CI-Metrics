@@ -212,27 +212,27 @@ function multiLineChart() {
                 })
                 .on("mouseover", function(d) {
                     // Make the line bold
-                    d3.select(this).transition().duration(200)
+                    d3.select(this)
                         .style("stroke-width", "5px");
 
                     d3.select("path." + d.key).transition().duration(200)
                         .style("stroke-width", "5px");
 
                     var otherlines = $("path.lines").not("path." + d.key);
-                    d3.selectAll(otherlines).transition().duration(200)
+                    d3.selectAll(otherlines)
                         .style("opacity", .3)
                         .style("stroke-width", 1.5)
                         .style("stroke", "gray");;
                 })
                 .on("mouseout", function(d) {
-                    d3.select(this).transition().duration(100)
+                    d3.select(this)
                         .style("stroke-width", "2px");
 
                     d3.select("path." + d.key).transition().duration(100)
                         .style("stroke-width", "2px");
 
                     var otherlines = $("path.lines").not("path." + d.key);
-                    d3.selectAll(otherlines).transition().duration(100)
+                    d3.selectAll(otherlines)
                         .style("opacity", 1)
                         .style("stroke-width", 2)
                         .style("stroke", function(d) { return color(d.key)});

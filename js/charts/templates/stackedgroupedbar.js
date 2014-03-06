@@ -251,11 +251,11 @@ function stackedGroupedBarChart() {
                 .on("mouseover", function(d) {
 
                     // Make the line bold
-                    d3.select(this).transition().duration(200)
+                    d3.select(this)
                         .style("stroke-width", "4px");
                 })
                 .on("mouseout", function(d) {
-                    d3.select(this).transition().duration(100)
+                    d3.select(this)
                         .style("stroke-width", "2px");
                 })
                 .on("click", function(d) { 
