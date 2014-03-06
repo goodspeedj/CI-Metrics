@@ -1,4 +1,4 @@
-var dataFile = "data/passfail.json";
+var chartName = "passFail";
 
 var chart = stackedAreaChart()
     .x(function(d) { return d.date; })

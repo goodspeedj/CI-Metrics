@@ -1,5 +1,7 @@
 function stackedAreaChart() {
 
+    console.log(chartName);
+
     // parsed date
     var parseDate = d3.time.format("%Y-%m-%d");
 
@@ -36,11 +38,20 @@ function stackedAreaChart() {
       .orient("bottom");
 
     // Setup Y axis
-    var main_y = d3.scale.sqrt()
-        .range([main_height, 0]);
+    if (chartName === "unitTest") {
+        var main_y = d3.scale.sqrt()
+            .range([main_height, 0]);
 
-    var mini_y = d3.scale.sqrt()
-        .range([mini_height, 0]);
+        var mini_y = d3.scale.sqrt()
+            .range([mini_height, 0]);
+    }
+    else {
+        var main_y = d3.scale.linear()
+            .range([main_height, 0]);
+
+        var mini_y = d3.scale.linear()
+            .range([mini_height, 0]);   
+    }
 
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
@@ -84,8 +95,6 @@ function stackedAreaChart() {
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
-
-            console.log(yScale);
 
 
             // Get the data into the right format - categories are passed in from calling chart
