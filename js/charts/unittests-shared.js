@@ -10,7 +10,7 @@ var chart = stackedAreaChart()
     .stackColors(["#ff8c00","#d0743c", "#98abc5"])
     .yScale(d3.scale.sqrt());
 
-d3.json('data/unit_by_portfolio.json', function(data) {
+d3.json('data/unitTest-shared.json', function(data) {
     d3.select("#graph")
         .datum(data)
         .call(chart);
