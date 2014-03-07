@@ -57,12 +57,6 @@ function stackedAreaChart() {
         .ticks(5)
         .orient("left");
 
-    // Create the brush for the mini chart
-    var brush = d3.svg.brush()
-        .x(mini_x)
-        .on("brush", brushed);
-
-
     // Z scale is the different categories (i.e.: build success, fail, unstable)
     var z = d3.scale.ordinal();
 
@@ -93,7 +87,13 @@ function stackedAreaChart() {
             // Loop through the data and add elements
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+                d.vis = "1";
             });
+
+            // Create the brush for the mini chart
+            var brush = d3.svg.brush()
+                .x(mini_x)
+                .on("brush", brushed);
 
 
             // Get the data into the right format - categories are passed in from calling chart
@@ -249,7 +249,6 @@ function stackedAreaChart() {
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
                 .attr("fill", function(d) { 
-                    console.log(d.vis);
                     if(d.vis === "1") {
                         return z(d.key); 
                     }
@@ -297,6 +296,20 @@ function stackedAreaChart() {
                         .transition()
                           .duration(800)
                         .call(main_yAxis);
+
+                    //main_area
+                    //    .y0(function(d) { console.log(d); return main_y(d.y0); })
+                    //    .y1(function(d) { return main_y(d.y0 + d.y); });
+                    console.log("wtf");
+                    stack.values(function(d) { 
+                        console.log("where"); 
+                        if(d.vis === "1") {
+                            return d.values; 
+                        }
+                        else {
+                            return null;
+                        }
+                    });
 
                     main_layer.select(".layer")
                         .transition()
@@ -351,26 +364,51 @@ function stackedAreaChart() {
                 });
 
                 return maxY;
-            }        
+            }     
+
+
+            // Brush/select function
+            function brushed() {
+                main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
+
+                var dataFiltered;
+
+                /* filter the data to update the Y axis
+                 * If the brush is very small this can produce a main graph with no data.  For example if the brush
+                 * is from 1/1/2014 9:00:00 to 1/1/2014 11:00:00 the d.date will have a value of 1/1/2014 00:00:00
+                 * which means it will not fall into the if case.
+                 */
+                for (var i = 0; i < dataSeries.length; i++) {
+                    if(dataSeries[i]['vis'] === "1") {
+                        dataFiltered = dataSeries[i]['values'].filter(function(d) {
+                            if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
+
+                                return yValue(d);  
+                            }         
+                        });
+                    }
+                }
+
+                main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
+
+                main.selectAll(".layer").attr("d", function(d) { 
+                    if (d.vis === "1") {
+                        return main_area(d.values);
+                    }
+                    else {
+                        return null;
+                    }           
+                });
+
+                main.select(".x.axis").call(main_xAxis);
+                main.select(".y.axis").transition().delay(500).call(main_yAxis);
+            }    
 
         });
     }
 
 
-    // Brush/select function
-    function brushed() {
-        main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
-        main.selectAll(".layer").attr("d", function(d) { 
-            if (d.vis === "1") {
-                return main_area(d.values);
-            }
-            else {
-                return null;
-            }           
-        });
 
-        main.select(".x.axis").call(main_xAxis);
-    }  
 
 
     // Get/set main_margin

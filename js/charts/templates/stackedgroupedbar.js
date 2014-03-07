@@ -439,7 +439,22 @@ function stackedGroupedBarChart() {
                     main_xZoom(originalRange[1])
                     ], 0.2);
 
+
                 main_x1.rangeRoundBands([0, main_x0.rangeBand()], 0);
+
+                console.log(main_xZoom.domain()[0]);
+                console.log(main_xZoom.domain()[1]);
+
+                console.log(nested);
+
+                // filter the data to update the Y axis
+                var dataFiltered = data.result.filter(function(d) {
+                    if((d.date >= main_xZoom.domain()[0]) && (d.date <= main_xZoom.domain()[1])) {
+                        return yValue(d);
+                    }
+                });
+
+                //console.log(dataFiltered);
 
 
                 if ($('input[name=orientation]:checked').val() === 'grouped') {
@@ -467,7 +482,12 @@ function stackedGroupedBarChart() {
                         });
                 }
 
+
+
+                main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
+
                 main.select("g.x.axis").call(main_xAxis);
+                main.select(".y.axis").transition().delay(500).call(main_yAxis);
             } 
 
             // Get the max Y value
