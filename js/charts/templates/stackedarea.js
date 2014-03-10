@@ -115,11 +115,14 @@ function stackedAreaChart() {
             // Set the x and y domains
             main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
             main_y.domain([0, d3.max(data.result, function(d) { 
-                var total = 0;
-                categories.forEach(function(type) {
-                    total = total + d[type];
-                })
-                return total; 
+                if(d.vis === "1") {
+                    var total = 0;
+                    categories.forEach(function(type) {
+                        total = total + d[type];
+                    })
+                    return total;  
+                }
+                else return null;                
             })]);
 
             mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
@@ -288,8 +291,17 @@ function stackedAreaChart() {
                         d.vis = "1";
                     }
 
-                    maxY = getMaxY();
-                    main_y.domain([0,maxY]);
+
+
+                    var updatedData = dataSeries.filter(function(d) {
+                        if(d.vis === "1"){
+                            return d;
+                        }
+                        else return null;
+                    });
+
+                    maxY = getMaxY(updatedData);
+                    main_y.domain([0, maxY]);
                     mini_y.domain([0,maxY]);
 
                     main.select(".y.axis")
@@ -297,43 +309,49 @@ function stackedAreaChart() {
                           .duration(800)
                         .call(main_yAxis);
 
-                    //main_area
-                    //    .y0(function(d) { console.log(d); return main_y(d.y0); })
-                    //    .y1(function(d) { return main_y(d.y0 + d.y); });
-                    console.log("wtf");
-                    stack.values(function(d) { 
-                        console.log("where"); 
-                        if(d.vis === "1") {
-                            return d.values; 
-                        }
-                        else {
-                            return null;
-                        }
-                    });
+                    stack(updatedData);
 
-                    main_layer.select(".layer")
+                    var main_sel = main_layer
+                        .select(".layer");
+                        //.data(newLayer);
+
+                    main_sel
+                        .attr("class", function(d) { return d.key + " layer"; })
                         .transition()
-                          .duration(500)
+                          .duration(200)
+                        .style("fill", function(d, i) { 
+                            if(d.vis === "1") {
+                                return z(i);   
+                            }
+                            else return null;
+                        })
                         .attr("d", function(d) { 
                             if(d.vis === "1") {
-                                return main_area(d.values);
+                                return main_area(d.values); 
                             }
-                            else {
-                                return null;
-                            }
+                            else return null;
                         });
 
-                    mini_layer.select(".mini-layer")
-                        .transition()
-                          .duration(500)
+
+                    var mini_sel = mini_layer.select(".mini-layer");
+
+                    mini_sel
+                        .attr("class", function(d) { return d.key + " mini-layer"; })
+                        .style("fill", function(d, i) { 
+                            if(d.vis === "1") {
+                                return z(i);   
+                            }
+                            else return null;
+                        })
                         .attr("d", function(d) { 
                             if(d.vis === "1") {
-                                return mini_area(d.values);
+                                return mini_area(d.values); 
                             }
-                            else {
-                                return null;
-                            }
+                            else return null;
                         });
+                    //    .transition()
+                    //      .duration(500)
+                    //    .attr("d", function(d) { return mini_area(d.values); });
 
                     legend.select("rect")
                         .transition()
@@ -350,21 +368,59 @@ function stackedAreaChart() {
 
 
             // Get the max Y value
-            function getMaxY() {
-                var maxY = -1;
+            function getMaxY(data) {
                 
-                dataSeries.forEach(function(d) {
+                var totals = [];
+
+                data.forEach(function(d) {
                     if (d.vis === "1") {
+                        for (var i = 0; i < categories.length; i++) {
+                            var maxY = -1;
+                            d.values.forEach(function(d) {
+                                if (yValue(d) > maxY){
+                                    maxY = yValue(d);
+                                }
+                            });
+                            
+                        }
+                        totals.push(maxY);
+                    }
+                });
+
+                console.log(totals);
+
+                console.log(d3.max(totals));
+
+                var grandTotal = 0;
+                $.each(totals, function() {
+                    grandTotal += this;
+                });
+                console.log(grandTotal);
+                return grandTotal;
+            }
+
+            /*
+
+                var maxY = -1;
+                console.log(data);
+               
+                data.forEach(function(d) {
+                    if (d.vis === "1") {
+                        console.log(d.key);
+
                         d.values.forEach(function(d) {
                             if (yValue(d) > maxY){
                                 maxY = yValue(d);
+                                console.log(maxY);
                             }
                         });
+
                     }
                 });
 
                 return maxY;
-            }     
+            }  
+            */   
 
 
             // Brush/select function
@@ -380,14 +436,23 @@ function stackedAreaChart() {
                  */
                 for (var i = 0; i < dataSeries.length; i++) {
                     if(dataSeries[i]['vis'] === "1") {
-                        dataFiltered = dataSeries[i]['values'].filter(function(d) {
-                            if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
 
-                                return yValue(d);  
+                        dataFiltered = dataSeries[i]['values'].filter(function(d) {
+
+                            if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
+                                console.log("************");
+                                console.log(d);
+                                
+                                console.log(yValue(d) + "===" + d.date + " -- " + main_x.domain()[0] + " -- " + main_x.domain()[1]);
+                                //console.log(yValue(d));
+                                return yValue(d);   // this is just returning the biggest total in the date range from the last layer (i.e.: 'Failed'), not the greatest of all the layers for that day
+                                                    // could we sort by date and then total??
                             }         
                         });
                     }
                 }
+
+                //console.log(dataFiltered);
 
                 main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
 
