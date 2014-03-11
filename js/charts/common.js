@@ -1,8 +1,8 @@
 // Chart dimensions
-var main_margin = {top: 20, right: 80, bottom: 100, left: 40},
+var main_margin = {top: 20, right: 80, bottom: 300, left: 40},
     mini_margin = {top: 585, right: 80, bottom: 20, left: 40},
     main_width  = 1300 - main_margin.left - main_margin.right,
-    main_height = 650 - main_margin.top - main_margin.bottom,
+    main_height = 850 - main_margin.top - main_margin.bottom,
     mini_height = 650 - mini_margin.top - mini_margin.bottom;
 
 // Define some offsets
