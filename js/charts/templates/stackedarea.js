@@ -372,6 +372,8 @@ function stackedAreaChart() {
                 
                 var totals = [];
 
+                console.log(data);
+
                 data.forEach(function(d) {
                     if (d.vis === "1") {
                         for (var i = 0; i < categories.length; i++) {
@@ -397,65 +399,51 @@ function stackedAreaChart() {
                 });
                 console.log(grandTotal);
                 return grandTotal;
-            }
-
-            /*
-
-                var maxY = -1;
-                console.log(data);
-               
-                data.forEach(function(d) {
-                    if (d.vis === "1") {
-                        console.log(d.key);
-
-                        d.values.forEach(function(d) {
-                            if (yValue(d) > maxY){
-                                maxY = yValue(d);
-                                console.log(maxY);
-                            }
-                        });
-
-                    }
-                });
-
-                return maxY;
-            }  
-            */   
+            } 
 
 
             // Brush/select function
             function brushed() {
                 main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
 
-                var dataFiltered;
-
                 /* filter the data to update the Y axis
                  * If the brush is very small this can produce a main graph with no data.  For example if the brush
                  * is from 1/1/2014 9:00:00 to 1/1/2014 11:00:00 the d.date will have a value of 1/1/2014 00:00:00
                  * which means it will not fall into the if case.
                  */
-                for (var i = 0; i < dataSeries.length; i++) {
-                    if(dataSeries[i]['vis'] === "1") {
-
-                        dataFiltered = dataSeries[i]['values'].filter(function(d) {
-
+                var dataFiltered = dataSeries.map(function(series) {
+                    
+                    return series.values.filter(function(d) {
+                        if(series.vis === "1") {
                             if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
-                                console.log("************");
-                                console.log(d);
-                                
-                                console.log(yValue(d) + "===" + d.date + " -- " + main_x.domain()[0] + " -- " + main_x.domain()[1]);
-                                //console.log(yValue(d));
-                                return yValue(d);   // this is just returning the biggest total in the date range from the last layer (i.e.: 'Failed'), not the greatest of all the layers for that day
-                                                    // could we sort by date and then total??
-                            }         
-                        });
-                    }
-                }
+                                return yValue(d);
+                            }
+                        }
+                    });
+                });
 
-                //console.log(dataFiltered);
+                // Arange the filtered data into stacks
+                var dataStackSums = {};
+                dataFiltered.forEach(function(series) {
 
-                main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
+                    series.forEach(function(d) {
+                        if (!dataStackSums[d.date]) { 
+                            dataStackSums[d.date] = 0; 
+                        }
+                        dataStackSums[d.date] += d.total;
+                    });
+                });
 
+                // Get the max from the stack
+                var max = 0;
+                Object.keys(dataStackSums).forEach(function(key) {
+                    max = Math.max(max, dataStackSums[key]);
+                });
+
+                // re-calculate the Y domain
+                main_y.domain([0, max]);
+
+                // Re-draw the layers
                 main.selectAll(".layer").attr("d", function(d) { 
                     if (d.vis === "1") {
                         return main_area(d.values);
