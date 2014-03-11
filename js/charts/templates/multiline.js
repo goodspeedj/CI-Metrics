@@ -351,16 +351,27 @@ function multiLineChart() {
             // Brush/select function
             function brushed() {
                 main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
+
+                // filter the data to update the Y axis
+                var dataFiltered = data.result.filter(function(d) {
+                    if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
+                        return yValue(d);
+                    }
+                });
+
+                main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
+
                 main_stream.select("path").attr("d", function(d) {
                     if (d.vis === "1") {
                         return main_line(d.values);
                     }
                     else {
                         return null;
-                    }
-                    
+                    }   
                 });
+
                 main.select(".x.axis").call(main_xAxis);
+                main.select(".y.axis").transition().delay(500).call(main_yAxis);
             }  
 
             // Get the max Y value

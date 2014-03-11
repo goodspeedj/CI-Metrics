@@ -57,12 +57,6 @@ function stackedAreaChart() {
         .ticks(5)
         .orient("left");
 
-    // Create the brush for the mini chart
-    var brush = d3.svg.brush()
-        .x(mini_x)
-        .on("brush", brushed);
-
-
     // Z scale is the different categories (i.e.: build success, fail, unstable)
     var z = d3.scale.ordinal();
 
@@ -93,7 +87,13 @@ function stackedAreaChart() {
             // Loop through the data and add elements
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+                d.vis = "1";
             });
+
+            // Create the brush for the mini chart
+            var brush = d3.svg.brush()
+                .x(mini_x)
+                .on("brush", brushed);
 
 
             // Get the data into the right format - categories are passed in from calling chart
@@ -115,11 +115,14 @@ function stackedAreaChart() {
             // Set the x and y domains
             main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
             main_y.domain([0, d3.max(data.result, function(d) { 
-                var total = 0;
-                categories.forEach(function(type) {
-                    total = total + d[type];
-                })
-                return total; 
+                if(d.vis === "1") {
+                    var total = 0;
+                    categories.forEach(function(type) {
+                        total = total + d[type];
+                    })
+                    return total;  
+                }
+                else return null;                
             })]);
 
             mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
@@ -249,7 +252,6 @@ function stackedAreaChart() {
                 .attr("class", function(d) { return d.key; })
                 .attr("stroke", function(d) { return z(d.key);})
                 .attr("fill", function(d) { 
-                    console.log(d.vis);
                     if(d.vis === "1") {
                         return z(d.key); 
                     }
@@ -279,9 +281,8 @@ function stackedAreaChart() {
                         .style("opacity", 1)
                         .style("fill", function(d) { return z(d.key)});
 
-                });
-/*  
-              .on("click", function(d) {
+                })
+               .on("click", function(d) {
 
                     if(d.vis === "1") {
                         d.vis = "0";
@@ -290,8 +291,17 @@ function stackedAreaChart() {
                         d.vis = "1";
                     }
 
-                    maxY = getMaxY();
-                    main_y.domain([0,maxY]);
+
+
+                    var updatedData = dataSeries.filter(function(d) {
+                        if(d.vis === "1"){
+                            return d;
+                        }
+                        else return null;
+                    });
+
+                    maxY = getMaxY(updatedData);
+                    main_y.domain([0, maxY]);
                     mini_y.domain([0,maxY]);
 
                     main.select(".y.axis")
@@ -299,29 +309,48 @@ function stackedAreaChart() {
                           .duration(800)
                         .call(main_yAxis);
 
-                    main_layer.select(".layer")
+                    stack(updatedData);
+
+                    var main_sel = main_layer
+                        .select(".layer");
+                        //.data(newLayer);
+
+                    main_sel
+                        .attr("class", function(d) { return d.key + " layer"; })
                         .transition()
-                          .duration(500)
+                          .duration(200)
+                        .style("fill", function(d, i) { 
+                            if(d.vis === "1") {
+                                return z(i);   
+                            }
+                            else return null;
+                        })
                         .attr("d", function(d) { 
                             if(d.vis === "1") {
-                                return main_area(d.values);
+                                return main_area(d.values); 
                             }
-                            else {
-                                return null;
-                            }
+                            else return null;
                         });
-                    
-		    mini_layer.select(".mini-layer")
-                        .transition()
-                          .duration(500)
+
+                    var mini_sel = mini_layer.select(".mini-layer");
+
+                    mini_sel
+                        .attr("class", function(d) { return d.key + " mini-layer"; })
+                        .style("fill", function(d, i) { 
+                            if(d.vis === "1") {
+                                return z(i);   
+                            }
+                            else return null;
+                        })
                         .attr("d", function(d) { 
                             if(d.vis === "1") {
-                                return mini_area(d.values);
+                                return mini_area(d.values); 
                             }
-                            else {
-                                return null;
-                            }
+                            else return null;
                         });
+                    //    .transition()
+                    //      .duration(500)
+                    //    .attr("d", function(d) { return mini_area(d.values); });
 
                     legend.select("rect")
                         .transition()
@@ -335,43 +364,95 @@ function stackedAreaChart() {
                             }
                         });
                 }); 
-*/
 
             // Get the max Y value
-            function getMaxY() {
-                var maxY = -1;
+            function getMaxY(data) {
                 
-                dataSeries.forEach(function(d) {
+                var totals = [];
+
+                data.forEach(function(d) {
                     if (d.vis === "1") {
-                        d.values.forEach(function(d) {
-                            if (yValue(d) > maxY){
-                                maxY = yValue(d);
-                            }
-                        });
+                        for (var i = 0; i < categories.length; i++) {
+                            var maxY = -1;
+                            d.values.forEach(function(d) {
+                                if (yValue(d) > maxY){
+                                    maxY = yValue(d);
+                                }
+                            });
+                            
+                        }
+                        totals.push(maxY);
                     }
                 });
 
-                return maxY;
-            }        
+                var grandTotal = 0;
+                $.each(totals, function() {
+                    grandTotal += this;
+                });
+                return grandTotal;
+            } 
+
+
+            // Brush/select function
+            function brushed() {
+                main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
+
+                /* filter the data to update the Y axis
+                 * If the brush is very small this can produce a main graph with no data.  For example if the brush
+                 * is from 1/1/2014 9:00:00 to 1/1/2014 11:00:00 the d.date will have a value of 1/1/2014 00:00:00
+                 * which means it will not fall into the if case.
+                 */
+                var dataFiltered = dataSeries.map(function(series) {
+                    
+                    return series.values.filter(function(d) {
+                        if(series.vis === "1") {
+                            if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
+                                return yValue(d);
+                            }
+                        }
+                    });
+                });
+
+                // Arange the filtered data into stacks
+                var dataStackSums = {};
+                dataFiltered.forEach(function(series) {
+
+                    series.forEach(function(d) {
+                        if (!dataStackSums[d.date]) { 
+                            dataStackSums[d.date] = 0; 
+                        }
+                        dataStackSums[d.date] += d.total;
+                    });
+                });
+
+                // Get the max from the stack
+                var max = 0;
+                Object.keys(dataStackSums).forEach(function(key) {
+                    max = Math.max(max, dataStackSums[key]);
+                });
+
+                // re-calculate the Y domain
+                main_y.domain([0, max]);
+
+                // Re-draw the layers
+                main.selectAll(".layer").attr("d", function(d) { 
+                    if (d.vis === "1") {
+                        return main_area(d.values);
+                    }
+                    else {
+                        return null;
+                    }           
+                });
+
+                main.select(".x.axis").call(main_xAxis);
+                main.select(".y.axis").transition().delay(500).call(main_yAxis);
+            }    
 
         });
     }
 
 
-    // Brush/select function
-    function brushed() {
-        main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
-        main.selectAll(".layer").attr("d", function(d) { 
-            if (d.vis === "1") {
-                return main_area(d.values);
-            }
-            else {
-                return null;
-            }           
-        });
 
-        main.select(".x.axis").call(main_xAxis);
-    }  
 
 
     // Get/set main_margin
