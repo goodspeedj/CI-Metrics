@@ -279,8 +279,9 @@ function stackedAreaChart() {
                         .style("opacity", 1)
                         .style("fill", function(d) { return z(d.key)});
 
-                })
-                .on("click", function(d) {
+                });
+/*  
+              .on("click", function(d) {
 
                     if(d.vis === "1") {
                         d.vis = "0";
@@ -309,8 +310,8 @@ function stackedAreaChart() {
                                 return null;
                             }
                         });
-
-                    mini_layer.select(".mini-layer")
+                    
+		    mini_layer.select(".mini-layer")
                         .transition()
                           .duration(500)
                         .attr("d", function(d) { 
@@ -334,7 +335,7 @@ function stackedAreaChart() {
                             }
                         });
                 }); 
-
+*/
 
             // Get the max Y value
             function getMaxY() {
