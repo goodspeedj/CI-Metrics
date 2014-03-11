@@ -301,7 +301,7 @@ function multiLineChart() {
             function toggle() {
                 if (this.value === "enable") {
                     nested.forEach(function(d) {
-                      d.vis = 1;
+                      d.vis = "1";
                 });
 
                 maxY = getMaxY();
@@ -328,7 +328,7 @@ function multiLineChart() {
             }
             else {
                 nested.forEach(function(d) {
-                  d.vis = 0;
+                  d.vis = "0";
                 });
                 main_stream.select("rect").transition()
                     .delay(function(d, i) { return i * 20; })
