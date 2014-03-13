@@ -1,5 +1,7 @@
 function stackedAreaChart() {
 
+    var ideal_time = 7200000;
+
     // parsed date
     var parseDate = d3.time.format("%Y-%m-%d");
 
