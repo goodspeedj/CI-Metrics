@@ -18,13 +18,11 @@ function multiLineChart() {
     var main_xAxis = d3.svg.axis()
         .scale(main_x)
         .ticks(10)
-        .tickFormat(dateFormat)
         .orient("bottom");
 
     var mini_xAxis = d3.svg.axis()
       .scale(mini_x)
       .ticks(10)
-      .tickFormat(dateFormat)
       .orient("bottom");
 
     // Setup Y axis
@@ -60,8 +58,13 @@ function multiLineChart() {
                 .on("brush", brushed);
 
             // Flatten out the data
-            var nested = d3.nest().key(dimKey)
+            var nested = d3.nest()
+                .key(dimKey)
                 .entries(data.result);
+
+            nested.forEach(function(d) {
+                d.vis = "1";
+            });
 
             // Add the X axis
             main.append("g")
@@ -123,24 +126,18 @@ function multiLineChart() {
             var main_stream = main.selectAll(".main_stream")
                 .data(nested)
               .enter().append("g")
-                .attr("class", function(d) {
-                    d.vis = "1";
-                    return "main_stream";
-                });
+                .attr("class", function(d) { return "main_stream"; });
 
             var mini_stream = mini.selectAll(".mini_stream")
                 .data(nested)
               .enter().append("g")
-                .attr("class", function(d) {
-                    d.vis = "1";
-                    return "mini_stream";
-                });
+                .attr("class", function(d) { return "mini_stream"; });
 
             mini_stream.append("path")
                 .style("stroke", function(d) { return color(d.key); })
                 .attr("class", function(d) { return d.key + " lines"; })
                 .attr("d", function(d) {
-                // Draw the lines or not depending on d.vis
+                    // Draw the lines or not depending on d.vis
                     if (d.vis === "1") {
                         return mini_line(d.values);
                     }
@@ -381,15 +378,37 @@ function multiLineChart() {
             function brushed() {
                 main_x.domain(brush.empty() ? mini_x.domain() : brush.extent());
 
-                // filter the data to update the Y axis
-                var dataFiltered = data.result.filter(function(d) {
-                    if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
-                        return yValue(d);
-                    }
+                var dataFiltered = nested.map(function(series) {
+                    
+                    return series.values.filter(function(d) {
+                        if(series.vis === "1") {
+                            if((d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1])) {
+                                return yValue(d);
+                            }
+                        }
+                    });
                 });
 
-                // The Y axis domain needs to know which lines are d.vis === 1 and not
-                main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
+                // Arange the filtered data into stacks
+                var dataStackSums = {};
+                dataFiltered.forEach(function(series) {
+
+                    series.forEach(function(d) {
+                        if (!dataStackSums[d.date]) { 
+                            dataStackSums[d.date] = 0; 
+                        }
+                        dataStackSums[d.date] += d.buildFixTime;
+                    });
+                });
+
+                // Get the max from the stack
+                var max = 0;
+                Object.keys(dataStackSums).forEach(function(key) {
+                    max = Math.max(max, dataStackSums[key]);
+                });
+
+
+                main_y.domain([0, max]);
 
                 main_stream.select("path").attr("d", function(d) {
                     if (d.vis === "1") {
