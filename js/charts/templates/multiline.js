@@ -1,6 +1,12 @@
 function multiLineChart() {
 
-    var ideal_time = 7200000;
+    if (chartName === "fixTime") {
+        var ideal_time = 7200000;
+    }
+    else {
+        var ideal_time = 1800000;  
+    }
+    
 
     // Define line colors
     var color = d3.scale.category20();
@@ -85,7 +91,7 @@ function multiLineChart() {
                 .text(yLabel)
                 .attr("class","y_label");
 
-            // Add the ideal fix time line
+            // Add the ideal line
             var line = main.append("line")
                 .attr("class", "ideal")
                 .attr("x1", 0)
@@ -397,7 +403,7 @@ function multiLineChart() {
                         if (!dataStackSums[d.date]) { 
                             dataStackSums[d.date] = 0; 
                         }
-                        dataStackSums[d.date] += d.buildFixTime;
+                        dataStackSums[d.date] += yValue(d);
                     });
                 });
 

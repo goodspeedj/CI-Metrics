@@ -1,3 +1,5 @@
+var chartName = "fixTime";
+
 var chart = multiLineChart()
     .x(function(d) { return d.date; })
     .y(function(d) { return d.buildFixTime; })
