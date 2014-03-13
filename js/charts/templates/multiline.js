@@ -1,5 +1,7 @@
 function multiLineChart() {
 
+    var ideal_time = 7200000;
+
     // Define line colors
     var color = d3.scale.category20();
 
@@ -79,6 +81,26 @@ function multiLineChart() {
                 .style("text-anchor", "end")
                 .text(yLabel)
                 .attr("class","y_label");
+
+            // Add the ideal fix time line
+            var line = main.append("line")
+                .attr("class", "ideal")
+                .attr("x1", 0)
+                .attr("y1", main_y(ideal_time))    
+                .attr("x2", main_width-main_margin.right - legend_text_offset.width)
+                .attr("y2", main_y(ideal_time))
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "5,5")
+                .attr("stroke", "#413839");
+
+            main.append("text")
+                .attr("class", "ideal")
+                .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
+                .attr("y", main_y(ideal_time))
+                .attr("fill", "#413839")
+                .attr("font-size", "11px")
+                .attr("font-family", "sans-serif")
+                .text("Ideal");
 
             // Add the Mini X axis
             mini.append("g")
@@ -256,6 +278,13 @@ function multiLineChart() {
                             .duration(800)
                         .call(main_yAxis);
 
+                    main.selectAll(".ideal")
+                        .transition()
+                          .duration(500)
+                        .attr("y", main_y(ideal_time))
+                        .attr("y1", main_y(ideal_time))
+                        .attr("y2", main_y(ideal_time));
+
                     // Update the lines
                     main_stream.select("path")
                         .transition()
@@ -359,6 +388,7 @@ function multiLineChart() {
                     }
                 });
 
+                // The Y axis domain needs to know which lines are d.vis === 1 and not
                 main_y.domain([0, d3.max(dataFiltered.map(function(d) { return yValue(d); }))]);
 
                 main_stream.select("path").attr("d", function(d) {
@@ -372,6 +402,13 @@ function multiLineChart() {
 
                 main.select(".x.axis").call(main_xAxis);
                 main.select(".y.axis").transition().delay(500).call(main_yAxis);
+
+                main.selectAll(".ideal")
+                    .transition()
+                      .duration(500)
+                    .attr("y", main_y(ideal_time))
+                    .attr("y1", main_y(ideal_time))
+                    .attr("y2", main_y(ideal_time));
             }  
 
             // Get the max Y value
