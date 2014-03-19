@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+  <head>
+    <title>Violations by Portfolio</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Violations by Portfolio</h3>
+          This chart shows the average number of JSHint violations in a given portfolio per day.
+          <div id="toggle" class="pull-right">
+            <!--
+            <form id="toggle">
+              <label><input class="offOn" type="radio" name="toggle" value="enable" checked> Enable All</label>
+              <label><input class="offOn" type="radio" name="toggle" value="disable"> Disable All</label>
+            </form>
+            -->
+            <form id="orientation">
+              <label><input class="orientation" type="radio" name="orientation" value="grouped"> Grouped</label>
+              <label><input class="orientation" type="radio" name="orientation" value="stacked" checked> Stacked</label>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="graph"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/jquery-2.0.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.min.js"></script>
+    <script src="js/colorbrewer.js"></script>
+    <script src="js/charts/common.js"></script>
+    <script src="js/charts/templates/stackedgroupedbar.js"></script>
+    <script src="js/charts/violationsbyportfolio.js"></script>
+
+  </body>
+</html>
