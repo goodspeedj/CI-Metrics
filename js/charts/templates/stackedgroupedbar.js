@@ -1,6 +1,7 @@
 function stackedGroupedBarChart() {
 
     var ideal_time = 7200000;
+    var avg_time   = 72000000;
 
     // Default bar colors
     var color = d3.scale.ordinal()
@@ -199,7 +200,7 @@ function stackedGroupedBarChart() {
                 .attr("height", function(d) { return mini_height - mini_y(yValue(d)); });
 
             // Add the ideal fix time line
-            var line = main.append("line")
+            var ideal_line = main.append("line")
                 .attr("class", "ideal")
                 .attr("x1", 0)
                 .attr("y1", main_y(ideal_time))    
@@ -217,6 +218,26 @@ function stackedGroupedBarChart() {
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
                 .text("Ideal");
+
+            // Add the eComm avg fix time line
+            var avg_line = main.append("line")
+                .attr("class", "avg")
+                .attr("x1", 0)
+                .attr("y1", main_y(avg_time))    
+                .attr("x2", main_width-main_margin.right - legend_text_offset.width)
+                .attr("y2", main_y(avg_time))
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "10,10")
+                .attr("stroke", "#413839");
+
+            main.append("text")
+                .attr("class", "avg")
+                .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
+                .attr("y", main_y(avg_time))
+                .attr("fill", "#413839")
+                .attr("font-size", "11px")
+                .attr("font-family", "sans-serif")
+                .text("eComm Avg");
 
             // Add the legend
             var legend = main.selectAll(".legendLabel")
@@ -290,6 +311,13 @@ function stackedGroupedBarChart() {
                         .attr("y1", main_y(ideal_time))
                         .attr("y2", main_y(ideal_time));
 
+                    // Update the avg dashed line
+                    main.selectAll(".avg")
+                        .transition()
+                          .duration(500)
+                        .attr("y", main_y(avg_time))
+                        .attr("y1", main_y(avg_time))
+                        .attr("y2", main_y(avg_time));
                     
                     // Show or hide the bars
                     main.selectAll("." + d.key + "-group")
