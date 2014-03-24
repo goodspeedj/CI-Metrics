@@ -1,12 +1,12 @@
 // Chart dimensions
-var main_margin = {top: 20, right: 80, bottom: 300, left: 40},
+var main_margin = {top: 20, right: 120, bottom: 300, left: 40},
     mini_margin = {top: 585, right: 80, bottom: 20, left: 40},
     main_width  = 1300 - main_margin.left - main_margin.right,
     main_height = 850 - main_margin.top - main_margin.bottom,
     mini_height = 650 - mini_margin.top - mini_margin.bottom;
 
 // Define some offsets
-var axis_offset        = 275,
+var axis_offset        = 315,
     legend_offset      = 195,
     legend_text_offset = {height: 518, width: 195},
     legend_rect_offset = {height: 525, width: 235},

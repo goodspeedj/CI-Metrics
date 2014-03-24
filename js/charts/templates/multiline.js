@@ -2,9 +2,11 @@ function multiLineChart() {
 
     if (chartName === "fixTime") {
         var ideal_time = 7200000;
+        var avg_time   = 72000000;
     }
     else {
-        var ideal_time = 1800000;  
+        var ideal_time = 1800000; 
+        var avg_time   = 2000000; 
     }
     
 
@@ -92,7 +94,7 @@ function multiLineChart() {
                 .attr("class","y_label");
 
             // Add the ideal line
-            var line = main.append("line")
+            var ideal_line = main.append("line")
                 .attr("class", "ideal")
                 .attr("x1", 0)
                 .attr("y1", main_y(ideal_time))    
@@ -110,6 +112,26 @@ function multiLineChart() {
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
                 .text("Ideal");
+
+            // Add the eComm avg fix time line
+            var avg_line = main.append("line")
+                .attr("class", "avg")
+                .attr("x1", 0)
+                .attr("y1", main_y(avg_time))    
+                .attr("x2", main_width-main_margin.right - legend_text_offset.width)
+                .attr("y2", main_y(avg_time))
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "10,10")
+                .attr("stroke", "#413839");
+
+            main.append("text")
+                .attr("class", "avg")
+                .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
+                .attr("y", main_y(avg_time))
+                .attr("fill", "#413839")
+                .attr("font-size", "11px")
+                .attr("font-family", "sans-serif")
+                .text("eComm Avg");
 
             // Add the Mini X axis
             mini.append("g")
@@ -288,6 +310,13 @@ function multiLineChart() {
                         .attr("y1", main_y(ideal_time))
                         .attr("y2", main_y(ideal_time));
 
+                    main.selectAll(".avg")
+                        .transition()
+                          .duration(500)
+                        .attr("y", main_y(avg_time))
+                        .attr("y1", main_y(avg_time))
+                        .attr("y2", main_y(avg_time));
+
                     // Update the lines
                     main_stream.select("path")
                         .transition()
@@ -434,6 +463,13 @@ function multiLineChart() {
                     .attr("y", main_y(ideal_time))
                     .attr("y1", main_y(ideal_time))
                     .attr("y2", main_y(ideal_time));
+
+                main.selectAll(".avg")
+                    .transition()
+                      .duration(500)
+                    .attr("y", main_y(avg_time))
+                    .attr("y1", main_y(avg_time))
+                    .attr("y2", main_y(avg_time));
             }  
 
             // Get the max Y value
