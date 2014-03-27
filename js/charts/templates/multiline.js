@@ -141,13 +141,13 @@ function multiLineChart() {
 
             // Create the main line elements
             var main_line = d3.svg.line()
-                .interpolate("cardinal")
+                .interpolate("monotone")
                 .x(function(d) { return main_x(xValue(d)); })
                 .y(function(d) { return main_y(yValue(d)); });
 
             // Create the mini line elements
             var mini_line = d3.svg.line()
-                .interpolate("cardinal")
+                .interpolate("monotone")
                 .x(function(d) { return mini_x(xValue(d)); })
                 .y(function(d) { return mini_y(yValue(d)); });
 
