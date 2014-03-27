@@ -4,8 +4,7 @@ function stackedGroupedBarChart() {
     var avg_time   = 72000000;
 
     // Default bar colors
-    var color = d3.scale.ordinal()
-        .range(["#5D5CD6","#FF7236","#5FD664","#D64041","#C53AD6"]);
+    var colors;
 
     // These are the x and y dimensions supplied by the calling chart
     var x0Value, x1Value, yValue;
@@ -151,7 +150,7 @@ function stackedGroupedBarChart() {
                 .data(nested)
               .enter().append("g")
                 .attr("class", function(d) { return d.key + "-group bar"; })
-                .attr("fill", function(d) { return color(d.key); } )
+                .attr("fill", function(d) { return colors(d.key); } )
                 .attr("clip-path", "url(#clip)")
                 .on("mouseover", function(d) {
                     var otherbars = $('rect').not('rect.' + d.key);
@@ -187,7 +186,7 @@ function stackedGroupedBarChart() {
                 .data(nested)
               .enter().append("g")
                 .attr("class", function(d) { return d.key + "-group mini_bar"; })
-                .attr("fill", function(d) { return color(d.key); } );
+                .attr("fill", function(d) { return colors(d.key); } );
 
             mini_bar.selectAll("rect")
                 .data(function(d) { return d.values; })
@@ -260,10 +259,10 @@ function stackedGroupedBarChart() {
                 .attr("x",main_width - legend_rect_offset.width)
                 .attr("y", function(d,i) { return main_height - legend_rect_offset.height + (i * legend_interval); })
                 .attr("class", function(d) { return d.key; })
-                .attr("stroke", function(d) { return color(d.key);})
+                .attr("stroke", function(d) { return colors(d.key);})
                 .attr("fill", function(d) {
                     if(d.vis === "1") {
-                        return color(d.key);
+                        return colors(d.key);
                     }
                     else {
                         return "white";
@@ -611,6 +610,13 @@ function stackedGroupedBarChart() {
     chart.yTickFormat = function(value) {
         if (!arguments.length) return yTickFormat;
         yTickFormat = value;
+        return chart;
+    }
+
+    // Get/set bar colors
+    chart.colors = function(value) {
+        if (!arguments.length) return colors;
+        colors = value;
         return chart;
     }
 

@@ -4,7 +4,8 @@ var chart = stackedGroupedBarChart()
     .y(function(d) { return d.violations; })
     .yLabel("Count of Violations")
     .dimKey(function(d) { return d._id.portfolio; })
-    .yTickFormat(function(d) { return d3.round((d), 1); });
+    .yTickFormat(function(d) { return d3.round((d), 1); })
+    .colors(d3.scale.ordinal().range(["#5D5CD6","#5FD664","#FF7236","#D64041","#C53AD6"]));
 
 d3.json('data/violations_by_portfolio.json', function(data) {
     d3.select("#graph")
