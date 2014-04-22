@@ -1,7 +1,7 @@
 function multiLineChart() {
 
     if (chartName === "fixTime") {
-        var ideal_time = 7200000;
+        var ideal_time = 43200000;
         var avg_time   = 72000000;
     }
     else {
