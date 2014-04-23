@@ -443,7 +443,7 @@ function multiLineChart() {
                 });
 
 
-                main_y.domain([0, max]);
+                //main_y.domain([0, max]);
 
                 main_stream.select("path").attr("d", function(d) {
                     if (d.vis === "1") {
@@ -455,7 +455,7 @@ function multiLineChart() {
                 });
 
                 main.select(".x.axis").call(main_xAxis);
-                main.select(".y.axis").transition().delay(500).call(main_yAxis);
+                //main.select(".y.axis").transition().delay(500).call(main_yAxis);
 
                 main.selectAll(".ideal")
                     .transition()
