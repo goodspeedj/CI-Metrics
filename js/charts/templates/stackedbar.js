@@ -1,7 +1,8 @@
 function stackedBarChart() {
 
-    var ideal_time = 43200000;
-    var avg_time   = 72000000;
+    var ideal_time = 36000000;
+    var median_time = 56626121.88235294;
+    var avg_time   = 58257845.84249471;
 
     // Default bar colors
     var colors;
@@ -207,11 +208,11 @@ function stackedBarChart() {
             main.append("text")
                 .attr("class", "ideal")
                 .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
-                .attr("y", main_y(ideal_time))
+                .attr("y", main_y(ideal_time) + 5)
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("Ideal");
+                .text("Ideal Average");
 
             // Add the eComm avg fix time line
             var avg_line = main.append("line")
@@ -232,6 +233,26 @@ function stackedBarChart() {
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
                 .text("eComm Avg");
+            /*
+            var median_line = main.append("line")
+                .attr("class", "avg")
+                .attr("x1", 0)
+                .attr("y1", main_y(median_time))    
+                .attr("x2", main_width-main_margin.right - legend_text_offset.width)
+                .attr("y2", main_y(median_time))
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "10,10")
+                .attr("stroke", "#413839");
+
+            main.append("text")
+                .attr("class", "avg")
+                .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
+                .attr("y", main_y(median_time))
+                .attr("fill", "#413839")
+                .attr("font-size", "11px")
+                .attr("font-family", "sans-serif")
+                .text("eComm Median");
+            */
 
             // Add the legend
             var legend = main.selectAll(".legendLabel")
