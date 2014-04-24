@@ -3,7 +3,7 @@ var chartName = "unitTest";
 var chart = stackedAreaChart()
     .x(function(d) { return d.date; })
     .y(function(d) { return d.total; })
-    .yLabel("Total Number")
+    .yLabel("Average Number")
     .dimKey(function(d) { return d._id.portfolio; })
     .yTickFormat(function(d) { return d; })
     .categories(["Failed", "Skipped", "Passed"])
