@@ -11,10 +11,13 @@ function multiLineChart() {
     
 
     // Define line colors
-    var color = d3.scale.category20();
+    var color;  
 
     // These are the x and y dimensions supplied by the calling chart
     var xValue, yValue;
+
+    // The Y Scale axis
+    var yScale;
 
     // Setup X time scale
     var main_x = d3.time.scale()
@@ -25,7 +28,7 @@ function multiLineChart() {
 
     var main_xAxis = d3.svg.axis()
         .scale(main_x)
-        .ticks(10)
+        .ticks(5)
         .orient("bottom");
 
     var mini_xAxis = d3.svg.axis()
@@ -34,8 +37,24 @@ function multiLineChart() {
       .orient("bottom");
 
     // Setup Y axis
-    var main_y = d3.scale.linear()
-        .range([main_height, 10]);
+    if (chartName === "sitespeed") {
+        var main_y = d3.scale.pow().exponent([5])
+            .range([main_height, 10]);
+
+        var mini_y = d3.scale.sqrt()
+            .range([mini_height, 10]);
+    }
+    else {
+        var main_y = d3.scale.linear()
+            .range([main_height, 10]);
+
+        var mini_y = d3.scale.linear()
+            .range([mini_height, 10]);   
+    }
+
+    // Setup Y axis
+    //var main_y = d3.scale.linear()
+    //    .range([main_height, 10]);
 
     var mini_y = d3.scale.linear()
         .range([mini_height, 0]);
@@ -557,6 +576,20 @@ function multiLineChart() {
     chart.yTickFormat = function(value) {
         if (!arguments.length) return yTickFormat;
         yTickFormat = value;
+        return chart;
+    }
+
+    // Y axis scale
+    chart.yScale = function(value) {
+        if (!arguments.length) return yScale;
+        yScale = value;
+        return chart;
+    }
+
+    // Line colors
+    chart.color = function(value) {
+        if (!arguments.length) return color;
+        color = value;
         return chart;
     }
 
