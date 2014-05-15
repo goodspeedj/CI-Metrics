@@ -7,7 +7,8 @@ var chart = multiLineChart()
     .dimKey(function(d) { return d._id.env; })
     .yTickFormat(function(d) { return d3.round(d); })
     .yScale(d3.scale.sqrt())
-    .color(d3.scale.category10());
+    .color(d3.scale.category10())
+    .brushChart(false);
 
 d3.json('data/sitespeed.json', function(data) {
     d3.select("#graph")
