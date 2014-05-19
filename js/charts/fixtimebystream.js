@@ -6,7 +6,7 @@ var chart = multiLineChart()
     .yLabel("Build Fix Time (Hours)")
     .dimKey(function(d) { return d._id.stream; })
     .yTickFormat(function(d) { return d3.round((d / 1000 / 60 / 60), 1); })
-    .color(d3.scale.category20());;
+    .color(d3.scale.category20());
 
 d3.json('data/fix_time_by_stream.json', function(data) {
     d3.select("#graph")

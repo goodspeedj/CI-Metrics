@@ -6,7 +6,7 @@ var chart = multiLineChart()
   	.yLabel("Build Duration (Minutes)")
   	.dimKey(function(d) { return d._id.stream; })
   	.yTickFormat(function(d) { return d3.round((d / 1000 / 60), 0); })
-  	.color(d3.scale.category20());;
+  	.color(d3.scale.category20());
 
 d3.json('data/duration_by_stream.json', function(data) {
 	d3.select("#graph")
