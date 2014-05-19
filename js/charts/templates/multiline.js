@@ -126,11 +126,11 @@ function multiLineChart() {
             main.append("text")
                 .attr("class", "ideal")
                 .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
-                .attr("y", main_y(ideal_time))
+                .attr("y", main_y(ideal_time) + 5)
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("Ideal");
+                .text("2014 Target Avg");
 
             // Add the eComm avg fix time line
             var avg_line = main.append("line")
@@ -150,7 +150,7 @@ function multiLineChart() {
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("eComm Avg");
+                .text("eComm YTD Avg");
 
             // Add the Mini X axis
             mini.append("g")

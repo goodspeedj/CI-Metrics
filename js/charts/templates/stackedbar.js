@@ -212,7 +212,7 @@ function stackedBarChart() {
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("Ideal Average");
+                .text("2014 Target Avg");
 
             // Add the eComm avg fix time line
             var avg_line = main.append("line")
@@ -232,7 +232,7 @@ function stackedBarChart() {
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("eComm Avg");
+                .text("eComm YTD Avg");
             /*
             var median_line = main.append("line")
                 .attr("class", "avg")
