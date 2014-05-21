@@ -38,7 +38,7 @@ function multiLineChart() {
 
     // Setup Y axis
     if (chartName === "sitespeed") {
-        var main_y = d3.scale.pow().exponent([5])
+        var main_y = d3.scale.pow().exponent([2])
             .range([main_height, 10]);
 
         var mini_y = d3.scale.sqrt()
@@ -61,6 +61,7 @@ function multiLineChart() {
 
     var main_yAxis = d3.svg.axis()
         .scale(main_y)
+        .ticks(5)
         .tickFormat(function(d) { return yTickFormat(d) })
         .orient("left");
 
@@ -73,6 +74,8 @@ function multiLineChart() {
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
+
+            console.log(yValue);
 
             // Create the axis domains
             main_x.domain(d3.extent(data.result, xValue));
@@ -375,7 +378,37 @@ function multiLineChart() {
                         });
                 });
 
+
+            d3.selectAll("select").on("change", wtf);
             d3.selectAll("input").on("change", toggle);
+
+
+            function wtf() {
+                console.log(this.value);
+                main_y.domain([0, d3.max(data.result, function(d) { 
+                    if(this.value == "imagesPerPage") {
+                        console.log("here");
+                        return d.imagesPerPage;
+                    }
+                    else {
+                        return d.ruleScore;
+                    }
+                })]);
+                main_line.y(function(d) { return main_y(d.imagesPerPage); });
+                //mini_y.domain([0, d3.max(data.result, function(d) { return d.this.value; })]);
+
+                main_stream.append("path")
+                .style("stroke", function(d) { return color(d.key); })
+                .attr("class", function(d) { return d.key + " lines"; })
+                .attr("d", function(d) {
+                    if (d.vis === "1") {
+                        return main_line(d.values);
+                    }
+                    else {
+                        return null;
+                    }
+                })
+            }
 
             // toggle the lines on or off
             function toggle() {
@@ -425,7 +458,8 @@ function multiLineChart() {
                     .attr("d", function(d) {
                         return null;
                     });
-           }
+            }
+
         }
 
             // Brush/select function
