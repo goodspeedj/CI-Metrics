@@ -75,7 +75,6 @@ function multiLineChart() {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
 
-            console.log(yValue);
 
             // Create the axis domains
             main_x.domain(d3.extent(data.result, xValue));
@@ -379,35 +378,45 @@ function multiLineChart() {
                 });
 
 
-            d3.selectAll("select").on("change", wtf);
+            d3.selectAll("select").on("change", switchY);
             d3.selectAll("input").on("change", toggle);
 
 
-            function wtf() {
-                console.log(this.value);
+            function switchY() {
+                var selected = this.value;
+
                 main_y.domain([0, d3.max(data.result, function(d) { 
-                    if(this.value == "imagesPerPage") {
-                        console.log("here");
+                    if(selected === "imagesPerPage") {
                         return d.imagesPerPage;
                     }
                     else {
                         return d.ruleScore;
                     }
                 })]);
-                main_line.y(function(d) { return main_y(d.imagesPerPage); });
-                //mini_y.domain([0, d3.max(data.result, function(d) { return d.this.value; })]);
 
-                main_stream.append("path")
-                .style("stroke", function(d) { return color(d.key); })
-                .attr("class", function(d) { return d.key + " lines"; })
-                .attr("d", function(d) {
-                    if (d.vis === "1") {
-                        return main_line(d.values);
+                main.select(".y.axis").transition().call(main_yAxis);
+
+                main_line.y(function(d) { 
+                    if(selected === "imagesPerPage") {
+                        return main_y(d.imagesPerPage);
                     }
                     else {
-                        return null;
+                        return main_y(d.ruleScore);
                     }
-                })
+                });
+
+                var paths = d3.selectAll(".lines").data(nested);
+
+                
+                paths
+                    .transition()
+                    //.style("stroke", "blue")
+                    //.attr("class", function(d) { return d.key + " lines-yeah " + selected; })
+                    .attr("d", function(d) { console.log(d.values); return main_line(d.values); });
+
+                //main_stream.exit().remove();
+                
+                
             }
 
             // toggle the lines on or off
