@@ -184,7 +184,7 @@ function multiLineChart() {
 
             mini_stream.append("path")
                 .style("stroke", function(d) { return color(d.key); })
-                .attr("class", function(d) { return d.key + " lines"; })
+                .attr("class", function(d) { return d.key + " mini_lines"; })
                 .attr("d", function(d) {
                     // Draw the lines or not depending on d.vis
                     if (d.vis === "1") {
@@ -199,7 +199,7 @@ function multiLineChart() {
             main_stream.append("path")
                 .style("stroke", function(d) { return color(d.key); })
                 .attr("clip-path", "url(#clip)")
-                .attr("class", function(d) { return d.key + " lines"; })
+                .attr("class", function(d) { return d.key + " main_lines"; })
                 .attr("d", function(d) {
                     if (d.vis === "1") {
                         return main_line(d.values);
@@ -215,8 +215,14 @@ function multiLineChart() {
                         .style("stroke-width", "5px");
 
                     // Fade out the other lines
-                    var otherlines = $('path.lines').not("path." + d.key);
-                    d3.selectAll(otherlines).transition().duration(200)
+                    var main_otherlines = $('path.main_lines').not("path." + d.key);
+                    d3.selectAll(main_otherlines).transition().duration(200)
+                        .style("opacity", .3)
+                        .style("stroke-width", 1.5)
+                        .style("stroke", "gray");
+
+                    var mini_otherlines = $('path.mini_lines').not("path." + d.key);
+                    d3.selectAll(mini_otherlines).transition().duration(200)
                         .style("opacity", .3)
                         .style("stroke-width", 1.5)
                         .style("stroke", "gray");
@@ -236,11 +242,17 @@ function multiLineChart() {
                         .style("stroke-width", "2px");
 
                     // Make the other lines normal again
-                    var otherlines = $('.lines').not("path." + d.key);
-                    d3.selectAll(otherlines).transition().duration(100)
+                    var main_otherlines = $('.main_lines').not("path." + d.key);
+                    d3.selectAll(main_otherlines).transition().duration(100)
                         .style("opacity", 1)
                         .style("stroke-width", 2)
-                        .style("stroke", function(d) { return color(d.key)});   
+                        .style("stroke", function(d) { return color(d.key)});  
+
+                    var mini_otherlines = $('.mini_lines').not("path." + d.key);
+                    d3.selectAll(mini_otherlines).transition().duration(100)
+                        .style("opacity", 1)
+                        .style("stroke-width", 2)
+                        .style("stroke", function(d) { return color(d.key)}); 
 
                     // Hide the tooltip
                     tooltip.transition().duration(500).style("opacity", 0);
@@ -286,11 +298,17 @@ function multiLineChart() {
                     d3.select("path." + d.key).transition().duration(200)
                         .style("stroke-width", "5px");
 
-                    var otherlines = $("path.lines").not("path." + d.key);
-                    d3.selectAll(otherlines)
+                    var main_otherlines = $("path.main_lines").not("path." + d.key);
+                    d3.selectAll(main_otherlines)
                         .style("opacity", .3)
                         .style("stroke-width", 1.5)
-                        .style("stroke", "gray");;
+                        .style("stroke", "gray");
+
+                    var mini_otherlines = $("path.mini_lines").not("path." + d.key);
+                    d3.selectAll(mini_otherlines)
+                        .style("opacity", .3)
+                        .style("stroke-width", 1.5)
+                        .style("stroke", "gray");
                 })
                 .on("mouseout", function(d) {
                     d3.select(this)
@@ -299,8 +317,14 @@ function multiLineChart() {
                     d3.select("path." + d.key).transition().duration(100)
                         .style("stroke-width", "2px");
 
-                    var otherlines = $("path.lines").not("path." + d.key);
-                    d3.selectAll(otherlines)
+                    var main_otherlines = $("path.main_lines").not("path." + d.key);
+                    d3.selectAll(main_otherlines)
+                        .style("opacity", 1)
+                        .style("stroke-width", 2)
+                        .style("stroke", function(d) { return color(d.key)});
+
+                    var mini_otherlines = $("path.mini_lines").not("path." + d.key);
+                    d3.selectAll(mini_otherlines)
                         .style("opacity", 1)
                         .style("stroke-width", 2)
                         .style("stroke", function(d) { return color(d.key)});
@@ -382,42 +406,40 @@ function multiLineChart() {
             d3.selectAll("input").on("change", toggle);
 
 
+            // Switch the Y axis metric value
             function switchY() {
                 var selected = this.value;
 
-                main_y.domain([0, d3.max(data.result, function(d) { 
-                    if(selected === "imagesPerPage") {
-                        return d.imagesPerPage;
-                    }
-                    else {
-                        return d.ruleScore;
-                    }
-                })]);
+                main_y.domain([0, d3.max(data.result, function(d) { return d[selected]; })]);
+                mini_y.domain([0, d3.max(data.result, function(d) { return d[selected]; })]);
 
-                main.select(".y.axis").transition().call(main_yAxis);
-
-                main_line.y(function(d) { 
-                    if(selected === "imagesPerPage") {
-                        return main_y(d.imagesPerPage);
-                    }
-                    else {
-                        return main_y(d.ruleScore);
-                    }
-                });
-
-                var paths = d3.selectAll(".lines").data(nested);
-
-                
-                paths
+                main.select(".y.axis")
                     .transition()
-                    //.style("stroke", "blue")
-                    //.attr("class", function(d) { return d.key + " lines-yeah " + selected; })
-                    .attr("d", function(d) { console.log(d.values); return main_line(d.values); });
+                      .delay(1000)
+                      .duration(1000)
+                    .call(main_yAxis);
 
-                //main_stream.exit().remove();
+
+
+                main_line.y(function(d) { return main_y(d[selected]); });
+                mini_line.y(function(d) { return mini_y(d[selected]); });
+
+                var main_paths = d3.selectAll(".main_lines").data(nested);
+                var mini_paths = d3.selectAll(".mini_lines").data(nested);
                 
-                
+                main_paths
+                    .transition()
+                      .duration(750)
+                      .delay(250)
+                    .attr("d", function(d) { return main_line(d.values); });  
+
+                mini_paths
+                    .transition()
+                      .duration(750)
+                      .delay(250)
+                    .attr("d", function(d) { return mini_line(d.values); }); 
             }
+
 
             // toggle the lines on or off
             function toggle() {
