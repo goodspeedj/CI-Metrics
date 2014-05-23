@@ -15,6 +15,12 @@
       <div class="row">
         <div class="col-md-12">
           <h3>Sitespeed.io metrics</h3>
+          This chart displays different performance metrics using the sitespeed.io tool.
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
           <div id="toggle" class="pull-right">
             <form id="toggle">
               <label><input class="offOn" type="radio" name="toggle" value="enable" checked> Enable All</label>
@@ -23,8 +29,38 @@
           </div>
         </div>
       </div>
+
       <p>&nbsp;</p>
+
       <div class="row">
+        <div id="descriptions" class="col-md-9">
+          <div id="ruleScore">The sitespeed.io total rule score</div>
+          <div id="criticalPathScore">The code and resources required to render the initial view of a web page.</div>
+          <div id="jsSyncInHead">The number of JavaScript resources loaded synchronously in the HEAD element.</div>
+          <div id="jsPerPage">The number of JavaScript files per page.</div>
+          <div id="cssPerPage">The number of CSS files per page.</div>
+          <div id="imagesPerPage">The number of image files per page.</div>
+          <div id="cssImagesPerPage">The number of CSS image files per page.</div>
+          <div id="requests">The number of requests per page.</div>
+          <!-- <div id="imageWeight">The image weight in KB per page.</div>
+          <div id="jsWeight">The JavaScript file weight in KB per page.</div>
+          <div id="cssWeight">The CSS file weight in KB per page.</div> -->
+          <div id="imageWeightPerPage">The total images weight per page.</div>
+          <div id="cssWeightPerPage">The total CSS weight per page.</div>
+          <div id="jsWeightPerPage">The total JavaScript weight per page.</div>
+          <div id="pageWeight">The total page weight in KB.</div>
+          <div id="docWeight">The document weight in KB.</div>
+          <div id="domElements">The number of DOM elements per page.</div>
+          <div id="spofPerPage">The number of single points of failure per page.</div>
+          <div id="spofPages">The number of pages with single points of failure.</div>
+          <div id="requestsWithoutExpires">The number of requests without Expires in the header.</div>
+          <div id="textContent">The amount of text content.</div>
+          <div id="assetsCacheTime">The cache time of assets in the browser.</div>
+          <div id="browserScaledImages">The number of images scaled by the browser.</div>
+          <div id="requestsWithoutGZipPerPage">The number of requests without compression.</div>
+          <div id="redirectsPerPage">The number of redirects per page.</div>
+          <div id="maxRequestsPerDomainPerPage">The maximum number of requests per domain per page.</div>
+        </div>
         <div class="col-md-3 pull-right">
           <form id="metric-pulldown">
             <select class="form-control metric-select">
@@ -36,14 +72,14 @@
                 <option value="imagesPerPage">Images per Page</option>
                 <option value="cssImagesPerPage">CSS Images per Page</option>
                 <option value="requests">Requests</option>
-                <option value="imageWeight">Image Weight</option>
+                <!-- <option value="imageWeight">Image Weight</option>
                 <option value="jsWeight">JavaScript Weight</option>
-                <option value="cssWeight">CSS Weight</option>
+                <option value="cssWeight">CSS Weight</option> -->
                 <option value="imageWeightPerPage">Image Weight per Page</option>
                 <option value="cssWeightPerPage">CSS Weight per Page</option>
                 <option value="jsWeightPerPage">JS Weight per Page</option>
                 <option value="pageWeight">Page Weight</option>
-                <option value="Doc Weight">Doc Weight</option>
+                <option value="docWeight">Doc Weight</option>
                 <option value="domElements">DOM Elements</option>
                 <option value="spofPerPage">SPOF per Page</option>
                 <option value="spofPages">SPOF Pages</option>
@@ -51,23 +87,20 @@
                 <option value="textContent">Text Content</option>
                 <option value="assetsCacheTime">Assets Cache Time</option>
                 <option value="browserScaledImages">Browser Scaled Images</option>
-                <option value="RequestsWithoutGZipPerPage">Requests Without GZip per Page</option>
+                <option value="requestsWithoutGZipPerPage">Requests Without GZip per Page</option>
                 <option value="redirectsPerPage">Redirects per Page</option>
                 <option value="maxRequestsPerDomainPerPage">Max Requets per Domain per Page</option>
             </select>
           </form>
         </div>
       </div>
+
       <div class="row">
         <div class="col-md-12">
           <div id="graph"></div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div id="table"></div>
-        </div>
-      </div>
+
     </div>
 
     <script src="js/d3.v3.min.js"></script>
@@ -77,6 +110,120 @@
     <script src="js/charts/common.js"></script>
     <script src="js/charts/templates/multiline.js"></script>
     <script src="js/charts/sitespeed.js"></script>
+
+    <script>
+      hideDivs = function() {
+        $("#ruleScore").hide();
+        $("#criticalPathScore").hide();
+        $("#jsSyncInHead").hide();
+        $("#jsPerPage").hide();
+        $("#cssPerPage").hide();
+        $("#imagesPerPage").hide();
+        $("#cssImagesPerPage").hide();
+        $("#requests").hide();
+        $("#imageWeightPerPage").hide();
+        $("#cssWeightPerPage").hide();
+        $("#jsWeightPerPage").hide();
+        $("#pageWeight").hide();
+        $("#docWeight").hide();
+        $("#domElements").hide();
+        $("#spofPerPage").hide();
+        $("#spofPages").hide();
+        $("#requestsWithoutExpires").hide();
+        $("#textContent").hide();
+        $("#assetsCacheTime").hide();
+        $("#browserScaledImages").hide();
+        $("#requestsWithoutGZipPerPage").hide();
+        $("#redirectsPerPage").hide();
+        $("#maxRequestsPerDomainPerPage").hide();
+      };
+
+      showSelection = function() {
+        hideDivs();
+
+        $("#descriptions").show();
+
+        switch ($(this).val()) {
+          case 'ruleScore':
+            $("#ruleScore").show(400);
+          break;
+          case 'criticalPathScore':
+            $("#criticalPathScore").show(400);
+          break;
+          case 'jsSyncInHead':
+            $("#jsSyncInHead").show(400);
+          break;
+          case 'jsPerPage':
+            $("#jsPerPage").show(400);
+          break;
+          case 'cssPerPage':
+            $("#cssPerPage").show(400);
+          break;
+          case 'imagesPerPage':
+            $("#imagesPerPage").show(400);
+          break;
+          case 'cssImagesPerPage':
+            $("#cssImagesPerPage").show(400);
+          break;
+          case 'requests':
+            $("#requests").show(400);
+          break;
+          case 'imageWeightPerPage':
+            $("#imageWeightPerPage").show(400);
+          break;
+          case 'cssWeightPerPage':
+            $("#cssWeightPerPage").show(400);
+          break;
+          case 'jsWeightPerPage':
+            $("#jsWeightPerPage").show(400);
+          break;
+          case 'pageWeight':
+            $("#pageWeight").show(400);
+          break;
+          case 'docWeight':
+            $("#docWeight").show(400);
+          break;
+          case 'domElements':
+            $("#domElements").show(400);
+          break;
+          case 'spofPerPage':
+            $("#spofPerPage").show(400);
+          break;
+          case 'spofPages':
+            $("#spofPages").show(400);
+          break;
+          case 'requestsWithoutExpires':
+            $("#requestsWithoutExpires").show(400);
+          break;
+          case 'textContent':
+            $("#textContent").show(400);
+          break;
+          case 'assetsCacheTime':
+            $("#assetsCacheTime").show(400);
+          break;
+          case 'browserScaledImages':
+            $("#browserScaledImages").show(400);
+          break;
+          case 'redirectsPerPage':
+            $("#redirectsPerPage").show(400);
+          break;
+          case 'maxRequestsPerDomainPerPage':
+            $("#maxRequestsPerDomainPerPage").show(400);
+          break;
+          default:
+            $("#ruleScore").show(400);
+        }
+      };
+
+      $(".metric-select").change(showSelection);
+
+      $(document).ready(function() {
+        $("#descriptions").show();
+        hideDivs();
+        $("#ruleScore").show();
+      });
+
+    </script>
 
   </body>
 </html>

@@ -19,6 +19,14 @@ div.tooltip {
   float: right;
 }
 
+#descriptions {
+  display: none;
+}
+
+#ruleScore {
+  display:;
+}
+
 .toggle {
   width: 150px;
 }
