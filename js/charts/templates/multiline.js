@@ -70,9 +70,14 @@ function multiLineChart() {
     function chart(selection) {
         selection.each(function(data) {
 
+            console.log(data);
+
+
+
             // Add the date field to the data set
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
+                d.platform = d._id.platform;
             });
 
 
@@ -94,6 +99,9 @@ function multiLineChart() {
             nested.forEach(function(d) {
                 d.vis = "1";
             });
+
+
+            console.log(nested);
 
             // Add the X axis
             main.append("g")
