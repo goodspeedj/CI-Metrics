@@ -77,7 +77,6 @@ function multiLineChart() {
             // Add the date field to the data set
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
-                d.platform = d._id.platform;
             });
 
 
