@@ -33,6 +33,29 @@
       <p>&nbsp;</p>
 
       <div class="row">
+        <div id="product" class="col-md-3 pull-right">
+          <form id="product-pulldown">
+            <select class="form-control product-select">
+              <option value="esales">eSales</option>
+              <option value="lmcom">LM.com</option>
+            </select>
+          </form>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div id="platform" class="col-md-3 pull-right">
+          <form id="platform-pulldown">
+            <select class="form-control platform-select">
+              <option value="desktop">Desktop</option>
+              <option value="mobile">Mobile</option>
+            </select>
+          </form>
+        </div>
+      </div>
+      
+
+      <div class="row">
         <div id="descriptions" class="col-md-9">
           <div id="ruleScore">The sitespeed.io total rule score</div>
           <div id="criticalPathScore">The code and resources required to render the initial view of a web page.</div>
@@ -109,9 +132,12 @@
     <script src="js/bootstrap-switch.min.js"></script>
     <script src="js/charts/common.js"></script>
     <script src="js/charts/templates/multiline.js"></script>
-    <script src="js/charts/sitespeed.js"></script>
 
     <script>
+
+      var platform = "desktop";
+      var product  = "esales";
+
       hideDivs = function() {
         $("#ruleScore").hide();
         $("#criticalPathScore").hide();
@@ -215,7 +241,17 @@
         }
       };
 
+      changeDataSource = function() {
+        window.platform = $(".platform-select").val();
+        window.product  = $(".product-select").val();
+
+        $.getScript('js/charts/sitespeed.js');
+      }
+
       $(".metric-select").change(showSelection);
+
+      $(".platform-select").change(changeDataSource);
+      $(".product-select").change(changeDataSource);
 
       $(document).ready(function() {
         $("#descriptions").show();
@@ -224,6 +260,8 @@
       });
 
     </script>
+
+    <script src="js/charts/sitespeed.js"></script>
 
   </body>
 </html>
