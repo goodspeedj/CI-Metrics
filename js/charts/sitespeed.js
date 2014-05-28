@@ -8,17 +8,10 @@ var chart = multiLineChart()
     .yTickFormat(function(d) { return d3.round(d); })
     .yScale(d3.scale.linear())
     .color(d3.scale.category10());
-    //.brushChart(false);
 
-d3.json('data/sitespeed.json', function(data) {
+d3.json('data/sitespeed.json', function(error, data) {
+    console.log(error);
     d3.select("#graph")
         .datum(data)
         .call(chart);
 });
-
-
-/*
-$(".metric-select").change(function() {
-    metric = $(".metric-select").val();
-});
-*/
