@@ -73,16 +73,16 @@ function multiLineChart() {
             console.log(data);
 
             // Add the date field to the data set
-            data.result.forEach(function(d) {
+            data.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
             });
 
 
             // Create the axis domains
-            main_x.domain(d3.extent(data.result, xValue));
-            mini_x.domain(d3.extent(data.result, xValue));
-            main_y.domain([0, d3.max(data.result, yValue)]);
-            mini_y.domain([0, d3.max(data.result, yValue)]);
+            main_x.domain(d3.extent(data, xValue));
+            mini_x.domain(d3.extent(data, xValue));
+            main_y.domain([0, d3.max(data, yValue)]);
+            mini_y.domain([0, d3.max(data, yValue)]);
 
             var brush = d3.svg.brush()
                 .x(mini_x)
@@ -91,7 +91,7 @@ function multiLineChart() {
             // Flatten out the data
             var nested = d3.nest()
                 .key(dimKey)
-                .entries(data.result);
+                .entries(data);
 
             nested.forEach(function(d) {
                 d.vis = "1";
@@ -412,8 +412,8 @@ function multiLineChart() {
             function switchY() {
                 var selected = this.value;
 
-                main_y.domain([0, d3.max(data.result, function(d) { return d[selected]; })]);
-                mini_y.domain([0, d3.max(data.result, function(d) { return d[selected]; })]);
+                main_y.domain([0, d3.max(data, function(d) { return d[selected]; })]);
+                mini_y.domain([0, d3.max(data, function(d) { return d[selected]; })]);
 
                 main.select(".y.axis")
                     .transition()
