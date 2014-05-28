@@ -72,8 +72,6 @@ function multiLineChart() {
 
             console.log(data);
 
-
-
             // Add the date field to the data set
             data.result.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
@@ -98,9 +96,6 @@ function multiLineChart() {
             nested.forEach(function(d) {
                 d.vis = "1";
             });
-
-
-            console.log(nested);
 
             // Add the X axis
             main.append("g")
@@ -409,7 +404,7 @@ function multiLineChart() {
                 });
 
 
-            d3.selectAll("select").on("change", switchY);
+            d3.selectAll(".metric-select").on("change", switchY);
             d3.selectAll("input").on("change", toggle);
 
 
