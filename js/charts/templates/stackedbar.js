@@ -33,7 +33,7 @@ function stackedBarChart() {
             var len = 0;
 
             // This adds new elements to the data object
-            data.result.forEach(function(d) {
+            data.forEach(function(d) {
                 d.portfolio = dimKey(d);
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
                 len++;
@@ -46,7 +46,7 @@ function stackedBarChart() {
                     ? -1
                     : 1);
                     return 0;} )
-                .entries(data.result);
+                .entries(data);
 
             
 
@@ -73,16 +73,16 @@ function stackedBarChart() {
             var main_x = d3.time.scale().range([0, main_width - axis_offset - (main_width/len/2)]);
 
             main_x.domain([
-                d3.min(data.result, function(d) { return xValue(d).setDate(xValue(d).getDate() - 1); }), 
-                d3.max(data.result, function(d) { return xValue(d).setDate(xValue(d).getDate() + 2); })
+                d3.min(data, function(d) { return xValue(d).setDate(xValue(d).getDate() - 1); }), 
+                d3.max(data, function(d) { return xValue(d).setDate(xValue(d).getDate() + 2); })
             ]);
 
             var mini_x = d3.time.scale().range(main_x.range()).domain(main_x.domain());
 
 
             // y axis domain (ie: time)
-            main_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
-            mini_y.domain([0, d3.max(data.result, function(d) { return yValue(d); })]);
+            main_y.domain([0, d3.max(data, function(d) { return yValue(d); })]);
+            mini_y.domain([0, d3.max(data, function(d) { return yValue(d); })]);
 
             // Create brush for mini graph
             var brush = d3.svg.brush()
@@ -92,7 +92,7 @@ function stackedBarChart() {
             // flatten out the data
             var nested = d3.nest()
                 .key(dimKey)
-                .entries(data.result);
+                .entries(data);
 
             // Add the vis element to the nested data structure
             nested.forEach(function(d) {

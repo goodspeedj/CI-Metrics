@@ -87,7 +87,7 @@ function stackedAreaChart() {
         selection.each(function(data) {
 
             // Loop through the data and add elements
-            data.result.forEach(function(d) {
+            data.forEach(function(d) {
                 d.date = new Date(d._id.year, d._id.month-1, d._id.day);
                 d.vis = "1";
             });
@@ -104,7 +104,7 @@ function stackedAreaChart() {
                 dataObj.key = type;
                 dataObj.vis = "1";
 
-                dataObj.values = data.result.map(function(d) {
+                dataObj.values = data.map(function(d) {
                     return { date: d.date, total: d[type] };  
                 });
 
@@ -115,8 +115,8 @@ function stackedAreaChart() {
             var layers = stack(dataSeries);
 
             // Set the x and y domains
-            main_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
-            main_y.domain([0, d3.max(data.result, function(d) { 
+            main_x.domain(d3.extent(data, function(d) { return xValue(d); }));
+            main_y.domain([0, d3.max(data, function(d) { 
                 if(d.vis === "1") {
                     var total = 0;
                     categories.forEach(function(type) {
@@ -127,8 +127,8 @@ function stackedAreaChart() {
                 else return null;                
             })]);
 
-            mini_x.domain(d3.extent(data.result, function(d) { return xValue(d); }));
-            mini_y.domain([0, d3.max(data.result, function(d) { 
+            mini_x.domain(d3.extent(data, function(d) { return xValue(d); }));
+            mini_y.domain([0, d3.max(data, function(d) { 
                 var total = 0;
                 categories.forEach(function(type) {
                     total = total + d[type];
