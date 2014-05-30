@@ -404,8 +404,31 @@ function stackedBarChart() {
                       .attr("width", function(d) { return main_width/days/2; })
                       .attr("x", function(d) { return main_x(xValue(d)) - (main_width/days); });
                 }
+                
+                var dataFiltered = data.filter(function(d, i) {
+                    if ( (d.date >= main_x.domain()[0]) && (d.date <= main_x.domain()[1]) ) {
+                        return yValue(d);
+                    }
+                });
+                
+                main_y.domain([0, d3.max(dataFiltered.map(function(d) { console.log(d); return yValue(d); }))]);
 
                 main.select(".x.axis").call(main_xAxis);
+                main.select(".y.axis").call(main_yAxis);
+                
+                main.selectAll(".ideal")
+                    .transition()
+                      .duration(500)
+                    .attr("y", main_y(ideal_time))
+                    .attr("y1", main_y(ideal_time))
+                    .attr("y2", main_y(ideal_time));
+
+                main.selectAll(".avg")
+                    .transition()
+                      .duration(500)
+                    .attr("y", main_y(avg_time))
+                    .attr("y1", main_y(avg_time))
+                    .attr("y2", main_y(avg_time));
             }
 
 
