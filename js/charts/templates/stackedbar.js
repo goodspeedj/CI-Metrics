@@ -1,6 +1,6 @@
 function stackedBarChart() {
 
-    var ideal_time = 36000000;
+    var ideal_time = 43200000;
     var thirty_avg = 49743024.22088353;
     var avg_time   = 54442875.80642504;
 
@@ -427,9 +427,9 @@ function stackedBarChart() {
                 main.selectAll(".avg")
                     .transition()
                       .duration(500)
-                    .attr("y", main_y(avg_time))
-                    .attr("y1", main_y(avg_time))
-                    .attr("y2", main_y(avg_time));
+                    .attr("y", main_y(thirty_avg))
+                    .attr("y1", main_y(thirty_avg))
+                    .attr("y2", main_y(thirty_avg));
             }
 
 
