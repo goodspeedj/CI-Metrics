@@ -1,7 +1,7 @@
 function stackedBarChart() {
 
     var ideal_time = 36000000;
-    var thirty_avg = 42464395.065789476;
+    var thirty_avg = 49743024.22088353;
     var avg_time   = 54442875.80642504;
 
     // Default bar colors
