@@ -34,7 +34,7 @@ var svg = d3.select("#graph").append("svg")
 svg.append("defs").append("clipPath")
     .attr("id", "clip")
   .append("rect")
-    .attr("width", main_width - axis_offset)
+    .attr("width", main_width - axis_offset + 5)
     .attr("height", main_height);
 
 var main = svg.append("g")

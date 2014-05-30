@@ -70,7 +70,6 @@ function multiLineChart() {
     function chart(selection) {
         selection.each(function(data) {
 
-            console.log(data);
 
             // Add the date field to the data set
             data.forEach(function(d) {

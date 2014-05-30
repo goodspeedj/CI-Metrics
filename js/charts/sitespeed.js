@@ -10,7 +10,6 @@ var chart = multiLineChart()
     .color(d3.scale.category10());
 
 d3.json('data/sitespeed.json', function(error, data) {
-    console.log(error);
     d3.select("#graph")
         .datum(data)
         .call(chart);

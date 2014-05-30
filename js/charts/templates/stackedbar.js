@@ -1,8 +1,8 @@
 function stackedBarChart() {
 
     var ideal_time = 36000000;
-    var median_time = 56626121.88235294;
-    var avg_time   = 58257845.84249471;
+    var thirty_avg = 49743024.22088353;
+    var avg_time   = 54442875.80642504;
 
     // Default bar colors
     var colors;
@@ -208,13 +208,13 @@ function stackedBarChart() {
             main.append("text")
                 .attr("class", "ideal")
                 .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
-                .attr("y", main_y(ideal_time) + 5)
+                .attr("y", main_y(ideal_time) + 8)
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
                 .text("2014 Target Avg");
 
-            // Add the eComm avg fix time line
+            /* Add the eComm avg fix time line
             var avg_line = main.append("line")
                 .attr("class", "avg")
                 .attr("x1", 0)
@@ -233,13 +233,15 @@ function stackedBarChart() {
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
                 .text("eComm YTD Avg");
-            /*
-            var median_line = main.append("line")
+            */
+
+            // 30 day average
+            var thirty_line = main.append("line")
                 .attr("class", "avg")
                 .attr("x1", 0)
-                .attr("y1", main_y(median_time))    
+                .attr("y1", main_y(thirty_avg))    
                 .attr("x2", main_width-main_margin.right - legend_text_offset.width)
-                .attr("y2", main_y(median_time))
+                .attr("y2", main_y(thirty_avg))
                 .attr("stroke-width", 1)
                 .attr("stroke-dasharray", "10,10")
                 .attr("stroke", "#413839");
@@ -247,12 +249,11 @@ function stackedBarChart() {
             main.append("text")
                 .attr("class", "avg")
                 .attr("x", main_width-main_margin.right - legend_text_offset.width + 10)
-                .attr("y", main_y(median_time))
+                .attr("y", main_y(thirty_avg))
                 .attr("fill", "#413839")
                 .attr("font-size", "11px")
                 .attr("font-family", "sans-serif")
-                .text("eComm Median");
-            */
+                .text("eComm 30 day average");
 
             // Add the legend
             var legend = main.selectAll(".legendLabel")
